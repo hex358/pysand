@@ -21,6 +21,7 @@ DATA_LEN: int = CHUNK_SIZE * CHUNK_SIZE
 
 is_in_bounds = lambda x, y: (x // CHUNK_SIZE, y // CHUNK_SIZE) in chunks
 
+PIXEL_SIZE = None
 class Chunk:
     was_updated: bool = False
     skipped_over_count: int = 0
@@ -29,6 +30,8 @@ class Chunk:
     update_intensity: float = 0.0
 
     local_is_in_bounds = lambda self, x, y: 0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE
+
+
 
     def __init__(self, xo: int, yo: int):
         #self.element_processor = element_storage.create_element_processor(chunk=self)
@@ -41,6 +44,11 @@ class Chunk:
         self.render_chunk = render.add_chunk(xo, yo, self.data)
         self.visited = {}
         self.merge_visited = {}
+        # self.rect = render.ColorRect(
+        # xo*CHUNK_SIZE*PIXEL_SIZE,yo*CHUNK_SIZE*PIXEL_SIZE,
+        # (CHUNK_SIZE*PIXEL_SIZE,CHUNK_SIZE*PIXEL_SIZE),
+        # (1,0,0,0.4),0,(1,1,1,1)
+ #   )
 
     def decrement_update(self):
         self.update_intensity -= update_delta
@@ -82,6 +90,11 @@ class Chunk:
             return 9
         ly, lx = gy % CHUNK_SIZE, gx % CHUNK_SIZE
         return target.data[ly, lx] if not (lx,ly) in target.visited else target.visited[(lx,ly)]
+
+    def get_chunk(self, x: int, y: int):
+        gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
+        chunk = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
+        return chunk if not chunk is None else dummy_chunk
 
     def skip_over(self):
         self.skipped_over_count += 1
@@ -132,7 +145,49 @@ class Chunk:
         self.render_chunk.update(self.data)
 
 
+def clear_all():
+    for i in chunks:
+        chunks[i].data.fill(0)
+        chunks[i].keep_alive()
+
+
+
+def make_snapshot() -> bytearray:
+    buff = bytearray()
+    for c in chunks:
+        ints = bytearray()
+        buff.append(chunks[c].xo); buff.append(chunks[c].yo)
+        for i in range(CHUNK_SIZE * CHUNK_SIZE):
+            ints.append(chunks[c].data[i // CHUNK_SIZE, i % CHUNK_SIZE])
+        buff.extend(ints)
+    return buff
+
+
+def apply_snapshot(snapshot: bytearray):
+    #chunks.clear()
+    shape = (CHUNK_SIZE, CHUNK_SIZE)
+    stack = {"xo": 0, "yo": 0, "array": np.ndarray(shape,dtype=np.uint8)}
+
+    for i in range(len(snapshot)):
+        caret = i % (CHUNK_SIZE * CHUNK_SIZE + 2)
+        if caret == 0 and i > 0:
+            chunk = chunks.setdefault((stack["xo"], stack["yo"]), Chunk(stack["xo"], stack["yo"]))
+            chunk.data = stack["array"]; stack["array"] = np.zeros_like(stack["array"])
+            chunks[(stack["xo"], stack["yo"])] = chunk; chunk.keep_alive()
+        if caret == 0: stack["xo"] = snapshot[i]
+        if caret == 1: stack["yo"] = snapshot[i];
+        if caret > 1:
+            caret -= 2
+            stack["array"][caret // CHUNK_SIZE, caret % CHUNK_SIZE] = snapshot[i]
+
+
+
+
 class DummyChunk:
+    def mark_dirty(self, x:int, y:int):
+        pass
+    def unskip(self):
+        pass
     def keep_alive(self, and_neighbors: bool = False):
         pass
 
@@ -140,7 +195,7 @@ class DummyChunk:
 def global_set_cell(gx: int, gy: int, v: int):
     target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
     if target:
-        target.keep_alive(and_neighbours=True)
+        target.keep_alive()
         target.data[gy % CHUNK_SIZE, gx % CHUNK_SIZE] = v
 
 
@@ -186,7 +241,10 @@ def _process(delta: float) -> None:
         for c in chunks.values():
             if c.is_alive():
                 c.update()
+              #  c.rect.color[3] = 0.5
                 to_render.add(c)
+           # else:
+           #     c.rect.color[3] = 0.0
         for c in chunks.values():
             c.update_ended()
     else:

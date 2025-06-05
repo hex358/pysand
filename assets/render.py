@@ -13,6 +13,7 @@ modules_dict = {}
 from OpenGL.GL import *
 import OpenGL.GLUT as glut
 import numpy as np
+from PIL import Image, ImageFont, ImageDraw
 
 _control_types: dict = {}
 
@@ -55,7 +56,7 @@ class Control:
         self.self_storage.remove(self)
 
 
-from PIL import Image, ImageFont, ImageDraw
+
 def _make_text_bitmap(text: str, font_path: str, font_size: int, color=(1.0,1.0,1.0,1.0), margin=0):
     font = ImageFont.truetype(font_path, font_size)
 
@@ -75,6 +76,14 @@ def _make_text_bitmap(text: str, font_path: str, font_size: int, color=(1.0,1.0,
     return width, height, raw_bytes
 
 import os
+
+control_scale: float = 1.0
+
+def set_control_scale(v: float):
+    global control_scale
+    control_scale = v
+
+
 class Label(Control):
     self_storage = []
     @property
@@ -93,7 +102,7 @@ class Label(Control):
         return self._text
 
     def _ready(self, text, x, y, scale: tuple = (1.0, 1.0), color: tuple = (1.0, 1.0, 1.0, 1.0)):
-        self.color = color; self.scale_x, self.scale_y = scale[0], scale[1]
+        self.color = color; self.scale_x, self.scale_y = scale[0]*control_scale, scale[1]*control_scale
         self._text = ""
         self.text, self.x, self.y = text, x, y
     def _before_draw(self):
@@ -117,9 +126,9 @@ class ColorRect(Control):
                offsets_fix = 1,
                 *args):
         self.offsets_fix = offsets_fix
-        self.color = color; self.scale_x, self.scale_y = size[0], size[1]
-        self.x, self.y = x, y; self.outline_color = outline_color
-        self.outline_width = outline_width
+        self.color = [*color]; self.scale_x, self.scale_y = int(size[0]*control_scale), int(size[1]*control_scale)
+        self.x, self.y = int(x*control_scale), int(y*control_scale); self.outline_color = outline_color
+        self.outline_width = int(outline_width*control_scale)
 
     @staticmethod
     def _draw_stage_entered():
@@ -200,7 +209,8 @@ class Button(ColorRect):
         super()._ready(x, y,size,color,outline_width,outline_color,offsets_fix=offsets_fix)
         assert(label is not None, "Label can't be None")
         self.label = label
-        label.x += x; label.y += y
+        label.x = int(label.x*control_scale); label.y = int(label.y*control_scale)
+        label.x += int(x*control_scale); label.y += int(y*control_scale)
         self.press_state_update = press_state_update
         self.color_hovered, self.color_pressed = color_hovered, color_pressed
         self.color_default = color

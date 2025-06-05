@@ -1,53 +1,114 @@
+import os.path
+
 TAGS = []
-USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant"]
+USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant", "variant"]
 chunk_manager = None
 render = None
 mainloop = None
 CHUNKS_RECT = None
 PIXEL_SIZE = None
+variant = None
 CHUNK_SIZE = None
 
 label = None
 modules_dict = {}
+
+buttons = {}
 def _ready() -> None:
     global label
     global prev_pos
     prev_pos = Vector2(0, 0, i=True)
     label = render.Label("hello",120*5,10*5,(1,1), (1,0,0,1))
     ox, oy = CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[0], CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[1]
-    # rect = render.ColorRect(
-    #     ox - 1.4*PIXEL_SIZE - PIXEL_SIZE,oy - 0.5*PIXEL_SIZE - PIXEL_SIZE,
-    #     (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] - oy),
-    #     (0,1,0,0),PIXEL_SIZE,(0.5,0.5,0.5,1)
-    # )
+
     rect2 = render.ColorRect(
         ox - 1.4*PIXEL_SIZE,oy - 0.5*PIXEL_SIZE,
-        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] - oy),
+        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] + PIXEL_SIZE*0.1 - oy),
         (0,1,0,0),PIXEL_SIZE,(1,1,1,1),offsets_fix=1
     )
 
-    rect2 = render.Button(
-        40,30,
-        (100,35),
+
+    render.set_control_scale(0.7)
+    buttons["clear"] = render.Button(
+        110,57,
+        (99,35),
         (0.5,0.5,0.5,1),PIXEL_SIZE,(0.8,0.8,0.8,1),
-        render.Label("CLEAR",4,5,(1,1), (1,1,1,1)),
-        testcall,
+        render.Label("CLEAR",3,5,(1,1), (1,1,1,1)),
+        clear_button,
         (0.6, 0.6, 0.6, 1),
         (0.8, 0.8, 0.8, 1),
         offsets_fix=-1,
     )
 
-def testcall(button):
+    buttons["save"] = render.Button(
+        230,57,
+        (92,35),
+        (0.5,0.5,0.5,1),PIXEL_SIZE,(0.8,0.8,0.8,1),
+        render.Label("SAVE",9,5,(1,1), (1,1,1,1)),
+        save_button,
+        (0.6, 0.6, 0.6, 1),
+        (0.8, 0.8, 0.8, 1),
+        offsets_fix=-1,
+    )
+
+    buttons["load"] = render.Button(
+        342,57,
+        (88,35),
+        (0.5,0.5,0.5,1),PIXEL_SIZE,(0.8,0.8,0.8,1),
+        render.Label("LOAD",9,5,(1,1), (1,1,1,1)),
+        load_button,
+        (0.6, 0.6, 0.6, 1),
+        (0.8, 0.8, 0.8, 1),
+        offsets_fix=-1,
+    )
+    render.set_control_scale(1)
+
+import tkinter as tk
+from tkinter import filedialog
+def clear_button(button):
     if button.press_state == render.PressState.JUST_PRESSED:
-        for i in chunk_manager.chunks:
-            chunk_manager.chunks[i].data.fill(0)
-            chunk_manager.chunks[i].keep_alive()
+        chunk_manager.clear_all()
+
+
+
+def save_button(button):
+    if button.press_state != render.PressState.JUST_PRESSED: return
+
+    root = tk.Tk(); root.withdraw()
+    path = filedialog.asksaveasfilename(
+        title="Save as",
+        initialfile="save.pysand",
+        defaultextension=".pysand",
+        filetypes=(("Pysand files", "*.pysand"), ("All files", "*.*"))
+    )
+    root.destroy()
+
+    try:
+        with open(path, "wb") as file:
+            snapshot = chunk_manager.make_snapshot()
+            file.write(snapshot)
+    except:
+        pass
+
+def load_button(button):
+    if button.press_state != render.PressState.JUST_PRESSED: return
+
+    root = tk.Tk(); root.withdraw()
+    path = filedialog.askopenfilename(
+        title="Load save",
+        defaultextension=".pysand",
+        filetypes=(("Pysand files", "*.pysand"), ("All files", "*.*"))
+    )
+    root.destroy()
+    if not os.path.exists(path): return
+
+    snapshot = open(path, "rb").read()
+    call_deferred(chunk_manager.apply_snapshot,snapshot)
+
 
 fps_log: list[int] = []
 window_size = 5
 
-CHUNK_SIZE = None
-PIXEL_SIZE = None
 WINDOW_HEIGHT = None
 WINDOW_WIDTH = None
 
@@ -57,7 +118,7 @@ def fps(delta:float):
     fps_log.append(current_fps)
     if len(fps_log) > window_size:
         fps_log.pop(0)
-    if mainloop.ticks % 120 == 0:
+    if chunk_manager.update_tick:
         label.text = str(int(sum(fps_log) / len(fps_log)))
 
 
