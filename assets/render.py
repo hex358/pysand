@@ -18,16 +18,30 @@ from PIL import Image, ImageFont, ImageDraw
 _control_types: dict = {}
 
 
-
 class Control:
     self_storage = []
-    __slots__ = ("x", "y", "scale_x", "scale_y", "color")
+
+    def __init_subclass__(cls, /, **kwargs):
+        _control_types[cls] = cls.self_storage
+
+    __slots__ = ("x", "y", "scale_x", "scale_y", "color", "child_controls", "local_x", "local_y")
     def __init__(self, *args, **kwargs):
+        self.child_controls = []
         self.self_storage.append(self)
         self._ready(*args, **kwargs)
 
     def _ready(self, *args, **kwargs):
         pass
+
+    def add_child(self, control: "Control"):
+        control.local_x = control.x
+        control.local_y = control.y
+        self.child_controls.append(control)
+    def add_children(self, *args: tuple["Control"]):
+        for control in args:
+            control.local_x = control.x
+            control.local_y = control.y
+            self.child_controls.append(control)
 
     @staticmethod
     def _draw_stage_entered():
@@ -36,6 +50,9 @@ class Control:
     @staticmethod
     def _draw_stage_exited():
         glColor4f(1, 1, 1, 1)
+
+    def __contains__(self, item):
+        return item in self.child_controls
 
     def _before_draw(self):
         glPushMatrix()
@@ -47,6 +64,11 @@ class Control:
         self._before_draw()
         self._draw()
         self._after_draw()
+
+        for child in self.child_controls:
+            child.x = child.local_x + self.x
+            child.y = child.local_y + self.y
+
     def _draw(self):
         pass
     def _free(self):
@@ -195,6 +217,43 @@ def default_call(from_button: "Button"):
     pass
     #print(from_button)
 
+class ScrollContainer(Control):
+    self_storage = []
+    def _ready(self, x: int, y: int, size: tuple[int, int], padding: int = 10, direction: str = "v"):
+        self.x, self.y, self.scale_x, self.scale_y = int(x * control_scale), int(y * control_scale), size[0], size[1]
+        self.child_controls = []
+        self.value = 0.0
+        self.padding = padding
+        self.direction = direction
+
+    @staticmethod
+    def _draw_stage_entered():
+        pass
+
+    @staticmethod
+    def _draw_stage_exited():
+        pass
+
+    def _before_draw(self):
+        pass
+
+    def _after_draw(self):
+        pass
+
+    def _draw(self):
+        h = self.direction == "h"
+        caret = 0#self.x if h else self.y
+        for control in self.child_controls:
+            if h:
+                control.local_x = caret
+                caret += control.scale_x
+            else:
+                control.local_y = caret
+                caret += control.scale_y
+            caret += self.padding
+
+
+
 class Button(ColorRect):
 
     def _ready(self, x, y, size: tuple = (1.0, 1.0),
@@ -209,8 +268,9 @@ class Button(ColorRect):
         super()._ready(x, y,size,color,outline_width,outline_color,offsets_fix=offsets_fix)
         assert(label is not None, "Label can't be None")
         self.label = label
-        label.x = int(label.x*control_scale); label.y = int(label.y*control_scale)
-        label.x += int(x*control_scale); label.y += int(y*control_scale)
+        self.add_child(label)
+        label.local_x = int(label.x*control_scale); label.y = int(label.y*control_scale)
+        #label.local_y += int(x*control_scale); label.y += int(y*control_scale)
         self.press_state_update = press_state_update
         self.color_hovered, self.color_pressed = color_hovered, color_pressed
         self.color_default = color
@@ -324,8 +384,8 @@ def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
 
 
 def _ready():
-    for control_type in [Control, Label, ColorRect, Button]:
-        _control_types[control_type] = control_type.self_storage
+    # for control_type in [Control, Label, ColorRect, Button, ScrollContainer]:
+    #     _control_types[control_type] = control_type.self_storage
 
     global _program, _uProj, _uPointSize, _pos_vbo, _id_vbo, _id_buffer
     glut.glutInit()
@@ -406,7 +466,7 @@ def _process(delta: float):
 
     glColor4f(1.0, 1.0, 1.0, 1.0)
 
-    for control_type in [ColorRect,Button,Label]:
+    for control_type in [ColorRect,Button,Label,ScrollContainer]:
         if len(control_type.self_storage) == 0: continue
         c: type = control_type; c._draw_stage_entered()
         for control in _control_types[control_type]:

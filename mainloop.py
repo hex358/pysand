@@ -6,11 +6,14 @@ PROJECT_CLASSNAMES = [
 GLOBAL_VARS = [
     "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT"
 ]
-WINDOW_WIDTH, WINDOW_HEIGHT = 800, 640
-PIXEL_SIZE = 5.0
-CHUNK_SIZE = 16
 
-CHUNKS_RECT = (1,1,9,7)
+
+
+WINDOW_WIDTH, WINDOW_HEIGHT = 780, 640
+PIXEL_SIZE = 5.0
+CHUNK_SIZE = 12
+
+CHUNKS_RECT = (1,2,12,10)
 
 import pygame
 from pygame.locals import *
@@ -25,9 +28,10 @@ modules_dict: dict[str] = {"mainloop": sys.modules["__main__"]}
 _pixels = 0
 to_process = []
 
-
 def _ready() -> None:
     pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), DOUBLEBUF | OPENGL)
+   # global clock
+   # clock = pygame.time.Clock()
     pygame.display.set_caption("gl_test")
     for classname in PROJECT_CLASSNAMES:
         module = importlib.import_module("assets."+classname)
@@ -98,6 +102,8 @@ def _process(delta:float) -> bool:
     for object in to_process:
         object._process(delta)
     pygame.display.flip()
+   # clock.tick(120)
+
     return True
 
 import math

@@ -1,6 +1,7 @@
 from multiprocessing import shared_memory, Manager
 import numpy as np
 
+USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
 
 CHUNK_SIZE = 16
@@ -44,11 +45,11 @@ class Chunk:
         self.render_chunk = render.add_chunk(xo, yo, self.data)
         self.visited = {}
         self.merge_visited = {}
-        # self.rect = render.ColorRect(
-        # xo*CHUNK_SIZE*PIXEL_SIZE,yo*CHUNK_SIZE*PIXEL_SIZE,
-        # (CHUNK_SIZE*PIXEL_SIZE,CHUNK_SIZE*PIXEL_SIZE),
-        # (1,0,0,0.4),0,(1,1,1,1)
- #   )
+        self.rect = render.ColorRect(
+        xo*CHUNK_SIZE*PIXEL_SIZE,yo*CHUNK_SIZE*PIXEL_SIZE,
+        (CHUNK_SIZE*PIXEL_SIZE,CHUNK_SIZE*PIXEL_SIZE),
+        (1,0,0,0.0),0,(1,1,1,1)
+   )
 
     def decrement_update(self):
         self.update_intensity -= update_delta
@@ -241,10 +242,11 @@ def _process(delta: float) -> None:
         for c in chunks.values():
             if c.is_alive():
                 c.update()
-              #  c.rect.color[3] = 0.5
+                if USE_DEBUG:
+                    c.rect.color = (1, 0, 0, 0.2)
                 to_render.add(c)
-           # else:
-           #     c.rect.color[3] = 0.0
+            elif USE_DEBUG:
+                c.rect.color = (1,0,0,0.0)
         for c in chunks.values():
             c.update_ended()
     else:

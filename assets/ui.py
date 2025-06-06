@@ -22,18 +22,18 @@ def _ready() -> None:
     ox, oy = CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[0], CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[1]
 
     rect2 = render.ColorRect(
-        ox - 1.4*PIXEL_SIZE,oy - 0.5*PIXEL_SIZE,
-        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] + PIXEL_SIZE*0.1 - oy),
+        ox - 1.4*PIXEL_SIZE,oy - 1*PIXEL_SIZE,
+        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] + PIXEL_SIZE*0.3 + 0.4*PIXEL_SIZE - oy),
         (0,1,0,0),PIXEL_SIZE,(1,1,1,1),offsets_fix=1
     )
 
 
     render.set_control_scale(0.7)
     buttons["clear"] = render.Button(
-        110,57,
+        0,0,#110,117,
         (99,35),
         (0.5,0.5,0.5,1),PIXEL_SIZE,(0.8,0.8,0.8,1),
-        render.Label("CLEAR",3,5,(1,1), (1,1,1,1)),
+        render.Label("CLEAR",5,5,(1,1), (1,1,1,1)),
         clear_button,
         (0.6, 0.6, 0.6, 1),
         (0.8, 0.8, 0.8, 1),
@@ -41,7 +41,7 @@ def _ready() -> None:
     )
 
     buttons["save"] = render.Button(
-        230,57,
+        0,0,#230,117,
         (92,35),
         (0.5,0.5,0.5,1),PIXEL_SIZE,(0.8,0.8,0.8,1),
         render.Label("SAVE",9,5,(1,1), (1,1,1,1)),
@@ -52,7 +52,7 @@ def _ready() -> None:
     )
 
     buttons["load"] = render.Button(
-        342,57,
+        0,0,#342,117,
         (88,35),
         (0.5,0.5,0.5,1),PIXEL_SIZE,(0.8,0.8,0.8,1),
         render.Label("LOAD",9,5,(1,1), (1,1,1,1)),
@@ -61,6 +61,12 @@ def _ready() -> None:
         (0.8, 0.8, 0.8, 1),
         offsets_fix=-1,
     )
+
+
+    scroll = render.ScrollContainer(85,121,(100,100),10,"h")
+    scroll.add_children(buttons["load"],buttons["save"],buttons["clear"])
+
+
     render.set_control_scale(1)
 
 import tkinter as tk
