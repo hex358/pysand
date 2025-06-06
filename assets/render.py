@@ -4,6 +4,7 @@ USE_MODULES = ["mainloop", "variant"]
 PIXEL_SIZE = None
 variant = None
 CHUNK_SIZE = 16
+Input = None
 WINDOW_WIDTH = None
 WINDOW_HEIGHT = None
 MAX_CHUNKS = 10000
@@ -77,9 +78,12 @@ class Control:
         self._free()
         self.self_storage.remove(self)
 
-
+bitmaps = {}
 
 def _make_text_bitmap(text: str, font_path: str, font_size: int, color=(1.0,1.0,1.0,1.0), margin=0):
+    args = (text, font_path, font_size, *color, margin)
+    if args in bitmaps: return bitmaps[args]
+
     font = ImageFont.truetype(font_path, font_size)
 
     tmp_img = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
@@ -94,6 +98,8 @@ def _make_text_bitmap(text: str, font_path: str, font_size: int, color=(1.0,1.0,
     draw.text((0, 0), text, font=font, fill=tuple(int(i*255) for i in color))
 
     raw_bytes = image.tobytes("raw", "RGBA", 0, -1)
+
+    bitmaps[args] = (width, height, raw_bytes)
 
     return width, height, raw_bytes
 
@@ -123,10 +129,10 @@ class Label(Control):
     def text(self) -> str:
         return self._text
 
-    def _ready(self, text, x, y, scale: tuple = (1.0, 1.0), color: tuple = (1.0, 1.0, 1.0, 1.0)):
+    def _ready(self, text, x:int, y:int, scale: tuple = (1.0, 1.0), color: tuple = (1.0, 1.0, 1.0, 1.0)):
         self.color = color; self.scale_x, self.scale_y = scale[0]*control_scale, scale[1]*control_scale
         self._text = ""
-        self.text, self.x, self.y = text, x, y
+        self.text, self.x, self.y = text, int(x), int(y)
     def _before_draw(self):
         pass
     def _after_draw(self):
@@ -135,7 +141,7 @@ class Label(Control):
     def _draw(self):
         glPushAttrib(GL_PIXEL_MODE_BIT)
         glPixelZoom(self.scale_x, self.scale_y)
-        glRasterPos2i(self.x, self.y)
+        glRasterPos2i(int(self.x), int(self.y))
         glDrawPixels(self.width, self.height, GL_RGBA, GL_UNSIGNED_BYTE, self.raw)
         glPopAttrib()
 
@@ -225,6 +231,10 @@ class ScrollContainer(Control):
         self.value = 0.0
         self.padding = padding
         self.direction = direction
+        self.smooth_scroll = False
+        self.scroll_k = -160.0
+        self._value_target = 0.0
+        self.scroll_lerp_speed = 20.0
 
     @staticmethod
     def _draw_stage_entered():
@@ -240,15 +250,27 @@ class ScrollContainer(Control):
     def _after_draw(self):
         pass
 
+    def scroll(self, v: float):
+        if self.smooth_scroll:
+            self._value_target += v
+            self._value_target = variant.clamp(self._value_target, 0.0, 1.0)
+        else:
+            self.value += v
+            self.value = variant.clamp(self.value, 0.0, 1.0)
+
     def _draw(self):
+        self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y)
+        #print()
+        if self.smooth_scroll:
+            self.value = variant.lerp(self.value, self._value_target, mainloop.delta_time * self.scroll_lerp_speed)
         h = self.direction == "h"
         caret = 0#self.x if h else self.y
         for control in self.child_controls:
             if h:
-                control.local_x = caret
+                control.local_x = caret + self.value * self.scale_x
                 caret += control.scale_x
             else:
-                control.local_y = caret
+                control.local_y = caret + self.value * self.scale_y
                 caret += control.scale_y
             caret += self.padding
 

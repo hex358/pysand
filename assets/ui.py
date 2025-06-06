@@ -22,8 +22,8 @@ def _ready() -> None:
     ox, oy = CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[0], CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[1]
 
     rect2 = render.ColorRect(
-        ox - 1.4*PIXEL_SIZE,oy - 1*PIXEL_SIZE,
-        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] + PIXEL_SIZE*0.3 + 0.4*PIXEL_SIZE - oy),
+        ox - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
+        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] + PIXEL_SIZE*0.4 + 0.4*PIXEL_SIZE - oy),
         (0,1,0,0),PIXEL_SIZE,(1,1,1,1),offsets_fix=1
     )
 
@@ -64,8 +64,9 @@ def _ready() -> None:
 
 
     scroll = render.ScrollContainer(85,121,(100,100),10,"h")
+    scroll.smooth_scroll = True
+    scroll.smooth_scroll_speed = 20.0
     scroll.add_children(buttons["load"],buttons["save"],buttons["clear"])
-
 
     render.set_control_scale(1)
 

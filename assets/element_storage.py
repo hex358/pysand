@@ -3,7 +3,7 @@ USE_MODULES = ["chunk_manager", "mainloop"]
 modules_dict = {}
 chunk_manager = None
 mainloop = None
-ELEMENT_LIST = ["default", "water"]
+ELEMENT_LIST = ["sand", "water"]
 
 import importlib
 import sys

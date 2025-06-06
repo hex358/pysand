@@ -65,19 +65,11 @@ def _ready() -> None:
     for object in modules:
         object._ready()
 
-
-
-SELECTED_TYPE = 1
-select_types = [0, 1, 2, 3]
-index: int = 1
-
-prev_pressed: bool = False
-def _process(delta:float) -> bool:
-    global screen_mouse_position
-    global mouse_just_pressed
-    global mouse_pressed
-    global prev_pressed
-    global SELECTED_TYPE, index
+mouse_scroll_y = 0
+def input_poll():
+    global screen_mouse_position, mouse_just_pressed
+    global mouse_pressed, prev_pressed
+    global SELECTED_TYPE, index, mouse_scroll_y
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a] and not prev_pressed:
@@ -87,18 +79,35 @@ def _process(delta:float) -> bool:
     prev_pressed = keys[pygame.K_a]
 
     mouse_just_pressed = False
+    mouse_scroll_y = 0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             return False
         if event.type == pygame.MOUSEMOTION:
             screen_mouse_position = event.pos
+
+        if event.type == pygame.MOUSEWHEEL:
+            mouse_scroll_y = 1 if event.y > 0 else -1
+
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             mouse_pressed = False
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_just_pressed = not mouse_pressed
             mouse_pressed = True
+
+
+
+
+SELECTED_TYPE = 1
+select_types = [0, 1, 2, 3]
+index: int = 1
+
+prev_pressed: bool = False
+def _process(delta:float) -> bool:
+    input_poll()
+
     for object in to_process:
         object._process(delta)
     pygame.display.flip()

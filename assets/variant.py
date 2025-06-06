@@ -6,6 +6,11 @@ mainloop = None
 
 import math
 
+
+lerp = lambda a, b, l: a + min(max(l, 0.0), 1.0) * (b-a)
+clamp = lambda l, a, b: min(max(l, a), b)
+
+
 class Vector2:
     __slots__ = ("x","y")
     def __init__(self, x, y, i = False):
