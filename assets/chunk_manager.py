@@ -4,7 +4,7 @@ import numpy as np
 USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
 
-CHUNK_SIZE = 16
+CHUNK_SIZE = 12
 UPDATES_PER_SECOND = 60
 RENDERS_PER_SECOND = 60
 MAX_UPDATE_INTENSITY = 3.0

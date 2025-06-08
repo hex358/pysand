@@ -137,9 +137,15 @@ def clear_button(button):
         chunk_manager.clear_all()
 
 
-
 def save_button(button):
     if button.press_state != render.PressState.JUST_PRESSED: return
+    def save_deferred(path):
+        try:
+            with open(path, "wb") as file:
+                snapshot = chunk_manager.make_snapshot()
+                file.write(snapshot)
+        except:
+            pass
 
     root = tk.Tk(); root.withdraw()
     path = filedialog.asksaveasfilename(
@@ -150,12 +156,7 @@ def save_button(button):
     )
     root.destroy()
 
-    try:
-        with open(path, "wb") as file:
-            snapshot = chunk_manager.make_snapshot()
-            file.write(snapshot)
-    except:
-        pass
+    variant.call_deferred(save_deferred, path)
 
 def load_button(button):
     if button.press_state != render.PressState.JUST_PRESSED: return
