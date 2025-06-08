@@ -41,10 +41,13 @@ class Chunk:
         self.data.fill(0)
         # self.data_swap = np.ndarray((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
         # self.data_swap.fill(0)
-        #self.to_swap: list[tuple[int, int, int]] = []
+        #self.to_swap: list[tuple[int, int, int]] =
+        # []
+        self.prev = np.zeros_like(self.data)
         self.render_chunk = render.add_chunk(xo, yo, self.data)
-        self.visited = {}
-        self.merge_visited = {}
+        self.visited = set([])
+        self.merge_visited = set([])
+        self.merge_prev = {}
         self.rect = render.ColorRect(
         xo*CHUNK_SIZE*PIXEL_SIZE,yo*CHUNK_SIZE*PIXEL_SIZE,
         (CHUNK_SIZE*PIXEL_SIZE,CHUNK_SIZE*PIXEL_SIZE),
@@ -60,6 +63,7 @@ class Chunk:
         self.neighbors_kept_alive = False
         self.was_updated = False
         self.skipped_over_count = 0
+        self.visited.clear()
 
     def keep_alive(self, and_neighbours: bool = False):
         self.update_intensity = MAX_UPDATE_INTENSITY
@@ -84,18 +88,31 @@ class Chunk:
 
     def get_cell(self, x: int, y: int) -> int:
         if self.local_is_in_bounds(x, y):
-            return self.data[y, x] if not (x,y) in self.visited else self.visited[(x,y)]
+            return self.prev[y, x]# if not (x,y) in self.visited else self.visited[(x,y)]
+
         gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
         target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
         if target is None:
             return 9
-        ly, lx = gy % CHUNK_SIZE, gx % CHUNK_SIZE
-        return target.data[ly, lx] if not (lx,ly) in target.visited else target.visited[(lx,ly)]
+        #ly, lx = gy % CHUNK_SIZE, gx % CHUNK_SIZE
+        return target.prev[gy % CHUNK_SIZE, gx % CHUNK_SIZE]# if target.was_updated else target.data[ly, lx]#if not (lx,ly) in target.visited else target.visited[(lx,ly)]
+
+    def move_cell(self, ox: int, oy: int, x: int, y: int, v: int):
+        if not self.is_visited(x,y):
+            self.set_cell(ox,oy, self.get_cell(x,y))
+            self.set_cell(x,y,v)
 
     def get_chunk(self, x: int, y: int):
         gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
         chunk = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
         return chunk if not chunk is None else dummy_chunk
+
+    def is_visited(self, x: int, y: int):
+        if (x,y) in self.visited: return True
+        gx, gy = x + CHUNK_SIZE * self.xo, y + CHUNK_SIZE * self.yo
+        target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
+        if not target: return False
+        return (gx % CHUNK_SIZE, gy % CHUNK_SIZE) in target.visited
 
     def skip_over(self):
         self.skipped_over_count += 1
@@ -104,10 +121,13 @@ class Chunk:
         self.skipped_over_count -= 1
 
     def set_cell(self, x: int, y: int, val: int) -> bool:
+        if self.is_visited(x,y):
+            return False
+        self.visited.add((x, y))
+        total_visited.add((x,y))
         if self.local_is_in_bounds(x, y):
+            #if not (x,y) in self.visited:
             self.data[y, x] = val
-            if not (x,y) in self.visited:
-                self.visited[(x, y)] = val
             self.keep_alive()
             return True
         gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
@@ -116,25 +136,26 @@ class Chunk:
             return False
         local_x, local_y = gx % CHUNK_SIZE, gy % CHUNK_SIZE
         target.keep_alive()
+
         if target.was_updated:
             target.data[local_y, local_x] = val
         else:
-            if not (local_x, local_y) in target.merge_visited:
-                target.merge_visited[(local_x, local_y)] = val
-            target.data[local_y, local_x] = val
+           # if not (local_x, local_y) in target.merge_visited:
+            target.visited.add((local_x, local_y))
+         #   target.merge_prev[(local_x, local_y)] = val
+            target.data[local_y,local_x] = val
         return True
 
     def update(self):
         self.was_updated = True
 
         self.skipped_over_count = 0
-        self.visited = {**self.merge_visited}
-        self.merge_visited.clear()
+        self.prev = self.data.copy()
 
         for x in range(CHUNK_SIZE):
             for y in range(CHUNK_SIZE):
                 if (x,y) in self.visited: continue
-                current = self.get_cell(x,y)
+                current = self.prev[y,x]
                 if not current in element_storage.skip:
                     element_storage.element_calls[current](self, x, y)
                 else:
@@ -151,6 +172,7 @@ def clear_all():
         chunks[i].data.fill(0)
         chunks[i].keep_alive()
 
+total_visited = set([])
 
 
 def make_snapshot() -> bytearray:
@@ -165,21 +187,19 @@ def make_snapshot() -> bytearray:
 
 
 def apply_snapshot(snapshot: bytearray):
-    #chunks.clear()
     shape = (CHUNK_SIZE, CHUNK_SIZE)
-    stack = {"xo": 0, "yo": 0, "array": np.ndarray(shape,dtype=np.uint8)}
+    chunk_size = CHUNK_SIZE * CHUNK_SIZE + 2
 
-    for i in range(len(snapshot)):
-        caret = i % (CHUNK_SIZE * CHUNK_SIZE + 2)
-        if caret == 0 and i > 0:
-            chunk = chunks.setdefault((stack["xo"], stack["yo"]), Chunk(stack["xo"], stack["yo"]))
-            chunk.data = stack["array"]; stack["array"] = np.zeros_like(stack["array"])
-            chunks[(stack["xo"], stack["yo"])] = chunk; chunk.keep_alive()
-        if caret == 0: stack["xo"] = snapshot[i]
-        if caret == 1: stack["yo"] = snapshot[i];
-        if caret > 1:
-            caret -= 2
-            stack["array"][caret // CHUNK_SIZE, caret % CHUNK_SIZE] = snapshot[i]
+    for i in range(0, len(snapshot), chunk_size):
+        xo = snapshot[i]
+        yo = snapshot[i + 1]
+        array = np.zeros(shape, dtype=np.uint8)
+        for j in range(CHUNK_SIZE * CHUNK_SIZE):
+            array[j // CHUNK_SIZE, j % CHUNK_SIZE] = snapshot[i + 2 + j]
+
+        chunk = chunks.setdefault((xo, yo), Chunk(xo, yo))
+        chunk.data = array
+        chunk.keep_alive()
 
 
 
@@ -237,6 +257,7 @@ def _process(delta: float) -> None:
 
     if mainloop.time_passed - timestamp > 1 / UPDATES_PER_SECOND:
         update_delta = mainloop.time_passed - timestamp
+        total_visited.clear()
         timestamp = mainloop.time_passed
         update_tick = True
         for c in chunks.values():

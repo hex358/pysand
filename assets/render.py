@@ -1,3 +1,4 @@
+import chunk_manager
 import mainloop
 
 USE_MODULES = ["mainloop", "variant"]
@@ -19,38 +20,81 @@ from PIL import Image, ImageFont, ImageDraw
 _control_types: dict = {}
 
 
+def cull(self):
+
+    xmin, ymin, xmax, ymax = 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT
+    scale_x, scale_y = self.scale_x, self.scale_y
+    if self.root.__class__ == ScrollContainer:
+        xmin, ymin, xmax, ymax = self.root.x - self.root.margin_left, self.root.y - self.root.margin_bottom, self.root.x + self.root.scale_x, self.root.y + self.root.scale_y
+    ret = xmin-scale_x < self.x < xmax and ymin-scale_y < self.y < ymax# and self in _culled
+    return ret
+
+_controls = []
+
+
+from collections import deque
 class Control:
     self_storage = []
+    buffer = []
 
     def __init_subclass__(cls, /, **kwargs):
         _control_types[cls] = cls.self_storage
 
-    __slots__ = ("x", "y", "scale_x", "scale_y", "color", "child_controls", "local_x", "local_y")
+    __slots__ = ("x", "y", "margin_left", "margin_bottom",
+                 "scale_x", "scale_y",
+                 "color", "child_controls", "local_x",
+                 "local_y", "init_scale", "metadata",
+                 "z_index", "parent", "root")
     def __init__(self, *args, **kwargs):
+        _controls.append(self)
         self.child_controls = []
+        self.z_index = 0
         self.self_storage.append(self)
+        self.margin_left = 0
+        self.margin_bottom = 0
+        self.metadata = {}
+        self.root = None
+        self.init_scale = control_scale
+        self.parent = None
+        if __class__ == Control:
+            self.x, self.y, self.scale_x, self.scale_y = 0, 0, 1, 1
         self._ready(*args, **kwargs)
+    def set_meta(self, name: str, v):
+        self.metadata[name] = v
+
+    def has_meta(self, name: str):
+        return name in self.metadata
+
+    def get_meta(self, name: str):
+        return self.metadata.get(name)
 
     def _ready(self, *args, **kwargs):
         pass
 
     def add_child(self, control: "Control"):
+        if self.root is None:
+            queue = deque(control.child_controls + [control])
+            while queue:
+                ctrl = queue.popleft()
+                ctrl.root = self
+                queue.extend(ctrl.child_controls)
+
         control.local_x = control.x
+        control.parent = self
         control.local_y = control.y
         self.child_controls.append(control)
     def add_children(self, *args: tuple["Control"]):
         for control in args:
-            control.local_x = control.x
-            control.local_y = control.y
-            self.child_controls.append(control)
+            self.add_child(control)
+
+    @staticmethod
+    def _draw_stage_exited():
+      #  super()._draw_stage_exited()
+        glColor4f(1, 1, 1, 1)
 
     @staticmethod
     def _draw_stage_entered():
         pass
-
-    @staticmethod
-    def _draw_stage_exited():
-        glColor4f(1, 1, 1, 1)
 
     def __contains__(self, item):
         return item in self.child_controls
@@ -62,13 +106,14 @@ class Control:
     def _after_draw(self):
         glPopMatrix()
     def draw(self):
-        self._before_draw()
-        self._draw()
-        self._after_draw()
-
         for child in self.child_controls:
             child.x = child.local_x + self.x
             child.y = child.local_y + self.y
+
+        if cull(self):
+            self._before_draw()
+            self._draw()
+            self._after_draw()
 
     def _draw(self):
         pass
@@ -76,12 +121,13 @@ class Control:
         pass
     def free(self):
         self._free()
+        _controls.remove(self)
         self.self_storage.remove(self)
 
 bitmaps = {}
 
-def _make_text_bitmap(text: str, font_path: str, font_size: int, color=(1.0,1.0,1.0,1.0), margin=0):
-    args = (text, font_path, font_size, *color, margin)
+def _make_text_bitmap(text: str, font_path: str, font_size: int, margin=0):
+    args = (text, font_path, font_size, margin)
     if args in bitmaps: return bitmaps[args]
 
     font = ImageFont.truetype(font_path, font_size)
@@ -95,7 +141,7 @@ def _make_text_bitmap(text: str, font_path: str, font_size: int, color=(1.0,1.0,
 
     image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
-    draw.text((0, 0), text, font=font, fill=tuple(int(i*255) for i in color))
+    draw.text((0, 0), text, font=font, fill=(255,255,255,255))
 
     raw_bytes = image.tobytes("raw", "RGBA", 0, -1)
 
@@ -120,9 +166,10 @@ class Label(Control):
 
     @text.setter
     def text(self, value: str):
+        value = value.lower()
         self._text = value
         self.width, self.height, self.raw = _make_text_bitmap(self._text,
-        os.path.abspath("../main/shaders/Pixel Emulator.otf"), 25, self.color,
+        os.path.abspath("../main/shaders/Pixel Emulator.otf"), 25,
         margin=10)
 
     @text.getter
@@ -132,14 +179,19 @@ class Label(Control):
     def _ready(self, text, x:int, y:int, scale: tuple = (1.0, 1.0), color: tuple = (1.0, 1.0, 1.0, 1.0)):
         self.color = color; self.scale_x, self.scale_y = scale[0]*control_scale, scale[1]*control_scale
         self._text = ""
-        self.text, self.x, self.y = text, int(x), int(y)
+        self.text, self.x, self.y = text.lower(), int(x), int(y)
+        self.z_index = 1
     def _before_draw(self):
         pass
+        #glColor4f(*self.color)
     def _after_draw(self):
         pass
         #glPopMatrix()
     def _draw(self):
-        glPushAttrib(GL_PIXEL_MODE_BIT)
+        glColor4f(*self.color)
+        glPushAttrib(GL_PIXEL_MODE_BIT | 0x00000010)#GL_PIXEL_TRANSFER_BIT)
+        glPixelTransferf(GL_RED_SCALE, self.color[0]); glPixelTransferf(GL_GREEN_SCALE, self.color[1])
+        glPixelTransferf(GL_BLUE_SCALE, self.color[2]); glPixelTransferf(GL_ALPHA_SCALE, self.color[3])
         glPixelZoom(self.scale_x, self.scale_y)
         glRasterPos2i(int(self.x), int(self.y))
         glDrawPixels(self.width, self.height, GL_RGBA, GL_UNSIGNED_BYTE, self.raw)
@@ -147,6 +199,7 @@ class Label(Control):
 
 class ColorRect(Control):
     self_storage = []
+
     def _ready(self, x, y, size: tuple = (1.0, 1.0),
                color: tuple = (1.0, 1.0, 1.0, 1.0),
                outline_width: float = 0,
@@ -165,10 +218,16 @@ class ColorRect(Control):
     @staticmethod
     def _draw_stage_exited():
         #print("END")
+    #    print(__class__.is_draw_stage())
+        #  super()._draw_stage_exited
         glEnd()
 
-        for self in __class__.self_storage:
+        for self in __class__.buffer:
             if self.outline_width == 0: continue
+            if cull(self):
+                pass
+            else:
+                continue
 
             width = self.outline_width
             glLineWidth(width)
@@ -223,18 +282,19 @@ def default_call(from_button: "Button"):
     pass
     #print(from_button)
 
+from math import floor
 class ScrollContainer(Control):
     self_storage = []
     def _ready(self, x: int, y: int, size: tuple[int, int], padding: int = 10, direction: str = "v"):
-        self.x, self.y, self.scale_x, self.scale_y = int(x * control_scale), int(y * control_scale), size[0], size[1]
-        self.child_controls = []
-        self.value = 0.0
-        self.padding = padding
-        self.direction = direction
-        self.smooth_scroll = False
-        self.scroll_k = -160.0
-        self._value_target = 0.0
+        self.x, self.y, self.scale_x, self.scale_y = int(x * control_scale), int(y * control_scale), size[0] * control_scale, size[1] * control_scale
+        self.child_controls = []; self.value = 0.0
+        self.padding = padding * control_scale; self.direction = direction
+        self.smooth_scroll = False; self.child_pixels = 0
+        self.scroll_k = -500.0; self._value_target = 0.0
         self.scroll_lerp_speed = 20.0
+        self.scroll_enabled = True; self.value_mapped = 0
+        self.snap = 0
+        self._prev = 0
 
     @staticmethod
     def _draw_stage_entered():
@@ -250,28 +310,46 @@ class ScrollContainer(Control):
     def _after_draw(self):
         pass
 
-    def scroll(self, v: float):
-        if self.smooth_scroll:
-            self._value_target += v
-            self._value_target = variant.clamp(self._value_target, 0.0, 1.0)
-        else:
-            self.value += v
-            self.value = variant.clamp(self.value, 0.0, 1.0)
+    def scroll(self, delta_px: float):
+        scroll_range = max(self.child_pixels, 0)
 
-    def _draw(self):
-        self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y)
+        raw_off = self._prev * scroll_range + delta_px / self.child_pixels * 500.0
+
+        if self.snap > 0:
+            snapped = raw_off#floor(raw_off / self.snap) * self.snap
+        else:
+            snapped = raw_off
+
+        snapped = variant.clamp(snapped, 0, scroll_range)
+
+        self._value_target = (snapped / scroll_range) if scroll_range > 0 else 0.0
+        self._prev = self._value_target
+
+
+
+    def _scroll_process(self):
+        self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 100)
         #print()
         if self.smooth_scroll:
             self.value = variant.lerp(self.value, self._value_target, mainloop.delta_time * self.scroll_lerp_speed)
+        else:
+            self.value = self._value_target
+        self.value_mapped = self.value * -(self.child_pixels - self.scale_x + 20)# * self.init_scale
+
+    def _draw(self):
+      #  print(self.child_pixels, self.scale_x)
+        if self.scroll_enabled and self.child_pixels > self.scale_x:
+            self._scroll_process()
         h = self.direction == "h"
-        caret = 0#self.x if h else self.y
+        caret = 0
         for control in self.child_controls:
             if h:
-                control.local_x = caret + self.value * self.scale_x
+                control.local_x = caret + self.value_mapped
                 caret += control.scale_x
             else:
-                control.local_y = caret + self.value * self.scale_y
+                control.local_y = caret + self.value_mapped
                 caret += control.scale_y
+            self.child_pixels = caret
             caret += self.padding
 
 
@@ -293,25 +371,30 @@ class Button(ColorRect):
         self.add_child(label)
         label.local_x = int(label.x*control_scale); label.y = int(label.y*control_scale)
         #label.local_y += int(x*control_scale); label.y += int(y*control_scale)
-        self.press_state_update = press_state_update
+        self.press_state_update = press_state_update; self.press_state = PressState.RELEASED
         self.color_hovered, self.color_pressed = color_hovered, color_pressed
-        self.color_default = color
-        self.mouse_in = False
+        self.color_default = color; self.mouse_in = False
+        self.stay_pressed = False
+    def reset(self):
         self.press_state = PressState.RELEASED
 
     def _draw(self):
         screen_pos = mainloop.screen_mouse_position
         pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
+
         self.mouse_in = self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y
 
-        if self.mouse_in:
+        if self.mouse_in or (self.stay_pressed and self.press_state == PressState.JUST_PRESSED):
             self.color = self.color_hovered if self.press_state != PressState.PRESSED else self.color_pressed
+
+            if self.stay_pressed and self.press_state == PressState.JUST_PRESSED:
+                self.color = self.color_pressed
+                super()._draw(); return
         else:
             self.color = self.color_default
 
 
-        if mainloop.mouse_just_pressed and self.mouse_in and (self.press_state == PressState.PRESSED or self.press_state == PressState.JUST_PRESSED):
-
+        if mainloop.mouse_just_pressed and self.mouse_in and (self.press_state == PressState.RELEASED or self.press_state == PressState.JUST_RELEASED):
             self.press_state = PressState.JUST_PRESSED
         elif mainloop.mouse_pressed and self.mouse_in:
             self.press_state = PressState.PRESSED
@@ -320,6 +403,7 @@ class Button(ColorRect):
         else:
             self.press_state = PressState.RELEASED
         self.press_state_update(self)
+
 
         super()._draw()
 
@@ -356,8 +440,6 @@ _id_vbo = None
 _id_buffer = None
 
 _program = None
-_uProj = None
-_uPointSize = None
 
 def compile_shader(src: str, kind: int):
     sh = glCreateShader(kind)
@@ -368,13 +450,17 @@ def compile_shader(src: str, kind: int):
     return sh
 
 
-def link_program(vs, fs):
+uniforms_locations = {}
+def link_program(vs, fs, get_uniforms=None):
     prog = glCreateProgram()
     glAttachShader(prog, vs)
     glAttachShader(prog, fs)
     glLinkProgram(prog)
     if glGetProgramiv(prog, GL_LINK_STATUS) != GL_TRUE:
         raise RuntimeError(glGetProgramInfoLog(prog).decode())
+    if not get_uniforms is None:
+        for uniform in get_uniforms:
+            uniforms_locations[uniform] = glGetUniformLocation(prog, uniform.encode("utf-8"))
     return prog
 
 def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
@@ -404,22 +490,23 @@ def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
 
     return new_chunk
 
-
+prev_len = 0
+sorted_controls = []
 def _ready():
+    glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE)
     # for control_type in [Control, Label, ColorRect, Button, ScrollContainer]:
     #     _control_types[control_type] = control_type.self_storage
+    glClearColor(0.3, 0.3, 0.3, 1)
 
-    global _program, _uProj, _uPointSize, _pos_vbo, _id_vbo, _id_buffer
+    global _program, _pos_vbo, _id_vbo, _id_buffer
     glut.glutInit()
 
     vs = compile_shader(variant.read_asset("shaders/vertex.glsl"), GL_VERTEX_SHADER)
     fs = compile_shader(variant.read_asset("shaders/fragment.glsl"), GL_FRAGMENT_SHADER)
-    _program = link_program(vs, fs)
+    _program = link_program(vs, fs, ["uProj", "uPointSize"])
     glDeleteShader(vs)
     glDeleteShader(fs)
 
-    _uProj = glGetUniformLocation(_program, b"uProj")
-    _uPointSize = glGetUniformLocation(_program, b"uPointSize")
     proj = np.array([
         [2.0/WINDOW_WIDTH, 0,               0, -1],
         [0,                2.0/WINDOW_HEIGHT,0, -1],
@@ -427,8 +514,8 @@ def _ready():
         [0,                0,               0,  1]
     ], dtype=np.float32)
     glUseProgram(_program)
-    glUniformMatrix4fv(_uProj, 1, GL_TRUE, proj.flatten())
-    glUniform1f(_uPointSize, PIXEL_SIZE)
+    glUniformMatrix4fv(uniforms_locations["uProj"], 1, GL_TRUE, proj.flatten())
+    glUniform1f(uniforms_locations["uPointSize"], PIXEL_SIZE)
     glUseProgram(0)
 
     _init_tile_offsets()
@@ -453,7 +540,24 @@ def _ready():
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glEnable(GL_PROGRAM_POINT_SIZE)
 
-def _process(delta: float):
+
+_gradients = []
+def create_gradient(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft = (0,0,0,1), botleft = (0,0,0,1)):
+    _gradients.append((x,y,w,h,topright,botright,topleft,botleft))
+
+
+def draw_gradient(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft = (0,0,0,1), botleft = (0,0,0,1)):
+    glColor4f(*botleft)
+    glVertex2f(x,y)
+    glColor4f(*botright)
+    glVertex2f(x+w,y)
+    glColor4f(*topright)
+    glVertex2f(x+w,y+h)
+    glColor4f(*topleft)
+    glVertex2f(x,y+h)
+
+
+def _draw_chunk_pass():
     global _id_buffer
     glClear(GL_COLOR_BUFFER_BIT)
     glUseProgram(_program)
@@ -476,6 +580,9 @@ def _process(delta: float):
     glBindBuffer(GL_ARRAY_BUFFER, 0)
     glUseProgram(0)
 
+
+
+def _draw_control_pass():
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
     glLoadIdentity()
@@ -488,25 +595,58 @@ def _process(delta: float):
 
     glColor4f(1.0, 1.0, 1.0, 1.0)
 
-    for control_type in [ColorRect,Button,Label,ScrollContainer]:
-        if len(control_type.self_storage) == 0: continue
-        c: type = control_type; c._draw_stage_entered()
-        for control in _control_types[control_type]:
+    if len(_controls) > 0:
+        global sorted_controls, prev_len
+        if len(_controls) != prev_len:
+            sorted_controls = sorted(_controls, key=lambda control: (control.z_index, id(control.__class__)))
+        prev_len = len(_controls)
+        sort = sorted_controls
+
+        prev_class = None
+        for control in sort:
+            if not control is ScrollContainer and (not cull(control) and not control.child_controls):
+                continue
+            c: type = control.__class__
+            if prev_class is None or prev_class != c:
+                if prev_class is not None: prev_class._draw_stage_exited(); prev_class.buffer.clear()
+                c._draw_stage_entered()
+            prev_class = c
             control.draw()
-        c._draw_stage_exited()
+            c.buffer.append(control)
+
+        if prev_class is not None:
+            prev_class._draw_stage_exited()
+            prev_class.buffer.clear()
 
 
+def _draw_gradient_pass():
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, -1, 1)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+
+    glBegin(GL_QUADS)
+    for gradient in _gradients:
+        draw_gradient(gradient[0],gradient[1],gradient[2],gradient[3],gradient[4],gradient[5],gradient[6],gradient[7])
+    glEnd()
 
     glPopMatrix()
 
+
+def _draw_matrix_clear():
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
 
     glMatrixMode(GL_MODELVIEW)
 
-    # for control_type in [Label]:
-    #     if len(control_type.self_storage) == 0: continue
-    #     c: type = control_type; c._draw_stage_entered()
-    #     for control in _control_types[control_type]:
-    #         control.draw()
-    #     c._draw_stage_exited()
+
+
+def _process(delta: float):
+    _draw_chunk_pass()
+    _draw_control_pass()
+    _draw_gradient_pass()
+    _draw_matrix_clear()
+
+

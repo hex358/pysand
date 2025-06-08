@@ -71,12 +71,12 @@ def input_poll():
     global mouse_pressed, prev_pressed
     global SELECTED_TYPE, index, mouse_scroll_y
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_a] and not prev_pressed:
-        index += 1
-        if index >= len(select_types): index = 0
-        SELECTED_TYPE = select_types[index]
-    prev_pressed = keys[pygame.K_a]
+    # keys = pygame.key.get_pressed()
+    # if keys[pygame.K_a] and not prev_pressed:
+    #     index += 1
+    #     if index >= len(select_types): index = 0
+    #     SELECTED_TYPE = select_types[index]
+    # prev_pressed = keys[pygame.K_a]
 
     mouse_just_pressed = False
     mouse_scroll_y = 0

@@ -4,7 +4,7 @@ chunk_manager = None
 element_storage = None
 element_processor = None
 get_cell = None
-CELL_INDEX: int = 1
+CELL_INDEX: int = 7
 
 def update(chunk, x: int, y: int):
     bottom = chunk.get_cell(x,y-1)
@@ -12,9 +12,9 @@ def update(chunk, x: int, y: int):
     #pos = (x, y)
     #keep_alive_list = ((x-1,y),(x,y),(x+1,y))
 
-    if bottom in element_storage.soft:
+    if bottom == 0:
         do_skip_over = False
-        if chunk.set_cell(x,y - 1,1):
+        if chunk.set_cell(x,y - 1,7):
             chunk.set_cell(x, y, bottom)
             #pos = (x,y-1)
             # keep_alive_list.append((x-1,y))
@@ -26,8 +26,8 @@ def update(chunk, x: int, y: int):
         left = chunk.get_cell(x - 1,y - 1)
         if left in element_storage.soft and chunk.get_cell(x - 1,y) in element_storage.soft:
             do_skip_over = False
-            if randint(0,10) > 6:
-                if chunk.set_cell(x - 1, y - 1, 1):
+            if randint(0,11) > 9:
+                if chunk.set_cell(x - 1, y - 1, 7):
                     chunk.set_cell(x,y,left)
                     #pos = (x - 1, y - 1)
             # chunk.unskip()
@@ -37,8 +37,8 @@ def update(chunk, x: int, y: int):
             right = chunk.get_cell(x + 1,y - 1)
             if right in element_storage.soft and chunk.get_cell(x + 1,y) in element_storage.soft:
                 do_skip_over = False
-                if randint(0, 10) > 6:
-                    if chunk.set_cell(x + 1, y - 1, 1):
+                if randint(0, 11) > 9:
+                    if chunk.set_cell(x + 1, y - 1, 7):
                         chunk.set_cell(x, y, right)
                        # pos = (x + 1, y - 1)
                 # chunk.unskip()
