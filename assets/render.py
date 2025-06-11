@@ -1,3 +1,4 @@
+import sys
 
 USE_MODULES = ["mainloop", "variant"]
 PIXEL_SIZE = None
@@ -607,7 +608,7 @@ def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
 
     return new_chunk
 
-prev_len = 0
+prev_control_count = 0
 sorted_controls = []
 def _ready():
     re.flush()
@@ -621,22 +622,8 @@ def _ready():
     global _program, _pos_vbo, _id_vbo, _id_buffer
     glut.glutInit()
 
-    vs = compile_shader(variant.read_asset("shaders/vertex.glsl"), GL_VERTEX_SHADER)
-    fs = compile_shader(variant.read_asset("shaders/fragment.glsl"), GL_FRAGMENT_SHADER)
-    _program = link_program(vs, fs, ["uProj", "uPointSize"])
-    glDeleteShader(vs)
-    glDeleteShader(fs)
-
-    proj = np.array([
-        [2.0/WINDOW_WIDTH, 0,               0, -1],
-        [0,                2.0/WINDOW_HEIGHT,0, -1],
-        [0,                0,              -1,  0],
-        [0,                0,               0,  1]
-    ], dtype=np.float32)
-    glUseProgram(_program)
-    glUniformMatrix4fv(uniforms_locations["uProj"], 1, GL_TRUE, proj.flatten())
-    glUniform1f(uniforms_locations["uPointSize"], PIXEL_SIZE)
-    glUseProgram(0)
+    plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
+    _program = plane.program_id
 
     _init_tile_offsets()
 
@@ -666,7 +653,7 @@ def create_gradient(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft
     _gradients.append((x,y,w,h,topright,botright,topleft,botleft))
 
 
-def draw_gradient(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft = (0,0,0,1), botleft = (0,0,0,1)):
+def draw_colored_quad(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft = (0,0,0,1), botleft = (0,0,0,1)):
     glColor4f(*botleft)
     glVertex2f(x,y)
     glColor4f(*botright)
@@ -677,45 +664,85 @@ def draw_gradient(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft =
     glVertex2f(x,y+h)
 
 compiled_shaders = {}
+compiled_programs = {}
 
 import reimport as re
-@re.reimport(True, variant=variant)
+@re.reimport("render", variant=variant)
 class ShaderPlane:
-    __slots__ = ("program_id", "uniforms", "vs_path", "fs_path", "uniform_changes_enqueued", "uniform_type_map")
-    def set_shader_parameter(self, name: str, value: str):
-        self.uniform_changes_enqueued[name] = value
-    def set_parameter_type(self, name: str, type_call_name: str):
-        pass
+    __slots__ = ("program_id", "uniforms", "vs_path", "fs_path", "uniform_changes_enqueued", "uniform_type_map", "vao", "vbo")
+    def set_shader_parameter(self, name: str, *values):
+        self.uniform_changes_enqueued[name] = values
+    def set_shader_parameter_type(self, name: str, type_call_name: str):
+        self.uniform_type_map[name] = getattr(sys.modules["render"], type_call_name)
 
     def set_uniforms(self):
-        for name in self.uniform_changes_enqueued:
-            uniform_type_map.get(name, glUniform1f)(self.uniforms[name], )
+        #1, GL_TRUE, proj.flatten()
+        for name, values in self.uniform_changes_enqueued.items():
+            self.uniform_type_map.get(name, glUniform1f)(self.uniforms[name], *values)
         self.uniform_changes_enqueued.clear()
 
-    def __init__(self, vs_path, fs_path, get_uniforms = None, shader_reuse: bool = False):
+    def generate_buffers(self, x,y,w,h):
+        quad = np.array([
+            # x, y,   r, g, b, a
+            x,   y,   1, 1, 1, 1,
+            x+w, y,   1, 1, 1, 1,
+            x+w, y+h, 1, 1, 1, 1,
+            x,   y+h, 1, 1, 1, 1,
+        ], dtype=np.float32)
+
+        self.vao = glGenVertexArrays(1)
+        self.vbo = glGenBuffers(1)
+
+        glBindVertexArray(self.vao)
+        glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
+        glBufferData(GL_ARRAY_BUFFER, quad.nbytes, quad, GL_STATIC_DRAW)
+
+        glEnableVertexAttribArray(0)
+        glVertexAttribPointer(0, 2, GL_FLOAT, False, 6 * 4, ctypes.c_void_p(0))
+        glEnableVertexAttribArray(1)
+        glVertexAttribPointer(1, 4, GL_FLOAT, False, 6 * 4, ctypes.c_void_p(2 * 4))
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        glBindVertexArray(0)
+
+    def __init__(self, vs_path, fs_path, get_uniforms = None, program_reuse_name: str = "", x=0, y=0, w=200, h=200):
         get_uniforms = ["uPointSize", "uProj"] if get_uniforms is None else get_uniforms + ["uPointSize", "uProj"]
         self.uniforms, self.uniform_changes_enqueued = {}, {}
+        self.generate_buffers(x,y,w,h)
         self.uniform_type_map = {"uProj": glUniformMatrix4fv, "uPointSize": glUniform1f}
 
-        shader_map = compiled_shaders if shader_reuse else {}
-        vs = shader_map.setdefault(vs_path, compile_shader(variant.read_asset(vs_path), GL_VERTEX_SHADER))
-        fs = shader_map.setdefault(fs_path, compile_shader(variant.read_asset(fs_path), GL_FRAGMENT_SHADER))
+        shader_map = compiled_shaders
+        if not vs_path in shader_map:
+            shader_map[vs_path] = compile_shader(variant.read_asset(vs_path), GL_VERTEX_SHADER)
+        vs = shader_map[vs_path]
 
-        self.program_id = link_program(vs, fs, get_uniforms, self.uniforms)
-        glDeleteShader(vs)
-        glDeleteShader(fs)
+        if not fs_path in shader_map:
+            shader_map[fs_path] = shader_map.setdefault(fs_path, compile_shader(variant.read_asset(fs_path), GL_FRAGMENT_SHADER))
+        fs = shader_map[fs_path]
+
+        program_map = compiled_programs if program_reuse_name else {}
+
+        if not program_reuse_name in program_map:
+            program_map[program_reuse_name] = link_program(vs, fs, get_uniforms, self.uniforms), self.uniforms, self.uniform_type_map
+        self.program_id, self.uniforms, self.uniform_type_map = program_map[program_reuse_name]
+
         proj = np.array([
             [2.0 / WINDOW_WIDTH, 0, 0, -1],
             [0, 2.0 / WINDOW_HEIGHT, 0, -1],
             [0, 0, -1, 0],
             [0, 0, 0, 1]
         ], dtype=np.float32)
+        self.set_shader_parameter("uProj", 1, GL_TRUE, proj.flatten())
+        self.set_shader_parameter("uPointSize", PIXEL_SIZE)
+
         glUseProgram(self.program_id)
         self.set_uniforms()
         glUseProgram(0)
 
     def _process(self):
-        pass
+        self.set_uniforms()
+        glBindVertexArray(self.vao)
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4)
 
 
 shader_planes: list[ShaderPlane] = []
@@ -724,11 +751,27 @@ shader_planes: list[ShaderPlane] = []
 def add_shader_plane(plane: ShaderPlane):
     shader_planes.append(plane)
 
+
+prev_plane_count = 0
+sorted_planes = []
 def _shader_plane_pass():
-    for plane in shader_planes:
+    if not shader_planes: return
+    global prev_plane_count, sorted_planes
+
+    if prev_plane_count != len(shader_planes):
+        prev_plane_count = len(shader_planes)
+        sorted_planes = sorted(shader_planes, key=lambda plane: plane.program_id)
+
+
+    for plane in sorted_planes:
         glUseProgram(plane.program_id)
 
+
+        #draw_colored_quad(0,0,900,900,(1,1,1,1),(1,1,1,1),(1,1,1,1),(1,1,1,1))
+
+        plane._process()
     glUseProgram(0)
+    glBindVertexArray(0)
 
 
 def _draw_chunk_pass():
@@ -770,10 +813,10 @@ def _draw_control_pass():
     glColor4f(1.0, 1.0, 1.0, 1.0)
 
     if len(_controls) > 0:
-        global sorted_controls, prev_len
-        if len(_controls) != prev_len:
+        global sorted_controls, prev_control_count
+        if len(_controls) != prev_control_count:
             sorted_controls = sorted(_controls, key=lambda control: (control.z_index, id(control.__class__)))
-        prev_len = len(_controls)
+        prev_control_count = len(_controls)
         sort = sorted_controls
 
         prev_class = None
@@ -803,7 +846,7 @@ def _draw_gradient_pass():
 
     glBegin(GL_QUADS)
     for gradient in _gradients:
-        draw_gradient(gradient[0],gradient[1],gradient[2],gradient[3],gradient[4],gradient[5],gradient[6],gradient[7])
+        draw_colored_quad(*gradient)#[0],gradient[1],gradient[2],gradient[3],gradient[4],gradient[5],gradient[6],gradient[7])
     glEnd()
 
     glPopMatrix()
@@ -819,9 +862,9 @@ def _draw_matrix_clear():
 
 def _process(delta: float):
     _draw_chunk_pass()
+    _shader_plane_pass()
     _draw_control_pass()
     _draw_gradient_pass()
-    _shader_plane_pass()
     _draw_matrix_clear()
 
 

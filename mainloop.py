@@ -74,9 +74,9 @@ def input_poll():
     global mouse_pressed, prev_pressed
     global SELECTED_TYPE, index, mouse_scroll_y
 
-    key = pygame.key.get_pressed()
-    if key[pygame.K_a]:
-        render.ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
+    #key = pygame.key.get_pressed()
+    # if key[pygame.K_a]:
+    #     render.ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
 
     mouse_just_pressed = False
     mouse_scroll_y = 0

@@ -26,8 +26,9 @@ modules_dict = {}
 
 hover = None
 buttons = {}
+
+plane = None
 def _ready() -> None:
-    global hover
     global label
     global prev_pos
     prev_pos = Vector2(0, 0, i=True)
@@ -35,16 +36,9 @@ def _ready() -> None:
     label.z_index = 5
     ox, oy = CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[0], CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[1]
 
-    hover = render.ColorRect(
-        ox,oy,
-        (5,5),
-        (1,1,1,0.5),
-    )
-    hover.z_index = 13
-
     rect2 = render.ColorRect(
-        ox - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
-        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + 2*PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] + PIXEL_SIZE*0.4 + 0.4*PIXEL_SIZE + PIXEL_SIZE - oy),
+        ox - PIXEL_SIZE*1.333,oy - PIXEL_SIZE*1.333,
+        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + PIXEL_SIZE*2, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] - oy + PIXEL_SIZE*2),
         (0,0,0,0),PIXEL_SIZE,(0.7,0.7,0.7,1),offsets_fix=1
     )
 
@@ -140,6 +134,17 @@ def _ready() -> None:
     texture.z_index = 9
     texture.scale_x = 1.5
     texture.scale_y = 1.5
+
+    global plane
+    #ox - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
+    plane = render.ShaderPlane("shaders/hovers_vertex.glsl", "shaders/hovers_fragment.glsl",
+                               get_uniforms=["mousePos"],
+                               x = rect2.x,
+                               y = rect2.y,
+                               w = rect2.scale_x,
+                               h = rect2.scale_y)
+    render.add_shader_plane(plane)
+    plane.set_shader_parameter_type("mousePos", "glUniform2f")
 
     # buttons["sel"] = render.Button(
     #     700,117,
@@ -238,7 +243,7 @@ def load_button(button):
 
 
 fps_log: list[int] = []
-window_size = 15
+window_size = 70
 
 WINDOW_HEIGHT = None
 WINDOW_WIDTH = None
@@ -270,7 +275,10 @@ def pen(delta:float):
     # - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
 
     display_pos = Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
-    hover.x, hover.y = math.floor(display_pos.x / PIXEL_SIZE) * PIXEL_SIZE - 0.4*PIXEL_SIZE, math.floor(display_pos.y / PIXEL_SIZE) * PIXEL_SIZE - 0.3*PIXEL_SIZE
+    plane.set_shader_parameter("mousePos",
+    display_pos.x,
+    display_pos.y)
+    #hover.x, hover.y = math.floor(display_pos.x / PIXEL_SIZE) * PIXEL_SIZE - 0.4*PIXEL_SIZE, math.floor(display_pos.y / PIXEL_SIZE) * PIXEL_SIZE - 0.3*PIXEL_SIZE
 
     if mainloop.mouse_pressed:
         prev_pressed = True
