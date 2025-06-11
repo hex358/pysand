@@ -17,11 +17,7 @@ burnables: dict[int] = {4: 10}
 solids: set[int] = {9,3,4}
 soft: set[int] = {0,2,6}
 skip: set[int] = {0,9,3,4}
-gases: set[int] = {6}
-
-def clear(c):
-    for call in clears.values():
-        call(c)
+gases: set[int] = {6, 0}
 
 clears = {}
 def _ready() -> None:
