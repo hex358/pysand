@@ -1,10 +1,9 @@
-import chunk_manager
-import mainloop
 
 USE_MODULES = ["mainloop", "variant"]
 PIXEL_SIZE = None
 variant = None
 CHUNK_SIZE = 16
+mainloop = None
 Input = None
 WINDOW_WIDTH = None
 WINDOW_HEIGHT = None
@@ -21,7 +20,7 @@ _control_types: dict = {}
 
 
 def cull(self):
-
+    if not self.visible: return False
     xmin, ymin, xmax, ymax = 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT
     scale_x, scale_y = self.scale_x, self.scale_y
     if self.root.__class__ == ScrollContainer:
@@ -44,7 +43,12 @@ class Control:
                  "scale_x", "scale_y",
                  "color", "child_controls", "local_x",
                  "local_y", "init_scale", "metadata",
-                 "z_index", "parent", "root")
+                 "z_index", "parent", "root",
+                 "visible")
+
+    def hide(self): self.visible = False
+    def show(self): self.visible = True
+
     def __init__(self, *args, **kwargs):
         _controls.append(self)
         self.child_controls = []
@@ -54,6 +58,7 @@ class Control:
         self.margin_bottom = 0
         self.metadata = {}
         self.root = None
+        self.visible = True
         self.init_scale = control_scale
         self.parent = None
         if __class__ == Control:
@@ -127,6 +132,7 @@ class Control:
 bitmaps = {}
 
 def _make_text_bitmap(text: str, font_path: str, font_size: int, margin=0):
+    font_path = os.path.abspath(font_path) if not os.path.isabs(font_path) else font_path
     args = (text, font_path, font_size, margin)
     if args in bitmaps: return bitmaps[args]
 
@@ -169,7 +175,7 @@ class Label(Control):
         value = value.lower()
         self._text = value
         self.width, self.height, self.raw = _make_text_bitmap(self._text,
-        os.path.abspath("../main/shaders/Pixel Emulator.otf"), 25,
+        "../main/shaders/Pixel Emulator.otf", 25,
         margin=10)
 
     @text.getter
@@ -221,6 +227,8 @@ class ColorRect(Control):
     #    print(__class__.is_draw_stage())
         #  super()._draw_stage_exited
         glEnd()
+
+
 
         for self in __class__.buffer:
             if self.outline_width == 0: continue
@@ -295,6 +303,7 @@ class ScrollContainer(Control):
         self.scroll_enabled = True; self.value_mapped = 0
         self.snap = 0
         self._prev = 0
+        self.scroll_bar = None#ColorRect(90,20,(50,10),outline_width=0)
 
     @staticmethod
     def _draw_stage_entered():
@@ -315,12 +324,9 @@ class ScrollContainer(Control):
 
         raw_off = self._prev * scroll_range + delta_px / self.child_pixels * 500.0
 
-        if self.snap > 0:
-            snapped = raw_off#floor(raw_off / self.snap) * self.snap
-        else:
-            snapped = raw_off
+        #snapped = raw_off
 
-        snapped = variant.clamp(snapped, 0, scroll_range)
+        snapped = variant.clamp(raw_off, 0, scroll_range)
 
         self._value_target = (snapped / scroll_range) if scroll_range > 0 else 0.0
         self._prev = self._value_target
@@ -328,7 +334,12 @@ class ScrollContainer(Control):
 
 
     def _scroll_process(self):
-        self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 100)
+        self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 400)
+        if self.scroll_bar is not None:
+            self.scroll_bar.x = variant.lerp(self.x, self.x + self.scale_x - self.scroll_bar.scale_x, self.value)
+            self.scroll_bar.scale_x = (self.scale_x**2 / self.child_pixels)
+            #print(self.scale_x / self.child_pixels)
+        #self.scroll_bar.x = self.scale_x * self.value
         #print()
         if self.smooth_scroll:
             self.value = variant.lerp(self.value, self._value_target, mainloop.delta_time * self.scroll_lerp_speed)
@@ -366,7 +377,7 @@ class Button(ColorRect):
                 color_pressed: tuple = (1.0,1.0,1.0,1.0),
                offsets_fix = 1):
         super()._ready(x, y,size,color,outline_width,outline_color,offsets_fix=offsets_fix)
-        assert(label is not None, "Label can't be None")
+        assert label is not None, "Label can't be None"
         self.label = label
         self.add_child(label)
         label.local_x = int(label.x*control_scale); label.y = int(label.y*control_scale)
@@ -375,6 +386,8 @@ class Button(ColorRect):
         self.color_hovered, self.color_pressed = color_hovered, color_pressed
         self.color_default = color; self.mouse_in = False
         self.stay_pressed = False
+        self.double = False
+        self.held = False
     def reset(self):
         self.press_state = PressState.RELEASED
 
@@ -383,11 +396,18 @@ class Button(ColorRect):
         pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
 
         self.mouse_in = self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y
+        if mainloop.mouse_just_pressed and self.mouse_in and self.held and self.double and self.press_state == PressState.JUST_PRESSED:
+            self.press_state = PressState.JUST_RELEASED
+            self.held = False
+            super()._draw(); return
 
-        if self.mouse_in or (self.stay_pressed and self.press_state == PressState.JUST_PRESSED):
+        if self.mouse_in or ((self.stay_pressed or self.double) and self.press_state == PressState.JUST_PRESSED):
+
             self.color = self.color_hovered if self.press_state != PressState.PRESSED else self.color_pressed
 
-            if self.stay_pressed and self.press_state == PressState.JUST_PRESSED:
+            if (self.stay_pressed or self.double) and self.press_state == PressState.JUST_PRESSED:
+                #print("JFHJFJ")
+                self.held = True
                 self.color = self.color_pressed
                 super()._draw(); return
         else:
@@ -421,6 +441,100 @@ def _init_tile_offsets():
             idx += 1
     _TILE_OFFSETS = coords
 
+textures = {}
+textures: dict[str, tuple[int, int, int]] = {}
+
+_quad_vbo_positions = None
+_quad_vbo_texcoords = None
+
+def _init_quad_vbo():
+    global _quad_vbo_positions, _quad_vbo_texcoords
+    positions = np.array([0, 0,
+                           1, 0,
+                           0, 1,
+                           1, 1], dtype=np.float32)
+    texcoords = np.array([0, 0,
+                          1, 0,
+                          0, 1,
+                          1, 1], dtype=np.float32)
+    _quad_vbo_positions = glGenBuffers(1)
+    glBindBuffer(GL_ARRAY_BUFFER, _quad_vbo_positions)
+    glBufferData(GL_ARRAY_BUFFER, positions.nbytes, positions, GL_STATIC_DRAW)
+
+    _quad_vbo_texcoords = glGenBuffers(1)
+    glBindBuffer(GL_ARRAY_BUFFER, _quad_vbo_texcoords)
+    glBufferData(GL_ARRAY_BUFFER, texcoords.nbytes, texcoords, GL_STATIC_DRAW)
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0)
+
+
+class TextureRect(Control):
+    def _ready(self, path: str, name: str, linear: bool = False):
+        if name in textures:
+            self.texture_id, self.width, self.height = textures[name]
+        else:
+            img_path = os.path.abspath(path) if not os.path.isabs(path) else path
+
+            img = Image.open(img_path).transpose(Image.FLIP_TOP_BOTTOM)
+            img = img.convert("RGBA")
+            self.width, self.height = img.size
+            data = img.tobytes()
+
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+            tex_id = glGenTextures(1)
+            glBindTexture(GL_TEXTURE_2D, tex_id)
+            wrap = GL_CLAMP_TO_EDGE
+            filter_min = GL_LINEAR_MIPMAP_LINEAR if linear else GL_NEAREST
+            filter_mag = GL_LINEAR if linear else GL_NEAREST
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag)
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, self.width, self.height,
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, data)
+            if linear:
+                glGenerateMipmap(GL_TEXTURE_2D)
+
+            glBindTexture(GL_TEXTURE_2D, 0)
+            self.texture_id = tex_id
+            textures[name] = (tex_id, self.width, self.height)
+
+    @staticmethod
+    def _draw_stage_entered():
+        pass
+
+    @staticmethod
+    def _draw_stage_exited():
+        pass
+
+    def _draw(self):
+        glEnable(GL_TEXTURE_2D)
+        glBindTexture(GL_TEXTURE_2D, self.texture_id)
+
+        glPushMatrix()
+        glTranslatef(self.x, self.y, 0)
+        glScalef(self.width * self.scale_x, self.height * self.scale_y, 1)
+
+        glEnableClientState(GL_VERTEX_ARRAY)
+        glBindBuffer(GL_ARRAY_BUFFER, _quad_vbo_positions)
+        glVertexPointer(2, GL_FLOAT, 0, None)
+
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+        glBindBuffer(GL_ARRAY_BUFFER, _quad_vbo_texcoords)
+        glTexCoordPointer(2, GL_FLOAT, 0, None)
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        glDisableClientState(GL_VERTEX_ARRAY)
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY)
+        glPopMatrix()
+
+        glBindTexture(GL_TEXTURE_2D, 0)
+        glDisable(GL_TEXTURE_2D)
+
+
 class RenderChunk:
     __slots__ = ('grid_x', 'grid_y', 'start_index')
     def __init__(self, gx: int, gy: int, start_idx: int):
@@ -451,7 +565,7 @@ def compile_shader(src: str, kind: int):
 
 
 uniforms_locations = {}
-def link_program(vs, fs, get_uniforms=None):
+def link_program(vs, fs, get_uniforms=None, uniform_namespace=uniforms_locations):
     prog = glCreateProgram()
     glAttachShader(prog, vs)
     glAttachShader(prog, fs)
@@ -460,13 +574,16 @@ def link_program(vs, fs, get_uniforms=None):
         raise RuntimeError(glGetProgramInfoLog(prog).decode())
     if not get_uniforms is None:
         for uniform in get_uniforms:
-            uniforms_locations[uniform] = glGetUniformLocation(prog, uniform.encode("utf-8"))
+            uniform_namespace[uniform] = glGetUniformLocation(prog, uniform.encode("utf-8"))
     return prog
 
+render_chunk_origins = {}
 def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
     global _total_count, _render_chunks, _id_buffer
+
     start_idx = _total_count
-    new_chunk = RenderChunk(gx, gy, start_idx)
+    new_chunk = render_chunk_origins.setdefault((gx,gy), RenderChunk(gx, gy, start_idx))
+
     _render_chunks.append(new_chunk)
     _total_count += CHUNK_SIZE * CHUNK_SIZE
 
@@ -493,6 +610,9 @@ def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
 prev_len = 0
 sorted_controls = []
 def _ready():
+    re.flush()
+
+    _init_quad_vbo()
     glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE)
     # for control_type in [Control, Label, ColorRect, Button, ScrollContainer]:
     #     _control_types[control_type] = control_type.self_storage
@@ -555,6 +675,60 @@ def draw_gradient(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), topleft =
     glVertex2f(x+w,y+h)
     glColor4f(*topleft)
     glVertex2f(x,y+h)
+
+compiled_shaders = {}
+
+import reimport as re
+@re.reimport(True, variant=variant)
+class ShaderPlane:
+    __slots__ = ("program_id", "uniforms", "vs_path", "fs_path", "uniform_changes_enqueued", "uniform_type_map")
+    def set_shader_parameter(self, name: str, value: str):
+        self.uniform_changes_enqueued[name] = value
+    def set_parameter_type(self, name: str, type_call_name: str):
+        pass
+
+    def set_uniforms(self):
+        for name in self.uniform_changes_enqueued:
+            uniform_type_map.get(name, glUniform1f)(self.uniforms[name], )
+        self.uniform_changes_enqueued.clear()
+
+    def __init__(self, vs_path, fs_path, get_uniforms = None, shader_reuse: bool = False):
+        get_uniforms = ["uPointSize", "uProj"] if get_uniforms is None else get_uniforms + ["uPointSize", "uProj"]
+        self.uniforms, self.uniform_changes_enqueued = {}, {}
+        self.uniform_type_map = {"uProj": glUniformMatrix4fv, "uPointSize": glUniform1f}
+
+        shader_map = compiled_shaders if shader_reuse else {}
+        vs = shader_map.setdefault(vs_path, compile_shader(variant.read_asset(vs_path), GL_VERTEX_SHADER))
+        fs = shader_map.setdefault(fs_path, compile_shader(variant.read_asset(fs_path), GL_FRAGMENT_SHADER))
+
+        self.program_id = link_program(vs, fs, get_uniforms, self.uniforms)
+        glDeleteShader(vs)
+        glDeleteShader(fs)
+        proj = np.array([
+            [2.0 / WINDOW_WIDTH, 0, 0, -1],
+            [0, 2.0 / WINDOW_HEIGHT, 0, -1],
+            [0, 0, -1, 0],
+            [0, 0, 0, 1]
+        ], dtype=np.float32)
+        glUseProgram(self.program_id)
+        self.set_uniforms()
+        glUseProgram(0)
+
+    def _process(self):
+        pass
+
+
+shader_planes: list[ShaderPlane] = []
+
+
+def add_shader_plane(plane: ShaderPlane):
+    shader_planes.append(plane)
+
+def _shader_plane_pass():
+    for plane in shader_planes:
+        glUseProgram(plane.program_id)
+
+    glUseProgram(0)
 
 
 def _draw_chunk_pass():
@@ -647,6 +821,7 @@ def _process(delta: float):
     _draw_chunk_pass()
     _draw_control_pass()
     _draw_gradient_pass()
+    _shader_plane_pass()
     _draw_matrix_clear()
 
 

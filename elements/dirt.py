@@ -12,7 +12,7 @@ def update(chunk, x: int, y: int):
     #pos = (x, y)
     #keep_alive_list = ((x-1,y),(x,y),(x+1,y))
 
-    if bottom == 0:
+    if bottom in element_storage.gases:
         do_skip_over = False
         if chunk.set_cell(x,y - 1,7):
             chunk.set_cell(x, y, bottom)
@@ -24,7 +24,7 @@ def update(chunk, x: int, y: int):
         # chunk.keep_alive()
     else:
         left = chunk.get_cell(x - 1,y - 1)
-        if left in element_storage.soft and chunk.get_cell(x - 1,y) in element_storage.soft:
+        if left in element_storage.gases:# and chunk.get_cell(x - 1,y) in element_storage.soft:
             do_skip_over = False
             if randint(0,11) > 9:
                 if chunk.set_cell(x - 1, y - 1, 7):
@@ -35,7 +35,7 @@ def update(chunk, x: int, y: int):
 
         else:
             right = chunk.get_cell(x + 1,y - 1)
-            if right in element_storage.soft and chunk.get_cell(x + 1,y) in element_storage.soft:
+            if right in element_storage.gases:# and chunk.get_cell(x + 1,y) in element_storage.soft:
                 do_skip_over = False
                 if randint(0, 11) > 9:
                     if chunk.set_cell(x + 1, y - 1, 7):

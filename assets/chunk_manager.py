@@ -1,3 +1,4 @@
+import pickle
 from multiprocessing import shared_memory, Manager
 import numpy as np
 
@@ -5,8 +6,8 @@ USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
 
 CHUNK_SIZE = 12
-UPDATES_PER_SECOND = 60
-RENDERS_PER_SECOND = 60
+UPDATES_PER_SECOND = 80
+RENDERS_PER_SECOND = 80
 MAX_UPDATE_INTENSITY = 3.0
 WINDOW_WIDTH = None
 WINDOW_HEIGHT = None
@@ -17,7 +18,6 @@ mainloop = None
 render = None
 variant = None
 
-empty = np.zeros((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
 DATA_LEN: int = CHUNK_SIZE * CHUNK_SIZE
 
 is_in_bounds = lambda x, y: (x // CHUNK_SIZE, y // CHUNK_SIZE) in chunks
@@ -33,21 +33,21 @@ class Chunk:
     local_is_in_bounds = lambda self, x, y: 0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE
 
 
+    def _loaded_init(self):
+        self.rect = render.ColorRect(
+            self.xo * CHUNK_SIZE * PIXEL_SIZE, self.yo * CHUNK_SIZE * PIXEL_SIZE,
+            (CHUNK_SIZE * PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE),
+            (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
+        )
 
     def __init__(self, xo: int, yo: int):
-        #self.element_processor = element_storage.create_element_processor(chunk=self)
         self.xo, self.yo = xo, yo
-        self.data = np.ndarray((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
-        self.data.fill(0)
-        # self.data_swap = np.ndarray((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
-        # self.data_swap.fill(0)
-        #self.to_swap: list[tuple[int, int, int]] =
-        # []
+        self.data = np.zeros((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint16)
         self.prev = np.zeros_like(self.data)
+
         self.render_chunk = render.add_chunk(xo, yo, self.data)
         self.visited = set([])
         self.merge_visited = set([])
-        self.merge_prev = {}
         self.rect = render.ColorRect(
         xo*CHUNK_SIZE*PIXEL_SIZE,yo*CHUNK_SIZE*PIXEL_SIZE,
         (CHUNK_SIZE*PIXEL_SIZE,CHUNK_SIZE*PIXEL_SIZE),
@@ -124,7 +124,6 @@ class Chunk:
         if self.is_visited(x,y):
             return False
         self.visited.add((x, y))
-        total_visited.add((x,y))
         if self.local_is_in_bounds(x, y):
             #if not (x,y) in self.visited:
             self.data[y, x] = val
@@ -153,6 +152,7 @@ class Chunk:
         self.prev = self.data.copy()
 
         for x in range(CHUNK_SIZE):
+            x = x if ticks % 2 == 0 else CHUNK_SIZE-x-1
             for y in range(CHUNK_SIZE):
                 if (x,y) in self.visited: continue
                 current = self.prev[y,x]
@@ -168,38 +168,23 @@ class Chunk:
 
 
 def clear_all():
-    for i in chunks:
-        chunks[i].data.fill(0)
-        chunks[i].keep_alive()
-
-total_visited = set([])
+    for c in chunks:
+        chunks[c].data.fill(0)
+        chunks[c].keep_alive()
 
 
 def make_snapshot() -> bytearray:
-    buff = bytearray()
-    for c in chunks:
-        ints = bytearray()
-        buff.append(chunks[c].xo); buff.append(chunks[c].yo)
-        for i in range(CHUNK_SIZE * CHUNK_SIZE):
-            ints.append(chunks[c].data[i // CHUNK_SIZE, i % CHUNK_SIZE])
-        buff.extend(ints)
-    return buff
+    return pickle.dumps(chunks)
 
 
 def apply_snapshot(snapshot: bytearray):
-    shape = (CHUNK_SIZE, CHUNK_SIZE)
-    chunk_size = CHUNK_SIZE * CHUNK_SIZE + 2
+    global chunks
+    chunks = pickle.loads(snapshot)
+    for c in chunks:
+        chunks[c].keep_alive()
+        chunks[c].render_chunk = render.add_chunk(*c, chunks[c].data)
+        chunks[c]._loaded_init()
 
-    for i in range(0, len(snapshot), chunk_size):
-        xo = snapshot[i]
-        yo = snapshot[i + 1]
-        array = np.zeros(shape, dtype=np.uint8)
-        for j in range(CHUNK_SIZE * CHUNK_SIZE):
-            array[j // CHUNK_SIZE, j % CHUNK_SIZE] = snapshot[i + 2 + j]
-
-        chunk = chunks.setdefault((xo, yo), Chunk(xo, yo))
-        chunk.data = array
-        chunk.keep_alive()
 
 
 
@@ -243,31 +228,30 @@ prev_len = 0
 to_render: set[Chunk] = set([])
 update_tick: bool = False
 update_calls = None
+ticks = 0
 CHUNKS_RECT = None
 
 def _ready() -> None:
-    global manager
-    manager = Manager()
     for x in range(CHUNKS_RECT[0],CHUNKS_RECT[2]):
         for y in range(CHUNKS_RECT[1],CHUNKS_RECT[3]):
             chunks[(x, y)] = Chunk(x, y)
+
+
 
 def _process(delta: float) -> None:
     global render_timestamp, timestamp, update_delta, update_tick
 
     if mainloop.time_passed - timestamp > 1 / UPDATES_PER_SECOND:
+        global ticks
         update_delta = mainloop.time_passed - timestamp
-        total_visited.clear()
         timestamp = mainloop.time_passed
         update_tick = True
+        ticks += 1
         for c in chunks.values():
             if c.is_alive():
                 c.update()
-                if USE_DEBUG:
-                    c.rect.color = (1, 0, 0, 0.2)
                 to_render.add(c)
-            elif USE_DEBUG:
-                c.rect.color = (1,0,0,0.0)
+
         for c in chunks.values():
             c.update_ended()
     else:

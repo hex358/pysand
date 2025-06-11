@@ -1,5 +1,7 @@
 import sys
 
+import render
+
 PROJECT_CLASSNAMES = [
     "variant", "render", "element_storage", "chunk_manager", "ui", "example"
 ]
@@ -37,6 +39,7 @@ def _ready() -> None:
         module = importlib.import_module("assets."+classname)
         modules.append(module)
         modules_dict[classname] = module
+        setattr(sys.modules["__main__"], classname, module)
     pygame.init()
 
     for object in modules:
@@ -71,12 +74,9 @@ def input_poll():
     global mouse_pressed, prev_pressed
     global SELECTED_TYPE, index, mouse_scroll_y
 
-    # keys = pygame.key.get_pressed()
-    # if keys[pygame.K_a] and not prev_pressed:
-    #     index += 1
-    #     if index >= len(select_types): index = 0
-    #     SELECTED_TYPE = select_types[index]
-    # prev_pressed = keys[pygame.K_a]
+    key = pygame.key.get_pressed()
+    if key[pygame.K_a]:
+        render.ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
 
     mouse_just_pressed = False
     mouse_scroll_y = 0
