@@ -1,9 +1,7 @@
 import sys
 
-import render
-
 PROJECT_CLASSNAMES = [
-    "variant", "render", "element_storage", "chunk_manager", "ui", "example"
+    "variant", "ui", "render", "element_storage", "chunk_manager", "example"
 ]
 GLOBAL_VARS = [
     "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT"
@@ -39,6 +37,8 @@ def _ready() -> None:
         module = importlib.import_module("assets."+classname)
         modules.append(module)
         modules_dict[classname] = module
+        if not classname in sys.modules:
+            sys.modules[classname] = module
         setattr(sys.modules["__main__"], classname, module)
     pygame.init()
 
@@ -101,7 +101,6 @@ def input_poll():
 
 
 SELECTED_TYPE = 1
-select_types = [0, 1, 2, 3]
 index: int = 1
 
 prev_pressed: bool = False
@@ -110,6 +109,7 @@ def _process(delta:float) -> bool:
 
     for object in to_process:
         object._process(delta)
+
     pygame.display.flip()
    # clock.tick(120)
 

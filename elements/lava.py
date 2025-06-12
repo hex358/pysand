@@ -12,7 +12,7 @@ def update(chunk, x: int, y: int):
    # keep_alive_list = ((x - 1, y), (x, y), (x + 1, y))
 
     bot = chunk.get_cell(x, y - 1)
-    if (bot == 2 or bot in element_storage.gases) and not chunk.is_visited(x,y-1):
+    if (bot == 2 or bot in element_storage.gases) and (bot == 2 or not chunk.is_visited(x,y-1)):
         chunk.set_cell(x, y-1, 5)
         chunk.set_cell(x, y, 6 if bot == 2 else bot)
         chunk.keep_alive(and_neighbours=True)
@@ -40,11 +40,11 @@ def update(chunk, x: int, y: int):
             if add == -1:
                 if (left in element_storage.gases and randint(0,10) > 6) or (left not in element_storage.gases and randint(0,100)+2 > 100-element_storage.burnables[left]):
                     if chunk.set_cell(x + add, y, 5):
-                        chunk.set_cell(x, y, 0)
+                        chunk.set_cell(x, y, left)
             else:
                 if (right in element_storage.gases and randint(0,10) > 6) or (right not in element_storage.gases and randint(0,100)+2 > 100-element_storage.burnables[right]):
                     if chunk.set_cell(x + add, y, 5):
-                        chunk.set_cell(x, y, 0)
+                        chunk.set_cell(x, y, right)
                   #  pos = (x + add, y)
             # chunk.keep_alive()
             # chunk.unskip()
@@ -53,7 +53,7 @@ def update(chunk, x: int, y: int):
             add = -1
             if (left in element_storage.gases and randint(0, 10) > 6) or (left not in element_storage.gases and randint(0,100)+2 > 100-element_storage.burnables[left]):
                 if chunk.set_cell(x + add, y, 5):
-                    chunk.set_cell(x, y, 0)
+                    chunk.set_cell(x, y, left)
                    # pos = (x + add, y)
             # chunk.keep_alive()
             # chunk.unskip()
@@ -62,7 +62,7 @@ def update(chunk, x: int, y: int):
             add = 1
             if (right in element_storage.gases and randint(0, 10) > 6) or (right not in element_storage.gases and randint(0,100)+2 > 100-element_storage.burnables[right]):
                 if chunk.set_cell(x + add, y, 5):
-                    chunk.set_cell(x, y, 0)
+                    chunk.set_cell(x, y, right)
               #      pos = (x+add, y)
             # chunk.keep_alive()
             # chunk.unskip()

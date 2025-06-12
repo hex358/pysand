@@ -44,16 +44,30 @@ class Control:
                  "scale_x", "scale_y",
                  "color", "child_controls", "local_x",
                  "local_y", "init_scale", "metadata",
-                 "z_index", "parent", "root",
-                 "visible")
+                 "parent", "root",
+                 "visible", "mouse_in", "_z_index")
 
     def hide(self): self.visible = False
     def show(self): self.visible = True
 
+    @property
+    def z_index(self):
+        return self._z_index
+
+    @z_index.setter
+    def z_index(self, val):
+        global prev_control_count
+        self._z_index = val
+        prev_control_count = 0
+
+    @z_index.getter
+    def z_index(self):
+        return self._z_index
+
     def __init__(self, *args, **kwargs):
         _controls.append(self)
         self.child_controls = []
-        self.z_index = 0
+        self._z_index = 0
         self.self_storage.append(self)
         self.margin_left = 0
         self.margin_bottom = 0
@@ -61,6 +75,7 @@ class Control:
         self.root = None
         self.visible = True
         self.init_scale = control_scale
+        self.mouse_in = False
         self.parent = None
         if __class__ == Control:
             self.x, self.y, self.scale_x, self.scale_y = 0, 0, 1, 1
@@ -111,6 +126,12 @@ class Control:
         glScalef(self.scale_x, self.scale_y, 1.0)
     def _after_draw(self):
         glPopMatrix()
+
+    def update_mouse_in(self):
+        screen_pos = mainloop.screen_mouse_position
+        pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
+        self.mouse_in = self.x <= pos.x <= self.x + self.scale_x and self.y <= pos.y <= self.y + self.scale_y
+
     def draw(self):
         for child in self.child_controls:
             child.x = child.local_x + self.x
@@ -303,6 +324,7 @@ class ScrollContainer(Control):
         self.scroll_lerp_speed = 20.0
         self.scroll_enabled = True; self.value_mapped = 0
         self.snap = 0
+        self.out_of_bounds_scroll_on = False
         self._prev = 0
         self.scroll_bar = None#ColorRect(90,20,(50,10),outline_width=0)
 
@@ -335,7 +357,11 @@ class ScrollContainer(Control):
 
 
     def _scroll_process(self):
-        self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 400)
+        screen_pos = mainloop.screen_mouse_position
+        pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
+        if (self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y) or self.out_of_bounds_scroll_on:
+            self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 400)
+
         if self.scroll_bar is not None:
             self.scroll_bar.x = variant.lerp(self.x, self.x + self.scale_x - self.scroll_bar.scale_x, self.value)
             self.scroll_bar.scale_x = (self.scale_x**2 / self.child_pixels)
@@ -378,14 +404,14 @@ class Button(ColorRect):
                 color_pressed: tuple = (1.0,1.0,1.0,1.0),
                offsets_fix = 1):
         super()._ready(x, y,size,color,outline_width,outline_color,offsets_fix=offsets_fix)
-        assert label is not None, "Label can't be None"
         self.label = label
-        self.add_child(label)
-        label.local_x = int(label.x*control_scale); label.y = int(label.y*control_scale)
+        if not label is None:
+            self.add_child(label)
+            label.local_x = int(label.x*control_scale); label.y = int(label.y*control_scale)
         #label.local_y += int(x*control_scale); label.y += int(y*control_scale)
         self.press_state_update = press_state_update; self.press_state = PressState.RELEASED
         self.color_hovered, self.color_pressed = color_hovered, color_pressed
-        self.color_default = color; self.mouse_in = False
+        self.color_default = color
         self.stay_pressed = False
         self.double = False
         self.held = False
@@ -393,10 +419,6 @@ class Button(ColorRect):
         self.press_state = PressState.RELEASED
 
     def _draw(self):
-        screen_pos = mainloop.screen_mouse_position
-        pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
-
-        self.mouse_in = self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y
         if mainloop.mouse_just_pressed and self.mouse_in and self.held and self.double and self.press_state == PressState.JUST_PRESSED:
             self.press_state = PressState.JUST_RELEASED
             self.held = False
@@ -469,40 +491,54 @@ def _init_quad_vbo():
     glBindBuffer(GL_ARRAY_BUFFER, 0)
 
 
+def load_texture(path: str, linear: bool = False):
+    img_path = os.path.abspath(path) if not os.path.isabs(path) else path
+
+    img = Image.open(img_path).transpose(Image.FLIP_TOP_BOTTOM)
+    img = img.convert("RGBA")
+    width, height = img.size
+    data = img.tobytes()
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+    tex_id = glGenTextures(1)
+    glBindTexture(GL_TEXTURE_2D, tex_id)
+    wrap = GL_CLAMP_TO_EDGE
+    filter_min = GL_LINEAR_MIPMAP_LINEAR if linear else GL_NEAREST
+    filter_mag = GL_LINEAR if linear else GL_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag)
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, data)
+
+    glBindTexture(GL_TEXTURE_2D, 0)
+    return tex_id, width, height
+
+
+def add_texture(path: str, name: str, linear: bool = False):
+    textures[name] = load_texture(path, linear)
+
 class TextureRect(Control):
+    def set_texture(self, name: str):
+        self.texture_id, self.width, self.height = textures[name]
+
     def _ready(self, path: str, name: str, linear: bool = False):
         if name in textures:
             self.texture_id, self.width, self.height = textures[name]
         else:
-            img_path = os.path.abspath(path) if not os.path.isabs(path) else path
-
-            img = Image.open(img_path).transpose(Image.FLIP_TOP_BOTTOM)
-            img = img.convert("RGBA")
-            self.width, self.height = img.size
-            data = img.tobytes()
-
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
-            tex_id = glGenTextures(1)
-            glBindTexture(GL_TEXTURE_2D, tex_id)
-            wrap = GL_CLAMP_TO_EDGE
-            filter_min = GL_LINEAR_MIPMAP_LINEAR if linear else GL_NEAREST
-            filter_mag = GL_LINEAR if linear else GL_NEAREST
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag)
-
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, self.width, self.height,
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, data)
-            if linear:
-                glGenerateMipmap(GL_TEXTURE_2D)
-
-            glBindTexture(GL_TEXTURE_2D, 0)
-            self.texture_id = tex_id
-            textures[name] = (tex_id, self.width, self.height)
+            textures[name] = load_texture(path, linear)
+            self.texture_id, self.width, self.height = textures[name]
 
     @staticmethod
     def _draw_stage_entered():
+        pass
+
+    def _before_draw(self):
+        pass
+
+    def _after_draw(self):
         pass
 
     @staticmethod
@@ -666,7 +702,7 @@ def draw_colored_quad(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), tople
 compiled_shaders = {}
 compiled_programs = {}
 
-import reimport as re
+import assets.reimport as re
 @re.reimport("render", variant=variant)
 class ShaderPlane:
     __slots__ = ("program_id", "uniforms", "vs_path", "fs_path", "uniform_changes_enqueued", "uniform_type_map", "vao", "vbo")
@@ -695,7 +731,7 @@ class ShaderPlane:
 
         glBindVertexArray(self.vao)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
-        glBufferData(GL_ARRAY_BUFFER, quad.nbytes, quad, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, quad.nbytes, quad, GL_DYNAMIC_DRAW)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 2, GL_FLOAT, False, 6 * 4, ctypes.c_void_p(0))
@@ -706,10 +742,11 @@ class ShaderPlane:
         glBindVertexArray(0)
 
     def __init__(self, vs_path, fs_path, get_uniforms = None, program_reuse_name: str = "", x=0, y=0, w=200, h=200):
+
         get_uniforms = ["uPointSize", "uProj"] if get_uniforms is None else get_uniforms + ["uPointSize", "uProj"]
         self.uniforms, self.uniform_changes_enqueued = {}, {}
-        self.generate_buffers(x,y,w,h)
         self.uniform_type_map = {"uProj": glUniformMatrix4fv, "uPointSize": glUniform1f}
+        self.generate_buffers(x, y, w, h)
 
         shader_map = compiled_shaders
         if not vs_path in shader_map:
@@ -821,7 +858,9 @@ def _draw_control_pass():
 
         prev_class = None
         for control in sort:
+            control.update_mouse_in()
             if not control is ScrollContainer and (not cull(control) and not control.child_controls):
+                control.mouse_in = False
                 continue
             c: type = control.__class__
             if prev_class is None or prev_class != c:

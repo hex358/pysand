@@ -12,6 +12,7 @@ def clear(c: tuple[int,int]):
 
 def update(chunk, x: int, y: int):
     do_skip_over: bool = True
+    chunk.visited.add((x,y))
    # pos = (x,y)
    # keep_alive_list = ((x - 1, y), (x, y), (x + 1, y))
 
@@ -40,11 +41,11 @@ def update(chunk, x: int, y: int):
             do_skip_over = False
             add = 1 if randint(0, 10) > 4 else -1
             if add == -1:
-                if left == 0 and randint(0,10) > 2:
+                if left in element_storage.gases and randint(0,10) > 2:
                     if chunk.set_cell(x + add, y, 2):
                         chunk.set_cell(x, y, left)
             else:
-                if right == 0 and randint(0,10) > 2:
+                if right in element_storage.gases and randint(0,10) > 2:
                     if chunk.set_cell(x + add, y, 2):
                         chunk.set_cell(x, y, right)
                   #  pos = (x + add, y)

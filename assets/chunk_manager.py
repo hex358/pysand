@@ -22,6 +22,8 @@ DATA_LEN: int = CHUNK_SIZE * CHUNK_SIZE
 
 is_in_bounds = lambda x, y: (x // CHUNK_SIZE, y // CHUNK_SIZE) in chunks
 
+is_paused: bool = False
+
 PIXEL_SIZE = None
 class Chunk:
     was_updated: bool = False
@@ -66,6 +68,8 @@ class Chunk:
         self.visited.clear()
 
     def keep_alive(self, and_neighbours: bool = False):
+        if is_paused:
+            to_render.add(self)
         self.update_intensity = MAX_UPDATE_INTENSITY
         if and_neighbours and not self.neighbors_kept_alive:
             self.neighbors_kept_alive = True
@@ -121,8 +125,8 @@ class Chunk:
         self.skipped_over_count -= 1
 
     def set_cell(self, x: int, y: int, val: int) -> bool:
-        if self.is_visited(x,y):
-            return False
+        # if self.is_visited(x,y):
+        #     return False
         self.visited.add((x, y))
         if self.local_is_in_bounds(x, y):
             #if not (x,y) in self.visited:
@@ -247,10 +251,11 @@ def _process(delta: float) -> None:
         timestamp = mainloop.time_passed
         update_tick = True
         ticks += 1
-        for c in chunks.values():
-            if c.is_alive():
-                c.update()
-                to_render.add(c)
+        if not is_paused:
+            for c in chunks.values():
+                if c.is_alive():
+                    c.update()
+                    to_render.add(c)
 
         for c in chunks.values():
             c.update_ended()

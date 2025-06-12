@@ -15,7 +15,7 @@ def update(chunk, x: int, y: int):
    # pos = (x,y)
    # keep_alive_list = ((x - 1, y), (x, y), (x + 1, y))
     top = chunk.get_cell(x, y + 1)
-    if top not in element_storage.gases and randint(0,10000) > 9996 and not chunk.is_visited(x,y):
+    if top not in element_storage.gases and randint(0,10000) > 9996:# and not chunk.is_visited(x,y):
         chunk.keep_alive()
         chunk.set_cell(x,y,2)
         return
