@@ -141,6 +141,7 @@ class Chunk:
         target.keep_alive()
 
         if target.was_updated:
+            target.visited.add((local_x, local_y))
             target.data[local_y, local_x] = val
         else:
            # if not (local_x, local_y) in target.merge_visited:
@@ -150,6 +151,7 @@ class Chunk:
         return True
 
     def update(self):
+        self.ticks = ticks
         self.was_updated = True
 
         self.skipped_over_count = 0
@@ -160,8 +162,9 @@ class Chunk:
             for y in range(CHUNK_SIZE):
                 if (x,y) in self.visited: continue
                 current = self.prev[y,x]
-                if not current in element_storage.skip:
-                    element_storage.element_calls[current](self, x, y)
+                if current in element_storage.types:
+                    element_storage.update_powder(self, x, y)
+                    #element_storage.element_calls[current](self, x, y)
                 else:
                     self.skip_over()
         if self.skipped_over_count >= CHUNK_SIZE * CHUNK_SIZE:

@@ -1,5 +1,7 @@
 from random import randint
 
+import element_storage
+
 chunk_manager = None
 element_processor = None
 get_cell = None
@@ -36,6 +38,13 @@ def update(chunk, x: int, y: int):
     else:
         left = chunk.get_cell(x-1, y) if not chunk.is_visited(x-1,y) else 9
         right = chunk.get_cell(x+1, y) if not chunk.is_visited(x+1,y) else 9
+
+        if CELL_INDEX in element_storage.interactions:
+            interactions = element_storage.interactions[CELL_INDEX]
+            if left in interactions:
+                chunk.set_cell(x-1 if not interactions[left][1] else x, y, interactions[left][0])
+            if right in interactions:
+                chunk.set_cell(x+1 if not interactions[left][1] else x, y, interactions[left][0])
 
         if left in element_storage.gases and right in element_storage.gases:
             do_skip_over = False

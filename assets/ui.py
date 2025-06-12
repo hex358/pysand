@@ -245,6 +245,8 @@ def _ready() -> None:
         button.z_index = 8
         button.stay_pressed = True
         brush_scroll.add_child(button)
+        if i+1 == 2:
+            button.press()
 
 
 
@@ -279,12 +281,6 @@ def pause_button(button):
 
 
 
-def bools_to_bitmask(bools: list[bool]) -> int:
-    mask = 0
-    for idx, flag in enumerate(bools):
-        if flag:
-            mask |= 1 << idx
-    return mask
 
 def rscroll(button):
     if button.press_state == render.PressState.PRESSED:
@@ -395,7 +391,7 @@ def fps(delta:float):
 
 _float_pen_size = 2.0
 pen_size = 2
-MODE = 3
+MODE = 2
 
 
 prev_pos = None
@@ -431,7 +427,7 @@ def pen(delta:float):
     #if chunk_manager.get_chunk(int(global_pos.x), int(global_pos.y), None) is None: return
     #hover.x, hover.y = math.floor(display_pos.x / PIXEL_SIZE) * PIXEL_SIZE - 0.4*PIXEL_SIZE, math.floor(display_pos.y / PIXEL_SIZE) * PIXEL_SIZE - 0.3*PIXEL_SIZE
 
-    _float_pen_size += mainloop.mouse_scroll_y * delta * 550
+    _float_pen_size += mainloop.mouse_scroll_y * 0.6
     _float_pen_size = variant.clamp(_float_pen_size, 0, 6)
     pen_size = int(_float_pen_size)
     NOISE_PATTERN[(pen_size % 12) + (pen_size % 12) * 12] = 1

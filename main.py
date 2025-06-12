@@ -69,6 +69,7 @@ def _ready() -> None:
         object._ready()
 
 mouse_scroll_y = 0
+mouse_just_pressed = False
 def input_poll():
     global screen_mouse_position, mouse_just_pressed
     global mouse_pressed, prev_pressed

@@ -415,8 +415,14 @@ class Button(ColorRect):
         self.stay_pressed = False
         self.double = False
         self.held = False
+
     def reset(self):
         self.press_state = PressState.RELEASED
+
+    def press(self):
+        self.color = self.color_pressed
+        self.press_state = PressState.JUST_PRESSED
+        self.press_state_update(self)
 
     def _draw(self):
         if mainloop.mouse_just_pressed and self.mouse_in and self.held and self.double and self.press_state == PressState.JUST_PRESSED:
