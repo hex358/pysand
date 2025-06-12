@@ -150,6 +150,8 @@ class Chunk:
             target.data[local_y,local_x] = val
         return True
 
+   # get_cell = lambda self,x,y: self.prev[y,x] if (0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE) else chunks.get(((self.xo*CHUNK_SIZE+x) // CHUNK_SIZE, (self.yo*CHUNK_SIZE+y) // CHUNK_SIZE), dummy_chunk).prev[y % CHUNK_SIZE, x % CHUNK_SIZE]
+
     def update(self):
         self.ticks = ticks
         self.was_updated = True
@@ -163,12 +165,13 @@ class Chunk:
                 if (x,y) in self.visited: continue
                 current = self.prev[y,x]
                 if current in element_storage.types:
-                    element_storage.update_powder(self, x, y)
-                    #element_storage.element_calls[current](self, x, y)
+                    #element_storage.update_powder(self, x, y)
+                    element_storage.element_calls[current](self, x, y)
                 else:
                     self.skip_over()
         if self.skipped_over_count >= CHUNK_SIZE * CHUNK_SIZE:
             self.update_intensity = 0.0
+        #self.prev = self.data
 
     def render(self):
         self.render_chunk.update(self.data)
@@ -197,6 +200,11 @@ def apply_snapshot(snapshot: bytearray):
 
 
 class DummyChunk:
+    def __init__(self):
+        self.prev = np.ndarray((CHUNK_SIZE,CHUNK_SIZE), dtype=np.uint16)
+        self.prev.fill(9)
+        self.data = np.ndarray((CHUNK_SIZE,CHUNK_SIZE), dtype=np.uint16)
+        self.visited = set([])
     def mark_dirty(self, x:int, y:int):
         pass
     def unskip(self):
@@ -247,6 +255,7 @@ def _ready() -> None:
 
 def _process(delta: float) -> None:
     global render_timestamp, timestamp, update_delta, update_tick
+    dummy_chunk.visited.clear()
 
     if mainloop.time_passed - timestamp > 1 / UPDATES_PER_SECOND:
         global ticks
