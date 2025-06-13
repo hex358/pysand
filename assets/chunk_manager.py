@@ -42,6 +42,8 @@ class Chunk:
             (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
         )
 
+
+
     def __init__(self, xo: int, yo: int):
         self.xo, self.yo = xo, yo
         self.data = np.zeros((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint16)
@@ -66,6 +68,7 @@ class Chunk:
         self.was_updated = False
         self.skipped_over_count = 0
         self.visited.clear()
+        self.prev = self.data
 
     def keep_alive(self, and_neighbours: bool = False):
         if is_paused:
@@ -112,10 +115,10 @@ class Chunk:
         return chunk if not chunk is None else dummy_chunk
 
     def is_visited(self, x: int, y: int):
-        if (x,y) in self.visited: return True
+        if 0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE: return (x,y) in self.visited
         gx, gy = x + CHUNK_SIZE * self.xo, y + CHUNK_SIZE * self.yo
         target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
-        if not target: return False
+        if not target: return True
         return (gx % CHUNK_SIZE, gy % CHUNK_SIZE) in target.visited
 
     def skip_over(self):

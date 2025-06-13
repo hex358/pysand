@@ -373,7 +373,7 @@ def load_button(button):
 
 
 fps_log: list[int] = []
-window_size = 70
+window_size = 5
 
 WINDOW_HEIGHT = None
 WINDOW_WIDTH = None
@@ -437,6 +437,8 @@ def pen(delta:float):
         visited = set([])
         length = max(1, global_pos.distance_to(prev_pos))
         row_size = (2*pen_size + 1)
+        if update_pattern:
+            plane.set_shader_parameter("noiseBits", len(NOISE_PATTERN), NOISE_PATTERN)
 
         def draw_here(i):
             ox, oy = i / length * (global_pos.x - prev_pos.x) + prev_pos.x, i / length * (global_pos.y - prev_pos.y) + prev_pos.y
@@ -447,7 +449,7 @@ def pen(delta:float):
                 if (MODE == 1 or MODE == 3) and (x**2 + y**2) > pen_size**2: continue
                 if (ox+x, oy+y) in visited: continue
                 if MODE == 3:
-                    idx = ((x-pen_size) % 12) + ((y-pen_size) % 12) * 12
+                    idx = ((x+pen_size) % 12) + ((y+pen_size) % 12) * 12
                     if (x,y) == (0,0): NOISE_PATTERN[idx] = 2
                     prev = NOISE_PATTERN[idx]
                     if update_pattern:
@@ -463,7 +465,7 @@ def pen(delta:float):
                 draw_here(i)
         else:
             draw_here(int(length)-1)
-        plane.set_shader_parameter("noiseBits", len(NOISE_PATTERN), NOISE_PATTERN)
+
 
     prev_pos = global_pos
 

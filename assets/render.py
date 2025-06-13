@@ -129,7 +129,7 @@ class Control:
 
     def update_mouse_in(self):
         screen_pos = mainloop.screen_mouse_position
-        pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
+        pos = variant.Vector2(screen_pos[0], (mainloop.WINDOW_HEIGHT - screen_pos[1]), i=True)
         self.mouse_in = self.x <= pos.x <= self.x + self.scale_x and self.y <= pos.y <= self.y + self.scale_y
 
     def draw(self):
@@ -358,7 +358,7 @@ class ScrollContainer(Control):
 
     def _scroll_process(self):
         screen_pos = mainloop.screen_mouse_position
-        pos = variant.Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
+        pos = variant.Vector2(screen_pos[0], (mainloop.WINDOW_HEIGHT - screen_pos[1]), i=True)
         if (self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y) or self.out_of_bounds_scroll_on:
             self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 400)
 

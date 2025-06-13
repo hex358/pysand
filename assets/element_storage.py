@@ -3,155 +3,100 @@ USE_MODULES = ["chunk_manager", "mainloop"]
 modules_dict = {}
 chunk_manager = None
 mainloop = None
-ELEMENT_LIST = ["sand", "water", "lava", "steam", "dirt"]
+import textwrap
 
-import importlib
 import sys
-import numpy as np
-from random import randint
-
-elements_dict = {}
 element_calls = {}
-elements = []
 
-burnables: dict[int] = {4: 10}
-solids: set[int] = {9,3,4,8}
-soft: set[int] = {0,2,6}
-skip: set[int] = {0,9,3,4,8}
-gases: set[int] = {6, 0}
 
-interactions = {
-    2: {7:[8,False]}, # element: {interacts with: turns into; True if turn itself}
-    7: {2:[8,True]}
-}
+class PowderTags:
+    Default = 0
+    Sand = 1
+    Liquid = 2
+    Gas = 3
 
-interactables = {2,7}
 
-from dataclasses import dataclass, field
+def build_classes():
+    for powder in types.values():
+        powder.create_interactions()
 
-@dataclass(frozen=True)
 class Powder:
-    index: int = 1
-    fall_offsets: list = field(default_factory=list)
-    #: dict = field(default_factory=dict) # element: [h mix probability, v mix probability]
-    interact_with_types: dict = field(default_factory=dict) # element: itself turns into.., type turns into.., interaction probability
+    #index: int = 1
+    class_tags = {}
 
-import importlib
-imported = None
-def create_unrolled():
-    result = ""
+    def create_interactions(self):
+        self.interact_with_types = {}
+        for tag in Powder.class_tags:
+            self.interact_with_types.update(class_tags[tag])
+        for other_type, interaction in self.interact_with_types.items():
+            if interaction[0] == -1: interaction[0] = self.index
+            if interaction[1] == -1: interaction[1] = self.index
+            interaction[2] = self.density - types[other_type]
+            interaction[3] = int(interaction[2]) * self.horizontal_damping
+        self.interact_with_types.update(self.add_interactions)
+        print(self.interact_with_types)
 
-    file_header = """from random import random
-dummy_chunk = None
-chunks = None
-"""
+    def __init__(self, index: int,
+                 class_tags: tuple = (),
+                 gravity_direction: int = -1,
+                 fall_direction: int = -1,
+                 move_probability: int = 50,
+                 add_interactions = {},
+                 add_fall_offsets = (),
+                 horizontal_damping = 0.2,
+                 density: int = 100):
+        self.interact_with_types = {}
+        self.index = index
+        self.density = density
+        self.fall_offsets = [(0,gravity_direction,100), (-1,fall_direction,move_probability),(1,fall_direction,move_probability)] + [*add_fall_offsets]
+        self.add_interactions = add_interactions
+        self.horizontal_damping = horizontal_damping
 
-    func_header = """
-    powder = types[{id}]
-    #get_cell = chunk.get_cell
-    #set_cell = chunk.get_cell
-    sleep: bool = True
-    keep = True
 
-    """
+    #fall_offsets: list = field(default_factory=list)
+    # offset: probability. All offsets except the first one will be processed in reversed order during odd-numbered ticks.
 
-    func_middle = """
-        if keep:
-            move_probability = {prob}
-            new_x, new_y = x + {x}, y + {y}
-            if not {is_visited_inline}:
-                bottom_cell = {get_cell_inline}
-                if bottom_cell in powder.interact_with_types:
-                    interaction = powder.interact_with_types[bottom_cell]
-                    if (move_probability == 100 or random()*100 > 100-move_probability) and (interaction[{interaction_index}] == 100 or random()*100 > 100-interaction[{interaction_index}]):
-                        {set_cell_inline}#chunk.set_cell(x, y, interaction[0])
-                        {set_cell_inline_new}#chunk.set_cell(new_x, new_y, interaction[1])
-                    sleep = False
-                    keep = False
-
-    """
-
-    func_bottom = """
-    if sleep:
-        chunk.skip_over()
-    else:
-        chunk.keep_alive(and_neighbours=True)
-    """
-
-    get_cell_lambda = "chunk.prev[new_y,new_x] if (0 <= new_x < CHUNK_SIZE and 0 <= new_y < CHUNK_SIZE) else chunks.get(((chunk.xo*CHUNK_SIZE+new_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+new_y) // CHUNK_SIZE), dummy_chunk).prev[new_y % CHUNK_SIZE, new_x % CHUNK_SIZE]"
-    set_cell_lambda = """
-                        new_chunk = chunk if 0 <= {new_x} < CHUNK_SIZE and 0 <= {new_y} else chunks.get(((chunk.xo*CHUNK_SIZE+{new_x}) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+{new_y}) // CHUNK_SIZE), dummy_chunk)
-                        ly, lx = {new_y}, {new_x}
-                        if new_chunk != chunk:
-                            ly, lx = {new_y} % CHUNK_SIZE, {new_x} % CHUNK_SIZE
-                        new_chunk.data[ly, lx] = {value}
-                        new_chunk.visited.add((lx, ly))
-    """
-    is_visited_lambda = "((new_x,new_y) in chunk.visited if 0 <= new_x < CHUNK_SIZE and 0 <= new_y else (new_x % CHUNK_SIZE, new_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+new_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+new_y) // CHUNK_SIZE), dummy_chunk).visited)"
-
-    result += file_header
-    for index, powder in types.items():
-        result += f"def powder_{index}(chunk, x: int, y: int):"
-        result += func_header.format(id=index)
-        result += """
-    if chunk.ticks % 2 == 0:
-        """
-        for offset in powder.fall_offsets:
-            result += func_middle.format(prob=offset[2],x=offset[0],y=offset[1], get_cell_inline=get_cell_lambda,
-                                         set_cell_inline=set_cell_lambda.format(new_x="x", new_y="y",
-                                                                                  value="interaction[0]"),
-                                         set_cell_inline_new=set_cell_lambda.format(new_x="new_x", new_y="new_y",
-                                                                                  value="interaction[1]"),
-                                         interaction_index=2 if offset[1] != 0 else 3,
-                                         is_visited_inline=is_visited_lambda,
-                                         )
-        result += """
-    else:
-"""
-        for i in range(len(powder.fall_offsets)):
-            offset = powder.fall_offsets[i if i == 0 else -i]
-            result += func_middle.format(prob=offset[2],x=offset[0],y=offset[1], get_cell_inline=get_cell_lambda,
-                                         set_cell_inline=set_cell_lambda.format(new_x="x", new_y="y",
-                                                                                value="interaction[0]"),
-                                         set_cell_inline_new=set_cell_lambda.format(new_x="new_x", new_y="new_y",
-                                                                                    value="interaction[1]"),
-                                         interaction_index=2 if offset[1] != 0 else 3,
-                                         is_visited_inline=is_visited_lambda,
-                                         )
-        result += func_bottom
-        result += "\n\n"
-
-    result = result.replace("CHUNK_SIZE", str(mainloop.CHUNK_SIZE))
-    with open("_unrolled.py", "w+") as f:
-        f.write(result)
-
-    global imported
-    imported = importlib.import_module("_unrolled")
-    imported.types = types
-    imported.chunks = chunk_manager.chunks
-    #imported.csize = mainloop.CHUNK_SIZE
-    imported.dummy_chunk = chunk_manager.dummy_chunk
-    for index in types:
-        element_calls[index] = getattr(imported, f"powder_{index}")
-
+    #interact_with_types: dict = field(default_factory=dict)
+    # element: itself turns into.., type turns into.., vertical interaction probability, horizontal interaction probability.
 
 
 
 
 types = {
     1: Powder(index=1,
-            fall_offsets=[(0,-1,100),(-1,-1,50),(1,-1,50)],
-            #mix_with_types={0: (100,100), 2: (20,20)},
-            interact_with_types={0: (0, 1, 100, 100), 2:(2, 1, 50, 20)}),
+              gravity_direction=-1,
+              fall_direction=-1,
+              density=100,
+              add_interactions={0:(0,1,100)}),
+            #fall_offsets=[(0,-1,100),(-1,-1,50),(1,-1,50)],
+            #interact_with_types={0: (0, 1, 100, 100), 6: (6, 1, 100, 100), 5: (5, 1, 1, 1), 2:(2, 1, 50, 20)}), # sand
     2: Powder(index=2,
-              fall_offsets=[(0, -1, 100), (-1, 0, 50), (1, 0, 50)],
-              #mix_with_types={0: (100,100)},
-              interact_with_types={0: (0, 2, 100, 100)})
+              density=30),
+              #fall_offsets=[(0, -1, 100), (-1, 0, 50), (1, 0, 50)],
+              #interact_with_types={0: (0, 2, 100, 100), 6: (6, 2, 100, 100), 5: (6, 5, 100, 100), 7: (2, 8, 1, 1)}), # water
+    5: Powder(index=5),
+              #fall_offsets=[(0, -1, 100), (-1, 0, 20), (1, 0, 20)],
+              #interact_with_types={0: (0, 5, 100, 100), 6: (6, 5, 100, 100), 2: (5, 6, 100, 100), 4: (0, 5, 5, 5)}), # lava
+    6: Powder(index=6),
+              #fall_offsets=[(0, 1, 100), (-1, 0, 60), (1, 0, 60)],
+              #interact_with_types={0: (0, 6, 100, 100)}), # vapor
+    7: Powder(index=7),
+              #fall_offsets=[(0, -1, 100), (-1, -1, 20), (1, -1, 20)],
+              #interact_with_types={0: (0, 7, 100, 100)}),  # dirt
+    8: Powder(index=8)
+              #fall_offsets=[(0, -1, 100), (-1, -1, 20), (1, -1, 20)],
+              #interact_with_types={0: (0, 8, 100, 100), })  # grass
 
 }
 
-
-
+import unrolled_builder
+unrolled = None
 clears = {}
 def _ready() -> None:
-    create_unrolled()
+    a = [[2,2],[1,1]]
+    build_classes()
+    global unrolled
+    unrolled_builder.chunk_manager = chunk_manager
+    unrolled_builder.types = types
+    global element_calls
+    element_calls = unrolled_builder.create_unrolled()

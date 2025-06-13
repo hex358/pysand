@@ -29,12 +29,12 @@ _pixels = 0
 to_process = []
 
 def _ready() -> None:
-    pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), DOUBLEBUF | OPENGL)
+    pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), DOUBLEBUF | OPENGL | pygame.RESIZABLE)
    # global clock
    # clock = pygame.time.Clock()
     pygame.display.set_caption("gl_test")
     for classname in PROJECT_CLASSNAMES:
-        module = importlib.import_module("assets."+classname)
+        module = importlib.import_module("assets."+classname if os.path.exists("assets."+classname) else classname)
         modules.append(module)
         modules_dict[classname] = module
         if not classname in sys.modules:
@@ -85,6 +85,11 @@ def input_poll():
         if event.type == pygame.QUIT:
             pygame.quit()
             return False
+
+        if event.type == pygame.VIDEORESIZE:
+            global WINDOW_WIDTH, WINDOW_HEIGHT
+            WINDOW_WIDTH, WINDOW_HEIGHT = event.size
+
         if event.type == pygame.MOUSEMOTION:
             screen_mouse_position = event.pos
 
@@ -109,6 +114,9 @@ def _process(delta:float) -> bool:
     input_poll()
 
     for object in to_process:
+        if not object.__name__ == "assets.render":
+            setattr(object, "WINDOW_WIDTH", WINDOW_WIDTH)
+            setattr(object, "WINDOW_HEIGHT", WINDOW_HEIGHT)
         object._process(delta)
 
     pygame.display.flip()
