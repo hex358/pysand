@@ -664,7 +664,7 @@ def _ready():
     global _program, _pos_vbo, _id_vbo, _id_buffer
     glut.glutInit()
 
-    plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
+    plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl", generate_vao = False)
     _program = plane.program_id
 
     _init_tile_offsets()
@@ -747,12 +747,13 @@ class ShaderPlane:
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
 
-    def __init__(self, vs_path, fs_path, get_uniforms = None, program_reuse_name: str = "", x=0, y=0, w=200, h=200):
+    def __init__(self, vs_path, fs_path, get_uniforms = None, program_reuse_name: str = "", x=0, y=0, w=200, h=200, generate_vao = True):
 
         get_uniforms = ["uPointSize", "uProj"] if get_uniforms is None else get_uniforms + ["uPointSize", "uProj"]
         self.uniforms, self.uniform_changes_enqueued = {}, {}
         self.uniform_type_map = {"uProj": glUniformMatrix4fv, "uPointSize": glUniform1f}
-        self.generate_buffers(x, y, w, h)
+        if generate_vao:
+            self.generate_buffers(x, y, w, h)
 
         shader_map = compiled_shaders
         if not vs_path in shader_map:
