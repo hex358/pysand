@@ -584,11 +584,10 @@ class RenderChunk:
         self.grid_x = gx
         self.grid_y = gy
         self.start_index = start_idx
-    def update(self, data: np.ndarray):
+    def update(self, data):
         global _id_buffer
-        flat_ids = data.flatten().astype(np.int32)
         start = self.start_index
-        _id_buffer[start:start + flat_ids.size] = flat_ids
+        _id_buffer[start:start + len(data)] = data
 
 _render_chunks = []
 _total_count = 0
@@ -621,8 +620,10 @@ def link_program(vs, fs, get_uniforms=None, uniform_namespace=uniforms_locations
     return prog
 
 render_chunk_origins = {}
-def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
-    global _total_count, _render_chunks, _id_buffer
+mv = None
+from array import array
+def add_chunk(gx, gy, data: array) -> RenderChunk:
+    global _total_count, _render_chunks, _id_buffer, mv
 
     start_idx = _total_count
     new_chunk = render_chunk_origins.setdefault((gx,gy), RenderChunk(gx, gy, start_idx))
@@ -631,11 +632,17 @@ def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
     _total_count += CHUNK_SIZE * CHUNK_SIZE
 
     if _id_buffer is None:
-        _id_buffer = np.zeros(_total_count, dtype=np.int32)
+        _id_buffer = array("L", [0]*(CHUNK_SIZE*CHUNK_SIZE))#np.zeros(_total_count, dtype=np.int32)
     else:
-        new_buf = np.zeros(_total_count, dtype=np.int32)
-        new_buf[:_id_buffer.shape[0]] = _id_buffer
+        mv = None
+        new_buf = array("L", [0]*_total_count)
+        new_buf[:len(_id_buffer)] = _id_buffer
         _id_buffer = new_buf
+        #new_buf = np.zeros(_total_count, dtype=np.int32)
+        #new_buf[:_id_buffer.shape[0]] = _id_buffer
+        #_id_buffer = new_buf
+
+    mv = memoryview(_id_buffer)
 
     base = np.array([gx * CHUNK_SIZE * PIXEL_SIZE,
                      gy * CHUNK_SIZE * PIXEL_SIZE], dtype=np.float32)
@@ -645,8 +652,8 @@ def add_chunk(gx, gy, data: np.ndarray) -> RenderChunk:
     glBufferSubData(GL_ARRAY_BUFFER, byte_off_pos, pos_chunk)
     glBindBuffer(GL_ARRAY_BUFFER, 0)
 
-    flat_ids = data.flatten().astype(np.int32)
-    _id_buffer[start_idx:start_idx + flat_ids.size] = flat_ids
+    #flat_ids = data#.flatten().astype(np.int32)
+    mv[start_idx:start_idx + len(data)] = data
 
     return new_chunk
 
@@ -680,7 +687,7 @@ def _ready():
     _id_vbo = glGenBuffers(1)
     glBindBuffer(GL_ARRAY_BUFFER, _id_vbo)
     glBufferData(GL_ARRAY_BUFFER,
-                 MAX_CHUNKS * CHUNK_SIZE * CHUNK_SIZE * 4,
+                 MAX_CHUNKS * CHUNK_SIZE * CHUNK_SIZE * array("L", [0]).itemsize,
                  None,
                  GL_DYNAMIC_DRAW)
     glBindBuffer(GL_ARRAY_BUFFER, 0)
@@ -824,7 +831,7 @@ def _draw_chunk_pass():
     glUseProgram(_program)
 
     glBindBuffer(GL_ARRAY_BUFFER, _id_vbo)
-    glBufferSubData(GL_ARRAY_BUFFER, 0, _id_buffer.flatten())
+    glBufferSubData(GL_ARRAY_BUFFER, 0, bytes(mv))
 
     glBindBuffer(GL_ARRAY_BUFFER, _pos_vbo)
     glEnableVertexAttribArray(0)
@@ -907,10 +914,9 @@ def _draw_matrix_clear():
 
 
 def _process(delta: float):
+    glClear(GL_COLOR_BUFFER_BIT)
     _draw_chunk_pass()
     _shader_plane_pass()
     _draw_control_pass()
     _draw_gradient_pass()
     _draw_matrix_clear()
-
-
