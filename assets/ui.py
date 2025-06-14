@@ -11,6 +11,7 @@ UI_MATCH = {
     6: ["VAPOR", (0.7,  0.7,  0.8, 0.7)],
     7: ["DIRT", (0.33,  0.19,  0.19, 1.0)],
     8: ["WET\nDIRT", (0.23,  0.09,  0.11, 1.0)],
+    9: ["GRASS", (0,  1,  0, 1.0)],
 
 }
 from random import randint

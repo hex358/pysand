@@ -2,7 +2,7 @@
 flat in int vTileID;
 in vec2 outPos;
 
-const vec4 uPalette[9] = vec4[](
+const vec4 uPalette[10] = vec4[](
     vec4(0.0, 0.0, 0.0, 0.0),
     vec4(0.75, 0.69, 0.50, 1.0),
     vec4(0.0,  0.5,  1.0, 0.8),
@@ -11,7 +11,8 @@ const vec4 uPalette[9] = vec4[](
     vec4(0.9,  0.4,  0.2, 0.9),
     vec4(0.6,  0.6,  0.8, 0.5),
     vec4(0.33,  0.19,  0.19, 1.0),
-    vec4(0.23,  0.09,  0.11, 1.0)
+    vec4(0.23,  0.09,  0.11, 1.0),
+    vec4(0,  1,  0, 1.0)
 );
 
 out vec4 FragColor;

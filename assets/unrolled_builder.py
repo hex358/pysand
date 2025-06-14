@@ -12,6 +12,7 @@ chunks = None
 
 func_header = """
 powder = types[{id}]
+id = {id}
 sleep: bool = True
 keep = True
 iter_counter: int = 0
@@ -34,7 +35,7 @@ if keep:
         bottom_cell = {get_cell_inline}
         if bottom_cell in powder.interact_with_types:
             interaction = powder.interact_with_types[bottom_cell]
-            if {prob_eval} (interaction[2] == 100 or random()*100 > 100-interaction[2]):
+            if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                 {set_cell_inline}
                 {set_cell_inline_new}
             sleep = False
@@ -52,13 +53,14 @@ else:
 
 get_cell_lambda = "chunk.prev[new_y*CHUNK_SIZE+new_x] if (0 <= new_x < CHUNK_SIZE and 0 <= new_y < CHUNK_SIZE) else chunks.get(((chunk.xo*CHUNK_SIZE+new_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+new_y) // CHUNK_SIZE), dummy_chunk).prev[(new_y % CHUNK_SIZE) * CHUNK_SIZE + new_x % CHUNK_SIZE]"
 set_cell_lambda = """
-new_chunk = chunk if 0 <= {new_x} < CHUNK_SIZE and 0 <= {new_y} < CHUNK_SIZE else chunks.get(((chunk.xo*CHUNK_SIZE+{new_x}) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+{new_y}) // CHUNK_SIZE), dummy_chunk)
-ly, lx = {new_y}, {new_x}
-if new_chunk != chunk:
-    ly, lx = {new_y} % CHUNK_SIZE, {new_x} % CHUNK_SIZE
-new_chunk.data[ly*CHUNK_SIZE + lx] = {value}
-if new_chunk != dummy_chunk:
-    new_chunk.visited.add((lx, ly))
+if {cond}:
+    new_chunk = chunk if 0 <= {new_x} < CHUNK_SIZE and 0 <= {new_y} < CHUNK_SIZE else chunks.get(((chunk.xo*CHUNK_SIZE+{new_x}) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+{new_y}) // CHUNK_SIZE), dummy_chunk)
+    ly, lx = {new_y}, {new_x}
+    if new_chunk != chunk:
+        ly, lx = {new_y} % CHUNK_SIZE, {new_x} % CHUNK_SIZE
+    new_chunk.data[ly*CHUNK_SIZE + lx] = {value}
+    if new_chunk != dummy_chunk:
+        new_chunk.visited.add((lx, ly))
     """
 is_visited_lambda = "not ((new_x,new_y) in chunk.visited if 0 <= new_x < CHUNK_SIZE and 0 <= new_y < CHUNK_SIZE else (new_x % CHUNK_SIZE, new_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+new_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+new_y) // CHUNK_SIZE), dummy_chunk).visited)"
 
@@ -70,13 +72,15 @@ def indent(text: str, count: int = 1):
 
 def middle_formatted(powder, offset):
     return func_middle.format(x=offset[0], y=offset[1], get_cell_inline=get_cell_lambda,
-                                     set_cell_inline=indent(set_cell_lambda.format(new_x="x", new_y="y",
-                                                                              value="interaction[0]"), count=4),
-                                     set_cell_inline_new=indent(set_cell_lambda.format(new_x="new_x", new_y="new_y",
-                                                                              value="interaction[1]"), count=4),
-                                     is_visited_inline=indent(is_visited_lambda, count=2),
-                                     prob_eval="" if offset[2] == 100 else f"100*random() > 100-{offset[2]} and ",
-                                     insert="" if not powder.throw_dice else "iter_counter += 1"
+                                set_cell_inline=indent(set_cell_lambda.format(new_x="x", new_y="y",
+                                                                      value="interaction[0]", cond = "interaction[0] != id"), count=4),
+                                set_cell_inline_new=indent(set_cell_lambda.format(new_x="new_x", new_y="new_y",
+                                                                      value="interaction[1]", cond = "True"), count=4),
+                                is_visited_inline=indent(is_visited_lambda, count=2),
+                                prob_eval="" if not isinstance(offset[2], str) and offset[2] >= 100
+                                else f"100*random() > 100-{offset[2]} and ",
+                                insert="" if not powder.throw_dice else "iter_counter += 1",
+
                                     )
 
 
