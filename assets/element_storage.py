@@ -14,8 +14,7 @@ class PowderTags(Enum):
     Liquid = 1
     Gas = 2
 
-class Any(Enum):
-    CurrentElement = -255
+current = 255
 
 def build_classes():
     for powder in types.values():
@@ -23,20 +22,47 @@ def build_classes():
     for powder in types.values():
         powder.create_interactions()
 
+import math
+def is_negative(x): return math.copysign(1.0, x) < 0.0
+
+
+name_map = {"sand": 1, "water": 2, "stone": 3, "wood": 4, "lava": 5, "vapor": 6, "dirt": 7, "wet_dirt": 8}
+def PowderName(name: str):
+    return name_map[name]
+
 class Interaction:
-    def __init__(self, with_powder: int | list[int], change_itself_into: int, change_other_into: int,
+    def __init__(self, with_powder: int | list[int],
+                 change_itself_into: int,
+                 change_other_into: int,
+                 probability: int = 100,
                  double_sided: bool = False):
         self.interactions = {}
-        if with_powder is int: with_powder = [with_powder]
-        # for types in with_powder:
-        #     types = [types] if types <
-        #     self.interactions[types]
+        self.double_sided = double_sided
+        if isinstance(with_powder, int): with_powder = [with_powder]
+        skip = []
+        for types in with_powder:
+            if is_negative(types): skip.append(-types)
+            types = [types] if not is_negative(types) else [element for element in Powder.all_elements]
+            for other_type in types:
+                self.interactions[other_type] = (change_itself_into, change_other_into, probability)
+        for key in skip:
+            self.interactions.pop(key)
 
-    def bind(self):
+    def replace(self, type: int):
+        for interaction in self.interactions.values():
+            for i in range(len(interaction)):
+                if interaction[i] == current: interaction[i] = type
+
+    def bind(self, type: int):
         pass
 
     def to_tuples(self):
-        return self.interactions
+        return self.interactions.copy()
+        # output = {}
+        # for other_type, tuple_interaction in self.interactions:
+        #     output[type] = (tuple_interaction[0] if tuple_interaction[0] != current else type,
+        #                     tuple_interaction[1] if tuple_interaction[1] != current else type,
+        #                     tuple_interaction[2] if tuple_interaction[2] is not None else types[type].density - types[other_type].density)
 
 
 class Powder:
@@ -44,71 +70,51 @@ class Powder:
     gases: set = {0, 6}
     liquids: set = {2, 5}
     #index: int = 1
-    gas_tuples = {gas: (gas, Any.CurrentElement, 100) for gas in gases}
-    liquid_tuples = {liquid: (liquid, Any.CurrentElement, None) for liquid in liquids}
+    gas_interactions = [Interaction(with_powder=gas, change_itself_into=gas, change_other_into=current, probability=100)
+                        for gas in gases]
+    liquid_interactions = [Interaction(with_powder=liquid, change_itself_into=liquid, change_other_into=current, probability=None)
+                     for liquid in liquids]
     class_tag_interactions = {
         PowderTags.Default:
-            {**liquid_tuples, **gas_tuples },
+            [*liquid_interactions, *gas_interactions ],
         PowderTags.Liquid:
-            {**liquid_tuples, **gas_tuples },
+            [*liquid_interactions, *gas_interactions ],
         PowderTags.Gas:
-            {**liquid_tuples, **gas_tuples}
+            [*liquid_interactions, *gas_interactions ]
     }
-
-    def bind_interactions(self):
-        #print(self.index)
-        for other_type, interaction in self.enq_add_interactions.items():
-            self.add_interactions[other_type] = interaction[:3]
-            if interaction[3]:
-                types[other_type].add_interactions[self.index] = (interaction[1], interaction[0], interaction[2])
-                #print((interaction[1], interaction[0], interaction[2]))
-
+    
     def create_interactions(self):
         self.interact_with_types = {}
-
+        to_add_interactions: list[Interaction] = []
         for tag in self.class_tags:
-            for other_type, interactions in Powder.class_tag_interactions[tag].items():
-                if other_type == self.index: continue
-                self.interact_with_types[other_type] = interactions
+            to_add_interactions += Powder.class_tag_interactions[tag]
 
-        for other_type, interaction in list(self.interact_with_types.items()):
-            new_interaction = list(interaction)
-            if other_type in types and self.density < types[other_type].density:
-                self.interact_with_types.pop(other_type); continue
-            if new_interaction[2] is None:
-                new_interaction[2] = self.density - types[other_type].density
-            self.interact_with_types[other_type] = tuple(new_interaction)
+        for interaction in to_add_interactions:
+            tuples = interaction.to_tuples()
+            for with_powder, tuple_interaction in tuples.items():
+                new = list(tuple_interaction)
+                if self.density < types[with_powder]: continue
+                if new[0] == current: new[0] = self.index
+                if new[1] == current: new[1] = self.index
+                if new[2] is None: new[2] = self.density - types[with_powder].density
+                tuples[with_powder] = tuple(new)
+            self.interact_with_types |= tuples
 
-        self.interact_with_types.update(self.add_interactions)
+        for interaction in self.add_interactions:
+            self.interact_with_types |= interaction.to_tuples()
 
-       # print(self.interact_with_types)
-        for other_type, interaction in list(self.interact_with_types.items()):
-            new_interaction = list(interaction)
-            if new_interaction[0] == Any.CurrentElement: new_interaction[0] = self.index
-            if new_interaction[1] == Any.CurrentElement: new_interaction[1] = self.index
-            if other_type is list:
-                reduce: int = 0
-                for i in range(len(other_type)):
-                    curr = other_type[i+reduce]
-                    if curr < 0:
-                        self.no_interactions_with.append(-curr)
-                        other_type += [opp for opp in Powder.all_elements]
-                        del other_type[i+reduce]; reduce -= 1
-                new_interaction = tuple(new_interaction)
-                self.interact_with_types.update({list_type: new_interaction for list_type in other_type}); continue
-            elif other_type < 0:
-                self.no_interactions_with.append(-other_type)
-                other_type = [opp for opp in Powder.all_elements]
-                self.interact_with_types.update({list_type: tuple(new_interaction) for list_type in other_type})
-                continue
+        if self.index == 2:
+            print(self.interact_with_types)
 
-            self.interact_with_types[other_type] = tuple(new_interaction)
+    def bind_interactions(self):
+        for interaction in self.add_interactions:
+            if interaction.double_sided:
+                for with_powder, interaction_tuple in interaction.to_tuples().items():
+                    other_powder = types[with_powder]
+                    if not self.index in other_powder.add_interactions:
+                        other_powder.add_interactions[self.index] = (interaction_tuple[1], interaction_tuple[0], interaction_tuple[2])
 
-        #print(self.no_interactions_with)
 
-        for no in self.no_interactions_with:
-            self.interact_with_types.pop(no)
-        #print(self.interact_with_types)
 
     def __init__(self, index: int,
                  class_tags: list = [PowderTags.Default],
@@ -116,26 +122,21 @@ class Powder:
                  gravity_direction: int = -1,
                  fall_direction: int = -1,
                  move_probability: int = 50,
-                 custom_interactions = {},
+                 custom_interactions: list[Interaction] = {},
                  add_fall_offsets = [],
-                 no_interactions_with = [],
                  density: int = 100):
         self.interact_with_types = {}
-        self.no_interactions_with = list(no_interactions_with)
-        print(no_interactions_with)
+        #print(no_interactions_with)
         self.class_tags = list(class_tags)
         self.throw_dice = throw_dice
         self.index = index
         self.density = density
         self.fall_offsets = [(0,gravity_direction,100), (-1,fall_direction,move_probability),(1,fall_direction,move_probability)]
         self.fall_offsets += list(add_fall_offsets)
-        self.enq_add_interactions = dict(custom_interactions)
-        self.add_interactions = {}
+        self.add_interactions = list(custom_interactions)
 
 
-name_map = {"sand": 1, "water": 2, "stone": 3, "wood": 4, "lava": 5, "vapor": 6, }
-def PowderName(name: str):
-    return name_map[name]
+
 
 
 types = {
@@ -148,18 +149,18 @@ types = {
             density=20,
             class_tags=[PowderTags.Liquid],
             fall_direction=0,
-            custom_interactions={7:(2,8,5,False)}),
+            custom_interactions=[]),
     5: Powder(index=5,
             density=87,
             class_tags=[PowderTags.Liquid],
             move_probability=30,
-            custom_interactions={2: (5, 6, 100, True), 4: (0, 5, 30, False)},
+            custom_interactions=[],
             fall_direction=0),
     6: Powder(index=6,
             density=0,
             class_tags=[PowderTags.Gas],
             move_probability=70,
-            custom_interactions={-6: (6, 2, 100, False)},
+            custom_interactions=[],
             fall_direction=0,
             gravity_direction=1),
     7: Powder(index=7,
@@ -167,20 +168,20 @@ types = {
             fall_direction=-1,
             density=88,
             move_probability=30,
-            custom_interactions={8:(7,7,2,False)}),
+            custom_interactions=[]),
     8: Powder(index=8,
             gravity_direction=-1,
             fall_direction=-1,
             density=150,
             move_probability=30,
-            custom_interactions={7:(8,8,0.5,False)}),
+            custom_interactions=[]),
     9: Powder(index=9,
             gravity_direction=-1,
             class_tags=[],
             fall_direction=-1,
             density=150,
             move_probability=30,
-            custom_interactions={7:(8,8,0.5,False)}),
+            custom_interactions=[]),
 }
 
 import unrolled_builder
