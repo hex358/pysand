@@ -345,7 +345,7 @@ class ScrollContainer(Control):
     def scroll(self, delta_px: float):
         scroll_range = max(self.child_pixels, 0)
 
-        raw_off = self._prev * scroll_range + delta_px / self.child_pixels * 500.0
+        raw_off = self._prev * scroll_range + delta_px / self.child_pixels * 100.0
 
         #snapped = raw_off
 
@@ -360,7 +360,7 @@ class ScrollContainer(Control):
         screen_pos = mainloop.screen_mouse_position
         pos = variant.Vector2(screen_pos[0], (mainloop.WINDOW_HEIGHT - screen_pos[1]), i=True)
         if (self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y) or self.out_of_bounds_scroll_on:
-            self.scroll(-mainloop.delta_time * self.scroll_k * mainloop.mouse_scroll_y * 400)
+            self.scroll(-self.scroll_k * mainloop.mouse_scroll_y * 400 / 1000)
 
         if self.scroll_bar is not None:
             self.scroll_bar.x = variant.lerp(self.x, self.x + self.scale_x - self.scroll_bar.scale_x, self.value)

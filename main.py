@@ -114,7 +114,7 @@ def _process(delta:float) -> bool:
     input_poll()
 
     for object in to_process:
-        if not object.__name__ == "assets.render":
+        if not object.__name__ == "render":
             setattr(object, "WINDOW_WIDTH", WINDOW_WIDTH)
             setattr(object, "WINDOW_HEIGHT", WINDOW_HEIGHT)
         object._process(delta)

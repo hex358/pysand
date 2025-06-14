@@ -5,7 +5,7 @@ chunk_manager = None
 imported = None
 types = None
 
-file_header = """from random import random
+file_header = """from random import random, randint, randrange
 dummy_chunk = None
 chunks = None
 """
@@ -14,8 +14,18 @@ func_header = """
 powder = types[{id}]
 sleep: bool = True
 keep = True
+iter_counter: int = 0
 
     """
+
+throw_dice_distinct = """
+a = randrange(1, {max})
+r = randrange(1, {max}-1)
+b = r + (r >= a)
+c = {total_sum} - a - b
+
+a -= 1; b -= 1; c -=1
+"""
 
 func_middle = """
 if keep:
@@ -23,12 +33,13 @@ if keep:
     if {is_visited_inline}:
         bottom_cell = {get_cell_inline}
         if bottom_cell in powder.interact_with_types:
-            interaction = powder.interact_with_types[bottom_cell] #(move_probability == 100 or random()*100 > 100-move_probability) 
+            interaction = powder.interact_with_types[bottom_cell]
             if {prob_eval} (interaction[2] == 100 or random()*100 > 100-interaction[2]):
                 {set_cell_inline}
                 {set_cell_inline_new}
             sleep = False
             keep = False
+{insert}
 
     """
 
@@ -56,30 +67,49 @@ def indent(text: str, count: int = 1):
         text = text.replace('\n', '\n' + (4 * ' '))
     return text
 
+
+def middle_formatted(powder, offset):
+    return func_middle.format(x=offset[0], y=offset[1], get_cell_inline=get_cell_lambda,
+                                     set_cell_inline=indent(set_cell_lambda.format(new_x="x", new_y="y",
+                                                                              value="interaction[0]"), count=4),
+                                     set_cell_inline_new=indent(set_cell_lambda.format(new_x="new_x", new_y="new_y",
+                                                                              value="interaction[1]"), count=4),
+                                     is_visited_inline=indent(is_visited_lambda, count=2),
+                                     prob_eval="" if offset[2] == 100 else f"100*random() > 100-{offset[2]} and ",
+                                     insert="" if not powder.throw_dice else "iter_counter += 1"
+                                    )
+
+
+from itertools import permutations
+from math import factorial
 def create_unrolled():
     result = ""
 
     result += file_header
     for index, powder in types.items():
+        if powder.throw_dice:
+            permuts = [f"\n{permut}," for permut in permutations(powder.fall_offsets)]
+            result += f"permuts_{index} = (" + "".join(permuts) + ")\n"
+
         result += f"def powder_{index}(chunk, x: int, y: int):"
         result += indent(func_header.format(id=index))
-        result += indent("\nif chunk.ticks % 2 == 0:")
+
+        if powder.throw_dice:
+            result += "\n" + indent("\ncurr_offsets = permuts_{index}[randint(0,{length})]".format(index = index,
+                                                                                                   length=factorial(len(powder.fall_offsets))-1))
+
+        result += indent("\nif chunk.ticks % 2 == 0:" if not powder.throw_dice else "\nif True:")
         result += "\n" + indent("\npass", 2)
-        for i in range(len(powder.fall_offsets)*2):
+
+        for i in range(len(powder.fall_offsets)*2 if not powder.throw_dice else len(powder.fall_offsets)):
             if i == len(powder.fall_offsets):
                 result += "\n" + indent("\nelse:")
                 result += "\n" + indent("\npass", 2)
             if i >= len(powder.fall_offsets): i = -(i-len(powder.fall_offsets))
-            offset = powder.fall_offsets[i]
-            block = func_middle.format(x=offset[0], y=offset[1], get_cell_inline=get_cell_lambda,
-                                         set_cell_inline=indent(set_cell_lambda.format(new_x="x", new_y="y",
-                                                                                  value="interaction[0]"), count=4),
-                                         set_cell_inline_new=indent(set_cell_lambda.format(new_x="new_x", new_y="new_y",
-                                                                                  value="interaction[1]"), count=4),
-                                         is_visited_inline=indent(is_visited_lambda, count=2),
-                                         prob_eval="" if offset[2] == 100 else f"100*random() > 100-{offset[2]} and "
-                                         )
-            result += indent(block, 2)
+            offset = powder.fall_offsets[i] if not powder.throw_dice else ("add_x", "add_y", "prob")
+            if powder.throw_dice:
+                result += "\n" + indent(f"\nadd_x, add_y, prob =  curr_offsets[iter_counter]", 2)
+            result += indent(middle_formatted(powder, offset), 2)
 
         result += indent(func_bottom)
         result += "\n\n"

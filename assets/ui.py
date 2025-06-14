@@ -8,8 +8,9 @@ UI_MATCH = {
     3: ["STONE", (0.7,  0.7,  0.7, 1.0)],
     4: ["WOOD", (0.33,  0.24,  0.19, 1.0)],
     5: ["LAVA", (0.9,  0.4,  0.2, 0.9)],
-    6: ["STEAM", (0.7,  0.7,  0.8, 0.7)],
+    6: ["VAPOR", (0.7,  0.7,  0.8, 0.7)],
     7: ["DIRT", (0.33,  0.19,  0.19, 1.0)],
+    8: ["WET\nDIRT", (0.23,  0.09,  0.11, 1.0)],
 
 }
 from random import randint
@@ -407,6 +408,8 @@ NOISE_PATTERN = [pen_get_random() for _ in range(12*12)]
 PEN_UPDATE_FREQ = 0.3
 pen_uses = PEN_UPDATE_FREQ
 def pen(delta:float):
+
+
     global prev_pos, pen_uses, pen_size
     update_pattern = False
     if pen_uses > PEN_UPDATE_FREQ:
@@ -427,7 +430,8 @@ def pen(delta:float):
     #if chunk_manager.get_chunk(int(global_pos.x), int(global_pos.y), None) is None: return
     #hover.x, hover.y = math.floor(display_pos.x / PIXEL_SIZE) * PIXEL_SIZE - 0.4*PIXEL_SIZE, math.floor(display_pos.y / PIXEL_SIZE) * PIXEL_SIZE - 0.3*PIXEL_SIZE
 
-    _float_pen_size += mainloop.mouse_scroll_y * 0.6
+    if rect2.mouse_in:
+        _float_pen_size += mainloop.mouse_scroll_y * 0.6
     _float_pen_size = variant.clamp(_float_pen_size, 0, 6)
     pen_size = int(_float_pen_size)
     NOISE_PATTERN[(pen_size % 12) + (pen_size % 12) * 12] = 1
