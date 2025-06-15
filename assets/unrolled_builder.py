@@ -13,20 +13,13 @@ chunks = None
 func_header = """
 powder = types[{id}]
 id = {id}
+get_cell = chunk.get_cell
+set_cell = chunk.set_cell
 sleep: bool = True
 keep = True
 iter_counter: int = 0
 
     """
-
-throw_dice_distinct = """
-a = randrange(1, {max})
-r = randrange(1, {max}-1)
-b = r + (r >= a)
-c = {total_sum} - a - b
-
-a -= 1; b -= 1; c -=1
-"""
 
 func_middle = """
 if keep:
@@ -51,6 +44,7 @@ else:
     chunk.keep_alive(and_neighbours=True)
     """
 
+
 get_cell_lambda = "chunk.prev[new_y*CHUNK_SIZE+new_x] if (0 <= new_x < CHUNK_SIZE and 0 <= new_y < CHUNK_SIZE) else chunks.get(((chunk.xo*CHUNK_SIZE+new_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+new_y) // CHUNK_SIZE), dummy_chunk).prev[(new_y % CHUNK_SIZE) * CHUNK_SIZE + new_x % CHUNK_SIZE]"
 set_cell_lambda = """
 if {cond}:
@@ -64,6 +58,32 @@ if {cond}:
     """
 is_visited_lambda = "not ((new_x,new_y) in chunk.visited if 0 <= new_x < CHUNK_SIZE and 0 <= new_y < CHUNK_SIZE else (new_x % CHUNK_SIZE, new_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+new_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+new_y) // CHUNK_SIZE), dummy_chunk).visited)"
 
+
+class InlineFunc:
+    def __init__(self, name: str, script: str, arg_count: int):
+        self.name, self.script, self.arg_count = name, script, arg_count
+    def inline(self, string: str):
+        look_for = list("{" + self.name + "}"); is_in_args = ""
+        tail, head = -1, len(look_for)-1
+        string = list(string)
+        while head != len(string)-2:
+            tail += 1; head += 1
+            if is_in_args:
+                is_in_args += string[head]
+                if string[head] == ")":
+                    print(is_in_args); is_in_args = ""
+                string[head] = ""
+                #string[args_origin:head] =
+            if string[tail:head] == look_for and string[head] == "(":
+                is_in_args += "("; string[head] = ""
+        string = "".join(string)
+        string = string.format(**{self.name: self.script})
+        print("".join(string))
+
+funcs = {"get_cell": InlineFunc("get_cell", get_cell_lambda, 2)}
+print(funcs["get_cell"].inline("{get_cell}(5,5) 1"))
+
+
 def indent(text: str, count: int = 1):
     for _ in range(count):
         text = text.replace('\n', '\n' + (4 * ' '))
@@ -71,12 +91,13 @@ def indent(text: str, count: int = 1):
 
 
 def middle_formatted(powder, offset):
+    custom_cond_formatted = powder.custom_cond
     return func_middle.format(x=offset[0], y=offset[1], get_cell_inline=get_cell_lambda,
                                 set_cell_inline=indent(set_cell_lambda.format(new_x="x", new_y="y",
                                                                       value="interaction[0]", cond = "interaction[0] != id"), count=4),
                                 set_cell_inline_new=indent(set_cell_lambda.format(new_x="new_x", new_y="new_y",
                                                                       value="interaction[1]", cond = "True"), count=4),
-                                is_visited_inline=indent(is_visited_lambda, count=2),
+                                is_visited_inline=indent(is_visited_lambda, count=2) + " " + custom_cond_formatted,
                                 prob_eval="" if not isinstance(offset[2], str) and offset[2] >= 100
                                 else f"100*random() > 100-{offset[2]} and ",
                                 insert="" if not powder.throw_dice else "iter_counter += 1",
@@ -97,6 +118,7 @@ def create_unrolled():
 
         result += f"def powder_{index}(chunk, x: int, y: int):"
         result += indent(func_header.format(id=index))
+        result += "\n"+indent("\n"+powder.custom_script)+"\n"
 
         if powder.throw_dice:
             result += "\n" + indent("\ncurr_offsets = permuts_{index}[randint(0,{length})]".format(index = index,
@@ -113,6 +135,7 @@ def create_unrolled():
             offset = powder.fall_offsets[i] if not powder.throw_dice else ("add_x", "add_y", "prob")
             if powder.throw_dice:
                 result += "\n" + indent(f"\nadd_x, add_y, prob =  curr_offsets[iter_counter]", 2)
+
             result += indent(middle_formatted(powder, offset), 2)
 
         result += indent(func_bottom)
@@ -129,4 +152,4 @@ def create_unrolled():
     #imported.csize = mainloop.CHUNK_SIZE
     imported.dummy_chunk = chunk_manager.dummy_chunk
 
-    return {index: getattr(imported, f"powder_{index}") for index in types}
+    return {index: getattr(imported, f"powder_{index}") for index in types if index != 0}

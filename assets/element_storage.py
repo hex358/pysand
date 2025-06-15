@@ -124,10 +124,13 @@ class Powder:
                  fall_direction: int = -1,
                  move_probability: int = 50,
                  custom_interactions: list[Interaction] = {},
+                 custom_scipt = "",
+                 custom_cond = "",
                  add_fall_offsets = [],
                  density: int = 100):
         self.interact_with_types = {}
         #print(no_interactions_with)
+        self.custom_script, self.custom_cond = custom_scipt, custom_cond
         self.gravity_direction = gravity_direction
         self.class_tags = list(class_tags)
         self.throw_dice = throw_dice
@@ -167,7 +170,7 @@ types = {
                 custom_interactions=[],
                 fall_direction=0),
     6: Powder(index=6,
-                density=-70,
+                density=-90,
                 class_tags=[PowderTags.Gas],
                 move_probability=50,
                 custom_interactions=[],
@@ -178,13 +181,15 @@ types = {
                 fall_direction=-1,
                 density=87,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=8, itself_turns_into=7, other_turns_into=7, probability=4)]),
+                custom_interactions=[Interaction(with_powder=8, itself_turns_into=7, other_turns_into=7, probability=1.5, double_sided=True)]),
     8: Powder(index=8,
                 gravity_direction=-1,
                 fall_direction=-1,
                 density=100,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=7, itself_turns_into=8, other_turns_into=8, probability=0.5)]),
+                custom_interactions=[Interaction(with_powder=7, itself_turns_into=8, other_turns_into=8, probability=0.5, double_sided=False)],
+
+              ),
     9: Powder(index=9,
                 gravity_direction=1,
                 class_tags=[],
@@ -192,7 +197,8 @@ types = {
                 density=150,
                 throw_dice=True,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=0, itself_turns_into=9, other_turns_into=9, probability=1)]),
+                custom_interactions=[Interaction(with_powder=0, itself_turns_into=9, other_turns_into=9, probability=1)],
+                custom_cond="and get_cell(new_x-1,new_y) == 0 and get_cell(new_x+1, new_y) == 0"),
 }
 
 import unrolled_builder
@@ -206,3 +212,4 @@ def _ready() -> None:
     unrolled_builder.types = types
     global element_calls
     element_calls = unrolled_builder.create_unrolled()
+    del types[0]
