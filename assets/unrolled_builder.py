@@ -52,9 +52,9 @@ if keep:
 
 func_bottom = """
 if sleep:
-    {skip_over}()
+    chunk.skip_over()
 else:
-    {keep_alive}()
+    chunk.keep_alive(and_neighbours=True)
     """
 
 

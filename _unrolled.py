@@ -225,21 +225,9 @@ def powder_1(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 
 def powder_2(chunk, x: int, y: int):
@@ -455,21 +443,9 @@ def powder_2(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 
 def powder_5(chunk, x: int, y: int):
@@ -685,21 +661,9 @@ def powder_5(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 
 def powder_6(chunk, x: int, y: int):
@@ -915,21 +879,9 @@ def powder_6(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 
 def powder_7(chunk, x: int, y: int):
@@ -1145,21 +1097,9 @@ def powder_7(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 
 def powder_8(chunk, x: int, y: int):
@@ -1375,21 +1315,9 @@ def powder_8(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 
 permuts_9 = (
@@ -1520,20 +1448,8 @@ def powder_9(chunk, x: int, y: int):
         
             
     if sleep:
-        
-        chunk.skipped_over_count += 1
-        
+        skip_over()
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
-        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
+        chunk.keep_alive(and_neighbours=True)
         
 

@@ -375,7 +375,7 @@ def load_button(button):
 
 
 fps_log: list[int] = []
-window_size = 15
+window_size = 5
 
 WINDOW_HEIGHT = None
 WINDOW_WIDTH = None
