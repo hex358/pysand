@@ -170,7 +170,7 @@ types = {
                 custom_interactions=[],
                 fall_direction=0),
     6: Powder(index=6,
-                density=-90,
+                density=-100,
                 class_tags=[PowderTags.Gas],
                 move_probability=50,
                 custom_interactions=[],
@@ -198,7 +198,7 @@ types = {
                 throw_dice=True,
                 move_probability=30,
                 custom_interactions=[Interaction(with_powder=0, itself_turns_into=9, other_turns_into=9, probability=1)],
-                custom_cond="and get_cell(new_x-1,new_y) == 0 and get_cell(new_x+1, new_y) == 0"),
+                custom_cond="and ({get_cell}(new_x-1,new_y)) == 0 and ({get_cell}(new_x+1, new_y)) == 0"),
 }
 
 import unrolled_builder

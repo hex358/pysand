@@ -1,3 +1,14 @@
+
+############        unrolled.py        ############
+# This file is created automatically to maximize  #
+# the perfomance via loop unrolling and function  #
+# inlining. It's not human-readable.              #
+###################################################
+
+
+
+
+
 from random import random, randint, randrange
 dummy_chunk = None
 chunks = None
@@ -19,28 +30,28 @@ def powder_0(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -51,28 +62,28 @@ def powder_0(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -83,28 +94,28 @@ def powder_0(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -119,28 +130,28 @@ def powder_0(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -151,28 +162,28 @@ def powder_0(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -183,28 +194,28 @@ def powder_0(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -214,9 +225,21 @@ def powder_0(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 def powder_1(chunk, x: int, y: int):
@@ -237,28 +260,28 @@ def powder_1(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -269,28 +292,28 @@ def powder_1(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -301,28 +324,28 @@ def powder_1(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -337,28 +360,28 @@ def powder_1(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -369,28 +392,28 @@ def powder_1(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -401,28 +424,28 @@ def powder_1(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -432,9 +455,21 @@ def powder_1(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 def powder_2(chunk, x: int, y: int):
@@ -455,28 +490,28 @@ def powder_2(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -487,28 +522,28 @@ def powder_2(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -519,28 +554,28 @@ def powder_2(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -555,28 +590,28 @@ def powder_2(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -587,28 +622,28 @@ def powder_2(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -619,28 +654,28 @@ def powder_2(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -650,9 +685,21 @@ def powder_2(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 def powder_5(chunk, x: int, y: int):
@@ -673,28 +720,28 @@ def powder_5(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -705,28 +752,28 @@ def powder_5(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -737,28 +784,28 @@ def powder_5(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -773,28 +820,28 @@ def powder_5(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -805,28 +852,28 @@ def powder_5(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -837,28 +884,28 @@ def powder_5(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -868,9 +915,21 @@ def powder_5(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 def powder_6(chunk, x: int, y: int):
@@ -891,28 +950,28 @@ def powder_6(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + 1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -923,28 +982,28 @@ def powder_6(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -955,28 +1014,28 @@ def powder_6(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -991,28 +1050,28 @@ def powder_6(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + 1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1023,28 +1082,28 @@ def powder_6(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1055,28 +1114,28 @@ def powder_6(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + 0
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1086,9 +1145,21 @@ def powder_6(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 def powder_7(chunk, x: int, y: int):
@@ -1109,28 +1180,28 @@ def powder_7(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1141,28 +1212,28 @@ def powder_7(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1173,28 +1244,28 @@ def powder_7(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1209,28 +1280,28 @@ def powder_7(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1241,28 +1312,28 @@ def powder_7(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1273,28 +1344,28 @@ def powder_7(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1304,9 +1375,21 @@ def powder_7(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 def powder_8(chunk, x: int, y: int):
@@ -1327,28 +1410,28 @@ def powder_8(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1359,28 +1442,28 @@ def powder_8(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1391,28 +1474,28 @@ def powder_8(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1427,28 +1510,28 @@ def powder_8(chunk, x: int, y: int):
         pass
         if keep:
             new_x, new_y = x + 0, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1459,28 +1542,28 @@ def powder_8(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1491,28 +1574,28 @@ def powder_8(chunk, x: int, y: int):
             
         if keep:
             new_x, new_y = x + -1, y + -1
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) :
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) :
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1522,9 +1605,21 @@ def powder_8(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 
 permuts_9 = (
@@ -1556,28 +1651,28 @@ def powder_9(chunk, x: int, y: int):
         add_x, add_y, prob =  curr_offsets[iter_counter]
         if keep:
             new_x, new_y = x + add_x, y + add_y
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) and get_cell(new_x-1,new_y) == 0 and get_cell(new_x+1, new_y) == 0:
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) and (chunk.prev[(new_y)*12+(new_x-1)] if (0 <= (new_x-1) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x-1)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x-1) % 12]) == 0 and (chunk.prev[( new_y)*12+(new_x+1)] if (0 <= (new_x+1) < 12 and 0 <= ( new_y) < 12) else chunks.get(((chunk.xo*12+(new_x+1)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).prev[(( new_y) % 12) * 12 + (new_x+1) % 12]) == 0:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-prob and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1590,28 +1685,28 @@ def powder_9(chunk, x: int, y: int):
         add_x, add_y, prob =  curr_offsets[iter_counter]
         if keep:
             new_x, new_y = x + add_x, y + add_y
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) and get_cell(new_x-1,new_y) == 0 and get_cell(new_x+1, new_y) == 0:
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) and (chunk.prev[(new_y)*12+(new_x-1)] if (0 <= (new_x-1) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x-1)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x-1) % 12]) == 0 and (chunk.prev[( new_y)*12+(new_x+1)] if (0 <= (new_x+1) < 12 and 0 <= ( new_y) < 12) else chunks.get(((chunk.xo*12+(new_x+1)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).prev[(( new_y) % 12) * 12 + (new_x+1) % 12]) == 0:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-prob and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1624,28 +1719,28 @@ def powder_9(chunk, x: int, y: int):
         add_x, add_y, prob =  curr_offsets[iter_counter]
         if keep:
             new_x, new_y = x + add_x, y + add_y
-            if not ((new_x,new_y) in chunk.visited if 0 <= new_x < 12 and 0 <= new_y < 12 else (new_x % 12, new_y % 12) in chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).visited) and get_cell(new_x-1,new_y) == 0 and get_cell(new_x+1, new_y) == 0:
-                bottom_cell = chunk.prev[new_y*12+new_x] if (0 <= new_x < 12 and 0 <= new_y < 12) else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk).prev[(new_y % 12) * 12 + new_x % 12]
+            if not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) and (chunk.prev[(new_y)*12+(new_x-1)] if (0 <= (new_x-1) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x-1)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x-1) % 12]) == 0 and (chunk.prev[( new_y)*12+(new_x+1)] if (0 <= (new_x+1) < 12 and 0 <= ( new_y) < 12) else chunks.get(((chunk.xo*12+(new_x+1)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).prev[(( new_y) % 12) * 12 + (new_x+1) % 12]) == 0:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 if bottom_cell in powder.interact_with_types:
                     interaction = powder.interact_with_types[bottom_cell]
                     if 100*random() > 100-prob and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                        
                         if interaction[0] != id:
-                            new_chunk = chunk if 0 <= x < 12 and 0 <= y < 12 else chunks.get(((chunk.xo*12+x) // 12, (chunk.yo*12+y) // 12), dummy_chunk)
-                            ly, lx = y, x
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
                             if new_chunk != chunk:
-                                ly, lx = y % 12, x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[0]
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
-                        
                         if True:
-                            new_chunk = chunk if 0 <= new_x < 12 and 0 <= new_y < 12 else chunks.get(((chunk.xo*12+new_x) // 12, (chunk.yo*12+new_y) // 12), dummy_chunk)
-                            ly, lx = new_y, new_x
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
                             if new_chunk != chunk:
-                                ly, lx = new_y % 12, new_x % 12
-                            new_chunk.data[ly*12 + lx] = interaction[1]
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1])
                             if new_chunk != dummy_chunk:
                                 new_chunk.visited.add((lx, ly))
                             
@@ -1655,8 +1750,20 @@ def powder_9(chunk, x: int, y: int):
         
             
     if sleep:
-        chunk.skip_over()
+        
+        chunk.skipped_over_count += 1
+        
     else:
-        chunk.keep_alive(and_neighbours=True)
+        
+        xo,yo = chunk.xo, chunk.yo
+        chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+        
         
 

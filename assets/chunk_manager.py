@@ -213,6 +213,7 @@ class DummyChunk:
         self.data = array("L", [9]*(CHUNK_SIZE*CHUNK_SIZE))
         self.prev = array("L", [9]*(CHUNK_SIZE*CHUNK_SIZE))
         self.visited = set([])
+        self.update_intensity = 0
     def mark_dirty(self, x:int, y:int):
         pass
     def unskip(self):
