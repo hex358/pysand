@@ -193,15 +193,15 @@ types = {
     9: Powder(index=9,
                 gravity_direction=1,
                 class_tags=[],
-                fall_direction=1,
-                density=150,
+                fall_direction=0,
+                density=2,
                 throw_dice=True,
-                move_probability=30,
-                custom_interactions=[Interaction(with_powder=0, itself_turns_into=9, other_turns_into=9, probability=1)],
+                move_probability=20,
+                custom_interactions=[Interaction(with_powder=0, itself_turns_into=9, other_turns_into=9, probability=5)],
                 custom_cond="and ({get_cell}(new_x-1,new_y)) == 0 and ({get_cell}(new_x+1, new_y)) == 0"),
 }
 
-import unrolled_builder
+import assets.unrolled_builder as unrolled_builder
 unrolled = None
 clears = {}
 def _ready() -> None:
@@ -211,5 +211,5 @@ def _ready() -> None:
     unrolled_builder.chunk_manager = chunk_manager
     unrolled_builder.types = types
     global element_calls
-    element_calls = unrolled_builder.create_unrolled()
     del types[0]
+    element_calls = unrolled_builder.create_unrolled()

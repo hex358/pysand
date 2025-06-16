@@ -112,7 +112,7 @@ class InlineFunc:
 
             inlined = self.script
             for k, v in mapping.items():
-                inlined = inlined.replace(k, "(" + v + ")")
+                inlined = inlined.replace(k, v)
             inlined = indent(inlined, indent_count)
 
             text = prefix + inlined + rest[end_args + 1:]

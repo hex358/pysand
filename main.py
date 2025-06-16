@@ -34,7 +34,7 @@ def _ready() -> None:
    # clock = pygame.time.Clock()
     pygame.display.set_caption("gl_test")
     for classname in PROJECT_CLASSNAMES:
-        module = importlib.import_module("assets."+classname if os.path.exists("assets."+classname) else classname)
+        module = importlib.import_module("assets."+classname)
         modules.append(module)
         modules_dict[classname] = module
         if not classname in sys.modules:
