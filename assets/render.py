@@ -585,7 +585,6 @@ class RenderChunk:
         self.grid_y = gy
         self.start_index = start_idx
     def update(self, data):
-        global _id_buffer
         start = self.start_index
         _id_buffer[start:start + len(data)] = data
 
@@ -625,8 +624,12 @@ from array import array
 def add_chunk(gx, gy, data: array) -> RenderChunk:
     global _total_count, _render_chunks, _id_buffer, mv
 
+    if (gx,gy) in render_chunk_origins:
+        return render_chunk_origins[(gx,gy)]
+
     start_idx = _total_count
-    new_chunk = render_chunk_origins.setdefault((gx,gy), RenderChunk(gx, gy, start_idx))
+    new_chunk = RenderChunk(gx, gy, start_idx)
+    render_chunk_origins[(gx,gy)] = new_chunk
 
     _render_chunks.append(new_chunk)
     _total_count += CHUNK_SIZE * CHUNK_SIZE

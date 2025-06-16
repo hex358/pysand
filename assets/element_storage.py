@@ -212,4 +212,4 @@ def _ready() -> None:
     unrolled_builder.types = types
     global element_calls
     del types[0]
-    element_calls = unrolled_builder.create_unrolled()
+    element_calls = unrolled_builder.import_unrolled()

@@ -38,11 +38,12 @@ class Chunk:
 
 
     def _loaded_init(self):
-        self.rect = render.ColorRect(
-            self.xo * CHUNK_SIZE * PIXEL_SIZE, self.yo * CHUNK_SIZE * PIXEL_SIZE,
-            (CHUNK_SIZE * PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE),
-            (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
-        )
+        pass
+        # self.rect = render.ColorRect(
+        #     self.xo * CHUNK_SIZE * PIXEL_SIZE, self.yo * CHUNK_SIZE * PIXEL_SIZE,
+        #     (CHUNK_SIZE * PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE),
+        #     (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
+        # )
 
 
 
@@ -52,7 +53,9 @@ class Chunk:
         self.xo, self.yo = xo, yo
         #self.data = np.zeros((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
         self.prev = array("L", [0]*(CHUNK_SIZE*CHUNK_SIZE))#np.zeros_like(self.data)
+        self.force_border = set([])
 
+        self.even_tick = False
         self.render_chunk = render.add_chunk(xo, yo, self.data)
         self.visited = set([])
         self.merge_visited = set([])
@@ -73,6 +76,7 @@ class Chunk:
         self.skipped_over_count = 0
         self.visited.clear()
         self.prev = self.data
+        self.force_border.clear()
 
     def keep_alive(self, and_neighbours: bool = False):
         if is_paused:
@@ -166,6 +170,7 @@ class Chunk:
 
         self.skipped_over_count = 0
         self.prev = array("L", self.data)
+        self.even_tick = ticks % 2 == 0
 
         for x in range(CHUNK_SIZE):
             x = x if ticks % 2 == 0 else CHUNK_SIZE-x-1
@@ -173,7 +178,6 @@ class Chunk:
                 if (x,y) in self.visited: continue
                 current = self.prev[y*CHUNK_SIZE+x]
                 if current in element_storage.types:
-#                    element_storage.update_powder(self, x, y)
                     element_storage.element_calls[current](self, x, y)
                 else:
                     self.skip_over()
@@ -197,6 +201,7 @@ def make_snapshot() -> bytearray:
 
 
 def apply_snapshot(snapshot: bytearray):
+
     global chunks
     chunks = pickle.loads(snapshot)
     for c in chunks:
@@ -225,6 +230,7 @@ class DummyChunk:
 def global_set_cell(gx: int, gy: int, v: int):
     target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
     if target:
+       # target.force_border.add((gx % CHUNK_SIZE, gy % CHUNK_SIZE))
         target.keep_alive()
         target.data[(gy % CHUNK_SIZE) * CHUNK_SIZE + gx % CHUNK_SIZE] = v
 

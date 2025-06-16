@@ -1,6 +1,8 @@
 import importlib
 import textwrap
 
+pre_built = False
+
 chunk_manager = None
 imported = None
 types = None
@@ -37,8 +39,8 @@ if keep:
     new_x, new_y = x + {x}, y + {y}
     if not {is_visited}(new_x, new_y) {add_cond}:
         bottom_cell = {get_cell}(new_x,new_y)
-        if bottom_cell in powder.interact_with_types:
-            interaction = powder.interact_with_types[bottom_cell]
+        if bottom_cell in {dict_name}:
+            interaction = {dict_name}[bottom_cell]
             if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                 if interaction[0] != id:
                     {set_cell}(x,y,interaction[0])
@@ -103,16 +105,13 @@ class InlineFunc:
             end_args = rest.find(")")
             raw_args = rest[1:end_args]
 
-            vals = raw_args.split(",")
-            mapping = dict(zip(self.arg_names, vals))
+            inlined = self.script
+            for arg_name, arg_value in zip(self.arg_names, raw_args.split(",")):
+                inlined = inlined.replace(arg_name, "(" + arg_value + ")")
 
             line_start = text.rfind('\n', 0, start) + 1
             indent_str = text[line_start:start]
             indent_count = indent_str.count(" ")//4
-
-            inlined = self.script
-            for k, v in mapping.items():
-                inlined = inlined.replace(k, v)
             inlined = indent(inlined, indent_count)
 
             text = prefix + inlined + rest[end_args + 1:]
@@ -136,6 +135,7 @@ def middle_formatted(powder, offset):
     custom_cond_formatted = inlines(powder.custom_cond)
     inlined = inlines(func_middle)
     return inlined.format(x=offset[0], y=offset[1],
+                        dict_name = f"interact_{powder.index}",
                         set_other_cell_cond = "True" if (offset[0],offset[1] != (0,0)) else "interaction[1] != id",
                         add_cond=custom_cond_formatted,
                         prob_eval="" if not isinstance(offset[2], str) and offset[2] >= 100
@@ -152,10 +152,15 @@ def inlines(string: str):
         string = inliner.inline(string)
     return string
 
-def create_unrolled():
+
+
+def string_unroll():
     result = ""
 
     result += file_header
+    for index in types:
+        result += f"\ninteract_{index} = None\n"
+
     for index, powder in types.items():
         permuts = None
         if powder.throw_dice:
@@ -163,22 +168,23 @@ def create_unrolled():
             permut_tuples = [f"\n{permut}," for permut in permuts]
             result += f"permuts_{index} = (" + "".join(permut_tuples) + ")\n"
 
-        result += f"def powder_{index}(chunk, x: int, y: int):"
+        result += f"\n\ndef powder_{index}(chunk, x: int, y: int):"
         result += indent(func_header.format(id=index))
-        result += "\n"+indent("\n"+inlines(powder.custom_script))+"\n"
+        result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 
         if powder.throw_dice:
-            result += "\n" + indent("\ncurr_offsets = permuts_{index}[randint(0,{length})]".format(index = index,
-                                                                                                   length = len(permuts)-1))
+            result += "\n" + indent("\ncurr_offsets = permuts_{index}[randint(0,{length})]".format(index=index,
+                                                                                                   length=len(
+                                                                                                       permuts) - 1))
 
         result += indent("\nif chunk.ticks % 2 == 0:" if not powder.throw_dice else "\nif True:")
         result += "\n" + indent("\npass", 2)
 
-        for i in range(len(powder.fall_offsets)*2 if not powder.throw_dice else len(powder.fall_offsets)):
+        for i in range(len(powder.fall_offsets) * 2 if not powder.throw_dice else len(powder.fall_offsets)):
             if i == len(powder.fall_offsets):
                 result += "\n" + indent("\nelse:")
                 result += "\n" + indent("\npass", 2)
-            if i >= len(powder.fall_offsets): i = -(i-len(powder.fall_offsets))
+            if i >= len(powder.fall_offsets): i = -(i - len(powder.fall_offsets))
             offset = powder.fall_offsets[i] if not powder.throw_dice else ("add_x", "add_y", "prob")
             if powder.throw_dice:
                 result += "\n" + indent(f"\nadd_x, add_y, prob =  curr_offsets[iter_counter]", 2)
@@ -192,10 +198,16 @@ def create_unrolled():
     with open("_unrolled.py", "w+") as f:
         f.write(result)
 
+def import_unrolled():
+    if not pre_built:
+        string_unroll()
+
     global imported
     imported = importlib.import_module("_unrolled")
     imported.types = types
     imported.chunks = chunk_manager.chunks
+    for index in types:
+        setattr(imported, f"interact_{index}", types[index].interact_with_types)
     #imported.csize = mainloop.CHUNK_SIZE
     imported.MAX_UPDATE_INTENSITY = chunk_manager.MAX_UPDATE_INTENSITY
     imported.dummy_chunk = chunk_manager.dummy_chunk
