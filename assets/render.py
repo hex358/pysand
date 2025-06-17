@@ -2,8 +2,10 @@ import sys
 
 USE_MODULES = ["mainloop", "variant"]
 PIXEL_SIZE = None
+CHUNK_PIXEL_SIZE = None
+plane_offset_x, plane_offset_y = 0,0
 variant = None
-CHUNK_SIZE = 16
+CHUNK_SIZE = 12
 mainloop = None
 Input = None
 WINDOW_WIDTH = None
@@ -19,6 +21,9 @@ from PIL import Image, ImageFont, ImageDraw
 
 _control_types: dict = {}
 
+def get_vertex_offset():
+    return (plane_offset_x - mainloop.CHUNKS_RECT[0] * CHUNK_SIZE * CHUNK_PIXEL_SIZE,
+            plane_offset_y - mainloop.CHUNKS_RECT[1] * CHUNK_SIZE * CHUNK_PIXEL_SIZE)
 
 def cull(self):
     if not self.visible: return False
@@ -360,7 +365,7 @@ class ScrollContainer(Control):
         screen_pos = mainloop.screen_mouse_position
         pos = variant.Vector2(screen_pos[0], (mainloop.WINDOW_HEIGHT - screen_pos[1]), i=True)
         if (self.x <= pos.x <= self.x+self.scale_x and self.y <= pos.y <= self.y+self.scale_y) or self.out_of_bounds_scroll_on:
-            self.scroll(-self.scroll_k * mainloop.mouse_scroll_y * 400 / 1000)
+            self.scroll(self.scroll_k * mainloop.mouse_scroll_y * 400 / 1000)
 
         if self.scroll_bar is not None:
             self.scroll_bar.x = variant.lerp(self.x, self.x + self.scale_x - self.scroll_bar.scale_x, self.value)
@@ -465,8 +470,8 @@ def _init_tile_offsets():
     idx = 0
     for y in range(CHUNK_SIZE):
         for x in range(CHUNK_SIZE):
-            coords[idx, 0] = x * PIXEL_SIZE
-            coords[idx, 1] = y * PIXEL_SIZE
+            coords[idx, 0] = x * CHUNK_PIXEL_SIZE
+            coords[idx, 1] = y * CHUNK_PIXEL_SIZE
             idx += 1
     _TILE_OFFSETS = coords
 
@@ -647,8 +652,8 @@ def add_chunk(gx, gy, data: array) -> RenderChunk:
 
     mv = memoryview(_id_buffer)
 
-    base = np.array([gx * CHUNK_SIZE * PIXEL_SIZE,
-                     gy * CHUNK_SIZE * PIXEL_SIZE], dtype=np.float32)
+    base = np.array([gx * CHUNK_SIZE * CHUNK_PIXEL_SIZE + (plane_offset_x - mainloop.CHUNKS_RECT[0] * CHUNK_SIZE * CHUNK_PIXEL_SIZE),
+                     gy * CHUNK_SIZE * CHUNK_PIXEL_SIZE + (plane_offset_y - mainloop.CHUNKS_RECT[1] * CHUNK_SIZE * CHUNK_PIXEL_SIZE)], dtype=np.float32)
     pos_chunk = (_TILE_OFFSETS + base).flatten()
     byte_off_pos = new_chunk.start_index * 2 * 4
     glBindBuffer(GL_ARRAY_BUFFER, _pos_vbo)
@@ -675,6 +680,10 @@ def _ready():
     glut.glutInit()
 
     plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl", generate_vao = False)
+    plane.set_shader_parameter("uPointSize", CHUNK_PIXEL_SIZE)
+    glUseProgram(plane.program_id)
+    plane.set_uniforms()
+    glUseProgram(0)
     _program = plane.program_id
 
     _init_tile_offsets()
@@ -787,7 +796,7 @@ class ShaderPlane:
             [0, 0, 0, 1]
         ], dtype=np.float32)
         self.set_shader_parameter("uProj", 1, GL_TRUE, proj.flatten())
-        self.set_shader_parameter("uPointSize", PIXEL_SIZE)
+        self.set_shader_parameter("uPointSize", CHUNK_PIXEL_SIZE)
 
         glUseProgram(self.program_id)
         self.set_uniforms()

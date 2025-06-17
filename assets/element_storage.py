@@ -13,11 +13,14 @@ class PowderTags(Enum):
     Default = 0
     Liquid = 1
     Gas = 2
+    Plant = 3
 
 
 other = 254
 current = 255
 
+def clear():
+    unrolled_builder.imported.updated_this_round.clear()
 
 def build_classes():
     for powder in types.values():
@@ -29,7 +32,7 @@ import math
 def is_negative(x): return math.copysign(1.0, x) < 0.0
 
 
-name_map = {"sand": 1, "water": 2, "stone": 3, "wood": 4, "lava": 5, "vapor": 6, "dirt": 7, "wet_dirt": 8}
+name_map = {"sand": 1, "water": 2, "stone": 3, "wood": 4, "lava": 5, "vapor": 6, "dirt": 7, "wet_dirt": 8, "grass": 9}
 def PowderName(name: str):
     return name_map[name]
 
@@ -38,17 +41,31 @@ class Interaction:
                  itself_turns_into: int,
                  other_turns_into: int,
                  probability: int = 100,
-                 double_sided: bool = False):
+                 double_sided: bool = False,
+                 in_offsets: list[tuple[int, int]] = [],
+                 itself_bit_state: int = 0,
+                 other_bit_state: int = 0,
+                 is_with_bit_state: bool = False
+                 ):
         self.interactions = {}
         self.double_sided = double_sided
+        self.is_with_bit_state = is_with_bit_state
+        self.in_offsets = in_offsets
         if isinstance(with_powder, int): with_powder = [with_powder]
         skip = []
         for types in with_powder:
             if is_negative(types): skip.append(-types)
-            types = [types] if not is_negative(types) else [element for element in Powder.all_elements]
+            types = [types]# if not is_negative(types) else [element for element in Powder.all_elements]
+            if is_with_bit_state:
+                assert itself_turns_into is None and other_turns_into is None, "If using bitwise operations, you cant modify the cells"
+                itself_turns_into, other_turns_into = itself_bit_state, other_bit_state
             for other_type in types:
-                self.interactions[other_type] = (itself_turns_into if itself_turns_into != other else other_type,
-                                                 other_turns_into if other_turns_into != other else other_type, probability)
+                self.interactions[(other_type, tuple(in_offsets), is_with_bit_state)] = (itself_turns_into if itself_turns_into != other else other_type,
+                                                 other_turns_into if other_turns_into != other else other_type,
+                                                 probability,
+                                                 in_offsets,
+                                                 itself_bit_state,
+                                                 other_bit_state)
         for key in skip:
             self.interactions.pop(key)
 
@@ -64,9 +81,10 @@ class Interaction:
         return self.interactions.copy()
 
 class Powder:
-    all_elements: list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    all_elements: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 99]
     gases: set = {0, 6}
     liquids: set = {2, 5}
+    solids: list = [1, 7, 8, 9, 10, 99]
     #index: int = 1
     gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=current, probability=None)
                         for gas in gases]
@@ -78,7 +96,9 @@ class Powder:
         PowderTags.Liquid:
             [*liquid_interactions, *gas_interactions ],
         PowderTags.Gas:
-            [*liquid_interactions, *gas_interactions ]
+            [*liquid_interactions, *gas_interactions ],
+        PowderTags.Plant:
+            []
     }
 
     def create_interactions(self):
@@ -94,8 +114,8 @@ class Powder:
             for with_powder, tuple_interaction in interaction.to_tuples().items():
                 new = list(tuple_interaction)
 
-                if new[2] is None: new[2] = add + -self.gravity_direction * (self.density - types[with_powder].density)
-                if with_powder in types and self.density < types[with_powder].density: continue
+                if new[2] is None: new[2] = add + -self.gravity_direction * (self.density - types[with_powder[0]].density)
+                if with_powder in types and self.density < types[with_powder[0]].density: continue
                 if with_powder == self.index: continue
                 if new[0] == current: new[0] = self.index
                 if new[1] == current: new[1] = self.index
@@ -106,14 +126,27 @@ class Powder:
         for interaction in self.add_interactions.values():
             self.interact_with_types |= interaction.to_tuples()
 
+        self.raw_interactions = {offset[:2]: {} for offset in self.fall_offsets}
+        for with_type, interaction in self.interact_with_types.items():
+            if with_type[2]: self.has_bitwise_operations = True
+            offsets = []
+            if not interaction[3]:
+                offsets = self.fall_offsets
+            else:
+                offsets = interaction[3]
+            for offset in offsets:
+                if offset in self.interaction_checks: continue
+                self.raw_interactions[offset[:2]][with_type[0]] = (interaction[0] << 8 | interaction[4], interaction[1] << 8 | interaction[5], interaction[2], with_type[2])
+
     def bind_interactions(self):
         for interaction in list(self.add_interactions.values()):
             #print(interaction.to_tuples())
             if interaction.double_sided:
                 for with_powder, interaction_tuple in interaction.to_tuples().items():
-                    other_powder = types[with_powder]
+                    other_powder = types[with_powder[0]]
                     if not self.index in other_powder.add_interactions:
-                        other_powder.add_interactions[self.index] = Interaction(self.index, interaction_tuple[1], interaction_tuple[0], interaction_tuple[2])
+                        other_powder.add_interactions[(self.index, ())] = Interaction(self.index, interaction_tuple[1], interaction_tuple[0], interaction_tuple[2],
+                                                                                itself_bit_state=interaction_tuple[5], other_bit_state=interaction_tuple[4])
 
 
 
@@ -126,9 +159,13 @@ class Powder:
                  custom_interactions: list[Interaction] = {},
                  custom_scipt = "",
                  custom_cond = "",
+                 add_interaction_checks = [],
                  add_fall_offsets = [],
                  density: int = 100):
+        self.raw_interactions = {}
         self.interact_with_types = {}
+        self.is_plant = False
+        self.has_bitwise_operations = False
         #print(no_interactions_with)
         self.custom_script, self.custom_cond = custom_scipt, custom_cond
         self.gravity_direction = gravity_direction
@@ -136,12 +173,45 @@ class Powder:
         self.throw_dice = throw_dice
         self.index = index
         self.density = density
-        self.fall_offsets = [(0,gravity_direction,100), (-1,fall_direction,move_probability),(1,fall_direction,move_probability)]
-        self.fall_offsets += list(add_fall_offsets)
+
+        self.interaction_checks = set(add_interaction_checks)
+        add_fall_offsets += add_interaction_checks
+
+        default_offsets = [(0,gravity_direction,100), (-1,fall_direction,move_probability), (1,fall_direction,move_probability)]
+        offsets_dict = dict({offset[0:2]: offset for offset in default_offsets})
+        offsets_dict |= dict({offset[0:2]: offset for offset in add_fall_offsets})
+        self.fall_offsets = []
+        for offset in offsets_dict.values():
+            if offset[2] > 0:
+                self.fall_offsets.append(offset)
+
         self.add_interactions = {}
         for interaction in custom_interactions:
             self.add_interactions |= {_tuple[0]: interaction for _tuple in interaction.to_tuples().values()}
 
+plant_heights = {}
+class Plant(Powder):
+    def __init__(self, index: int,
+                 growth_direction: int = 1,
+                 growth_probability: int = 20,
+                 growth_suitable: list[int] = [],
+                 branch_probability: int = 5,
+                 height: int = 10):
+        super().__init__(index,
+                        class_tags=[PowderTags.Plant],
+                        throw_dice=True,
+                        gravity_direction=growth_direction,
+                        fall_direction=growth_direction,
+                        add_fall_offsets=[(-1,growth_direction, branch_probability),
+                                          (1, growth_direction, branch_probability),
+                                          (0, growth_direction, growth_probability)
+                                          ],
+                        )
+        self.is_plant = True
+        plant_heights[index] = height
+        self.height = height
+        for gas in growth_suitable:
+            self.add_interactions[gas] = Interaction(with_powder=gas, itself_turns_into=index, other_turns_into=index, probability=100)
 
 
 
@@ -155,19 +225,20 @@ types = {
     1: Powder(index=1,
                 gravity_direction=-1,
                 fall_direction=-1,
-                density=90,
+                density=80,
                 move_probability=50),
     2: Powder(index=2,
-                density=20,
+                density=40,
                 class_tags=[PowderTags.Liquid],
                 fall_direction=0,
                 custom_interactions=[Interaction(with_powder=5, double_sided=True, itself_turns_into=6, other_turns_into=5),
-                                     Interaction(with_powder=7, itself_turns_into=2, other_turns_into=8, probability=20)]),
+                                     Interaction(with_powder=7, itself_turns_into=2, other_turns_into=8, probability=100, double_sided=True)]),
     5: Powder(index=5,
-                density=87,
+                density=70,
                 class_tags=[PowderTags.Liquid],
                 move_probability=30,
-                custom_interactions=[],
+                custom_interactions=[Interaction(with_powder=4, itself_turns_into=0, other_turns_into=5, probability=30),
+                                     Interaction(with_powder=8, itself_turns_into=5, other_turns_into=7, probability=4)],
                 fall_direction=0),
     6: Powder(index=6,
                 density=-100,
@@ -179,33 +250,41 @@ types = {
     7: Powder(index=7,
                 gravity_direction=-1,
                 fall_direction=-1,
-                density=87,
+                density=80,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=8, itself_turns_into=7, other_turns_into=7, probability=1.5, double_sided=True)]),
+                custom_interactions=[Interaction(with_powder=8, itself_turns_into=7, other_turns_into=7, probability=11, double_sided=True)]),
     8: Powder(index=8,
                 gravity_direction=-1,
                 fall_direction=-1,
-                density=100,
+                density=120,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=7, itself_turns_into=8, other_turns_into=8, probability=0.5, double_sided=False)],
-
-              ),
+                custom_interactions=[Interaction(with_powder=7, itself_turns_into=8, other_turns_into=8, probability=10.9)],
+                ),
     9: Powder(index=9,
-                gravity_direction=1,
-                class_tags=[],
-                fall_direction=0,
-                density=2,
-                throw_dice=True,
-                move_probability=20,
-                custom_interactions=[Interaction(with_powder=0, itself_turns_into=9, other_turns_into=9, probability=5)],
-                custom_cond="and ({get_cell}(new_x-1,new_y)) == 0 and ({get_cell}(new_x+1, new_y)) == 0"),
+                gravity_direction=-1,
+                fall_direction=-1,
+                density=120,
+                move_probability=50,
+                add_interaction_checks=[(0,1,100)],
+                custom_interactions=[Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other, probability=1,
+                                                 itself_bit_state=20, in_offsets=[(0,1)]),
+                                     Interaction(with_powder=9, itself_turns_into=None, other_turns_into=None, probability=100,
+                                                 itself_bit_state=1,other_bit_state=1,
+                                                 is_with_bit_state=True)]
+                ),
+    10: Plant(index=10,
+                growth_direction=1,
+                branch_probability=15,
+                growth_probability=100,
+                growth_suitable=[0],
+                height=10,
+                )
 }
 
 import assets.unrolled_builder as unrolled_builder
 unrolled = None
 clears = {}
 def _ready() -> None:
-    a = [[2,2],[1,1]]
     build_classes()
     global unrolled
     unrolled_builder.chunk_manager = chunk_manager

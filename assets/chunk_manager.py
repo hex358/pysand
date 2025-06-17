@@ -5,6 +5,7 @@ import numpy as np
 USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
 
+
 CHUNK_SIZE = 12
 UPDATES_PER_SECOND = 60
 RENDERS_PER_SECOND = 60
@@ -59,11 +60,6 @@ class Chunk:
         self.render_chunk = render.add_chunk(xo, yo, self.data)
         self.visited = set([])
         self.merge_visited = set([])
-        self.rect = render.ColorRect(
-        xo*CHUNK_SIZE*PIXEL_SIZE,yo*CHUNK_SIZE*PIXEL_SIZE,
-        (CHUNK_SIZE*PIXEL_SIZE,CHUNK_SIZE*PIXEL_SIZE),
-        (1,0,0,0.0),0,(1,1,1,1)
-   )
 
     def decrement_update(self):
         self.update_intensity -= update_delta
@@ -101,16 +97,39 @@ class Chunk:
     def is_alive(self) -> bool:
         return self.update_intensity > 0.03
 
+    def get_bit_state(self, x: int, y: int):
+        if self.local_is_in_bounds(x, y):
+            return self.prev[y*CHUNK_SIZE+x] & 0xFF
+        gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
+        target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
+        if target is None:
+            return 0
+        #ly, lx = gy % CHUNK_SIZE, gx % CHUNK_SIZE
+        return target.prev[(gy % CHUNK_SIZE)*CHUNK_SIZE + gx % CHUNK_SIZE] & 0xFF
+
+    def set_bit_state(self, x: int, y: int, val: int):
+        if self.local_is_in_bounds(x, y):
+            self.data[y*CHUNK_SIZE+x] = (self.data[y*CHUNK_SIZE+x] & 0xFF00) | (val & 0xFF)
+            return True
+        gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
+        target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
+        if target is None:
+            return False
+        local_x, local_y = gx % CHUNK_SIZE, gy % CHUNK_SIZE
+        target.data[local_y*CHUNK_SIZE+local_x] = (target.data[local_y*CHUNK_SIZE+local_x] & 0xFF00) | (val & 0xFF)
+
+        return True
+
     def get_cell(self, x: int, y: int) -> int:
         if self.local_is_in_bounds(x, y):
-            return self.prev[y*CHUNK_SIZE+x]# if not (x,y) in self.visited else self.visited[(x,y)]
+            return self.prev[y*CHUNK_SIZE+x] >> 8# if not (x,y) in self.visited else self.visited[(x,y)]
 
         gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
         target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
         if target is None:
-            return 9
+            return 99
         #ly, lx = gy % CHUNK_SIZE, gx % CHUNK_SIZE
-        return target.prev[(gy % CHUNK_SIZE)*CHUNK_SIZE + gx % CHUNK_SIZE]# if target.was_updated else target.data[ly, lx]#if not (lx,ly) in target.visited else target.visited[(lx,ly)]
+        return target.prev[(gy % CHUNK_SIZE)*CHUNK_SIZE + gx % CHUNK_SIZE] >> 8# if target.was_updated else target.data[ly, lx]#if not (lx,ly) in target.visited else target.visited[(lx,ly)]
 
     def move_cell(self, ox: int, oy: int, x: int, y: int, v: int):
         if not self.is_visited(x,y):
@@ -135,13 +154,15 @@ class Chunk:
     def unskip(self):
         self.skipped_over_count -= 1
 
+
+
     def set_cell(self, x: int, y: int, val: int) -> bool:
         # if self.is_visited(x,y):
         #     return False
         self.visited.add((x, y))
         if self.local_is_in_bounds(x, y):
             #if not (x,y) in self.visited:
-            self.data[y*CHUNK_SIZE+x] = val
+            self.data[y*CHUNK_SIZE+x] = val << 8
            # print(self.data)
             self.keep_alive()
             return True
@@ -152,14 +173,9 @@ class Chunk:
         local_x, local_y = gx % CHUNK_SIZE, gy % CHUNK_SIZE
         target.keep_alive()
 
-        if target.was_updated:
-            target.visited.add((local_x, local_y))
-            target.data[local_y*CHUNK_SIZE+local_x] = val
-        else:
-           # if not (local_x, local_y) in target.merge_visited:
-            target.visited.add((local_x, local_y))
-         #   target.merge_prev[(local_x, local_y)] = val
-            target.data[local_y*CHUNK_SIZE+local_x] = val
+        target.visited.add((local_x, local_y))
+        target.data[local_y*CHUNK_SIZE+local_x] = val << 8
+
         return True
 
    # get_cell = lambda self,x,y: self.prev[y,x] if (0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE) else chunks.get(((self.xo*CHUNK_SIZE+x) // CHUNK_SIZE, (self.yo*CHUNK_SIZE+y) // CHUNK_SIZE), dummy_chunk).prev[y % CHUNK_SIZE, x % CHUNK_SIZE]
@@ -176,7 +192,7 @@ class Chunk:
             x = x if ticks % 2 == 0 else CHUNK_SIZE-x-1
             for y in range(CHUNK_SIZE):
                 if (x,y) in self.visited: continue
-                current = self.prev[y*CHUNK_SIZE+x]
+                current = self.prev[y*CHUNK_SIZE+x] >> 8
                 if current in element_storage.types:
                     element_storage.element_calls[current](self, x, y)
                 else:
@@ -215,8 +231,8 @@ def apply_snapshot(snapshot: bytearray):
 
 class DummyChunk:
     def __init__(self):
-        self.data = array("L", [9]*(CHUNK_SIZE*CHUNK_SIZE))
-        self.prev = array("L", [9]*(CHUNK_SIZE*CHUNK_SIZE))
+        self.data = array("L", [99 << 8]*(CHUNK_SIZE*CHUNK_SIZE))
+        self.prev = array("L", [99 << 8]*(CHUNK_SIZE*CHUNK_SIZE))
         self.visited = set([])
         self.update_intensity = 0
     def mark_dirty(self, x:int, y:int):
@@ -224,15 +240,16 @@ class DummyChunk:
     def unskip(self):
         pass
     def keep_alive(self, and_neighbors: bool = False):
+
         pass
 
 
-def global_set_cell(gx: int, gy: int, v: int):
+def global_set_cell(gx: int, gy: int, v: int, bit_value = False):
     target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
     if target:
        # target.force_border.add((gx % CHUNK_SIZE, gy % CHUNK_SIZE))
         target.keep_alive()
-        target.data[(gy % CHUNK_SIZE) * CHUNK_SIZE + gx % CHUNK_SIZE] = v
+        target.data[(gy % CHUNK_SIZE) * CHUNK_SIZE + gx % CHUNK_SIZE] = v << 8 if not bit_value else v
 
 
 dummy_chunk = DummyChunk()
@@ -273,6 +290,7 @@ def _process(delta: float) -> None:
         timestamp = mainloop.time_passed
         update_tick = True
         ticks += 1
+        element_storage.clear()
         if not is_paused:
             for c in chunks.values():
                 if c.is_alive():

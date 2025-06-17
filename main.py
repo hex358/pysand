@@ -4,16 +4,18 @@ PROJECT_CLASSNAMES = [
     "variant", "ui", "render", "element_storage", "chunk_manager", "example"
 ]
 GLOBAL_VARS = [
-    "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT"
+    "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT", "CHUNK_PIXEL_SIZE"
 ]
 
 
 
-WINDOW_WIDTH, WINDOW_HEIGHT = 780, 640
+WINDOW_WIDTH, WINDOW_HEIGHT = 773, 740
+CHUNK_PIXEL_SIZE = 5.0
 PIXEL_SIZE = 5.0
 CHUNK_SIZE = 12
+size_inc = (3*5-PIXEL_SIZE/3,5*5-PIXEL_SIZE/3)
 
-CHUNKS_RECT = (1,2,12,10)
+CHUNKS_RECT = (1,2,12,12)
 
 import pygame
 from pygame.locals import *
@@ -29,7 +31,7 @@ _pixels = 0
 to_process = []
 
 def _ready() -> None:
-    pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), DOUBLEBUF | OPENGL | pygame.RESIZABLE)
+    pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), DOUBLEBUF | OPENGL)
    # global clock
    # clock = pygame.time.Clock()
     pygame.display.set_caption("gl_test")

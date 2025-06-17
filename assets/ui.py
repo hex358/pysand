@@ -11,14 +11,16 @@ UI_MATCH = {
     6: ["VAPOR", (0.7,  0.7,  0.8, 0.7)],
     7: ["DIRT", (0.33,  0.19,  0.19, 1.0)],
     8: ["WET\nDIRT", (0.23,  0.09,  0.11, 1.0)],
-    9: ["GRASS", (0,  1,  0, 1.0)],
+    9: ["SEEDS", (0.4,  0.8,  0, 1.0)],
+#10: ["GRASS", (0,  1,  0, 1.0)],
 
 }
 from random import randint
 
 
 TAGS = []
-USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant", "variant"]
+USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant", "variant", "element_storage"]
+element_storage = None
 chunk_manager = None
 render = None
 mainloop = None
@@ -45,14 +47,16 @@ def _ready() -> None:
     prev_pos = Vector2(0, 0, i=True)
     label = render.Label("hello",120*5,17*5,(1,1), (1,0,0,1))
     label.z_index = 5
-    ox, oy = CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[0], CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[1]
+    ox, oy = CHUNK_SIZE * 5.0, CHUNK_SIZE * 5.0 * 2
 
     global rect2
+    pix = render.CHUNK_PIXEL_SIZE
     rect2 = render.ColorRect(
         ox - PIXEL_SIZE*1.333,oy - PIXEL_SIZE*1.333,
-        (CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[2] - ox + PIXEL_SIZE*2, CHUNK_SIZE * PIXEL_SIZE * CHUNKS_RECT[3] - oy + PIXEL_SIZE*2),
-        (0,0,0,0),PIXEL_SIZE,(0.7,0.7,0.7,1),offsets_fix=1
+        (CHUNK_SIZE * pix * CHUNKS_RECT[2] - ox - pix * 2/3 + mainloop.size_inc[0], CHUNK_SIZE * pix * (CHUNKS_RECT[3]) - oy - pix * 2/3 - pix * 2 + mainloop.size_inc[1]),
+        (0,0,0,0),5.0,(0.7,0.7,0.7,1),offsets_fix=1
     )
+    render.plane_offset_x, render.plane_offset_y = ox, oy
 
 
     render.set_control_scale(0.7)
@@ -210,7 +214,7 @@ def _ready() -> None:
     pause_texture.x, pause_texture.y = 10,3
     pause_texture.scale_x, pause_texture.scale_y = 3.4,3.4
     buttons["pause_button"] = render.Button(
-       990,118,
+       rect2.x/0.7 + rect2.scale_x/0.7 - 35,118,
         (35,35),
         (0.5, 0.5, 0.5, 1), PIXEL_SIZE, (0.8, 0.8, 0.8, 1),
         pause_texture,
@@ -224,8 +228,8 @@ def _ready() -> None:
 
 
 
-    brush_scroll = render.ScrollContainer(805,46-5-3,(800,100),17,"h")
-    rect = render.ColorRect(805-5-1,46-5-6-3, (226,72), (0.5,0.5,0.5,1), PIXEL_SIZE*1.3, (0.8, 0.8, 0.8, 1), offsets_fix=-1)
+    brush_scroll = render.ScrollContainer(rect2.x/0.7 + rect2.scale_x/0.7 - 226 + 5,  38, (800,100),17,"h")
+    rect = render.ColorRect(rect2.x/0.7 + rect2.scale_x/0.7 - 226, 32, (226,72), (0.5,0.5,0.5,1), PIXEL_SIZE*1.3, (0.8, 0.8, 0.8, 1), offsets_fix=-1)
     rect.z_index = 7
     #scroll.add_children(buttons["load"],buttons["save"],buttons["clear"])
     for i,name in enumerate(["circle_brush", "square_brush", "noise_brush"]):
@@ -418,7 +422,8 @@ def pen(delta:float):
 
 
     screen_pos = mainloop.screen_mouse_position
-    global_pos = Vector2((screen_pos[0]+1.333) / mainloop.PIXEL_SIZE, (WINDOW_HEIGHT - screen_pos[1] + 1.333) / mainloop.PIXEL_SIZE, i=True)
+    off = render.get_vertex_offset()
+    global_pos = Vector2((screen_pos[0]+1.333 - off[0]) / render.CHUNK_PIXEL_SIZE, (WINDOW_HEIGHT - screen_pos[1] + 1.333 - off[1]) / render.CHUNK_PIXEL_SIZE, i=True)
     global MODE, _float_pen_size
     # - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
 
@@ -463,7 +468,10 @@ def pen(delta:float):
                     if prev == 0: continue
 
                 visited.add((ox+x,oy+y))
-                chunk_manager.global_set_cell(int(ox+x),int(oy+y),mainloop.SELECTED_TYPE)
+                selected = mainloop.SELECTED_TYPE
+                chunk_manager.global_set_cell(int(ox+x), int(oy+y),
+                                              selected << 8 | element_storage.plant_heights.get(selected, 0),
+                                              bit_value=True)
 
         if MODE != 3:
             for i in range(int(length)):
