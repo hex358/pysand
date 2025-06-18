@@ -11,6 +11,6 @@ out vec2 outPos;
 void main() {
     gl_Position = uProj * vec4(aPos, 0.0, 1.0);
     gl_PointSize = uPointSize;
-    vTileID = aTileID >> 8;
+    vTileID = aTileID;
     outPos = aPos;
 }

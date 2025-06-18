@@ -19,6 +19,7 @@ file_header = """
 
 
 from random import random, randint, randrange
+from collections import namedtuple
 dummy_chunk = None
 updated_this_round = set([])
 chunks = None
@@ -43,20 +44,20 @@ if keep:
     new_x, new_y = x + {x}, y + {y}
     if (not {is_visited}(new_x, new_y) {add_cond}) and {mandatory_cond}:
         bottom_cell = {get_cell}(new_x,new_y)
-        cond_1 = bottom_cell in {dict_name}[({x}, {y})]
-        cond_2 = False       
-        if cond_1 or cond_2:
-            interaction = {dict_name}[({x}, {y})][bottom_cell]
+        dict1, dict2 = {dict_name}[({x}, {y}, False)], {dict_name}[({x}, {y}, True)]
+        bit_1 = bottom_cell >> 8
+        bit_2 = bottom_cell & 0xFF
+        if bit_1 in dict1 or bit_2 in dict2:
+            interaction = dict2[bit_2] if bit_2 in dict2 else dict1[bit_1]
             if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                 {plant_insert}
-                if {bitwise_interaction_cond}:
-                    if interaction[0] != id:
-                        {set_cell}(x,y,interaction[0])
-                    if {set_other_cell_cond}:
-                        {set_cell}(new_x,new_y,interaction[1])
-                else:
-                    {set_bit}(x,y,interaction[0])
-                    {set_bit}(new_x,new_y,interaction[1])
+                if interaction[0] != id:
+                    {set_cell}(x,y,interaction[0])
+                if {set_other_cell_cond}:
+                    {set_cell}(new_x,new_y,interaction[1])
+
+                {set_bit}(x,y,interaction[0])
+                {set_bit}(new_x,new_y,interaction[1])
                 {plant_inline_bottom}
             sleep = False
             keep = False
@@ -94,7 +95,7 @@ else:
     """
 
 
-get_cell_inline = "chunk.prev[get_y*CHUNK_SIZE+get_x] >> 8 if (0 <= get_x < CHUNK_SIZE and 0 <= get_y < CHUNK_SIZE) else chunks.get(((chunk.xo*CHUNK_SIZE+get_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+get_y) // CHUNK_SIZE), dummy_chunk).prev[(get_y % CHUNK_SIZE) * CHUNK_SIZE + get_x % CHUNK_SIZE] >> 8"
+get_cell_inline = "chunk.prev[get_y*CHUNK_SIZE+get_x] if (0 <= get_x < CHUNK_SIZE and 0 <= get_y < CHUNK_SIZE) else chunks.get(((chunk.xo*CHUNK_SIZE+get_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+get_y) // CHUNK_SIZE), dummy_chunk).prev[(get_y % CHUNK_SIZE) * CHUNK_SIZE + get_x % CHUNK_SIZE]"
 get_bit_inline = "chunk.prev[get_y*CHUNK_SIZE+get_x] & 0xFF if (0 <= get_x < CHUNK_SIZE and 0 <= get_y < CHUNK_SIZE) else chunks.get(((chunk.xo*CHUNK_SIZE+get_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+get_y) // CHUNK_SIZE), dummy_chunk).prev[(get_y % CHUNK_SIZE) * CHUNK_SIZE + get_x % CHUNK_SIZE] & 0xFF"
 
 
@@ -103,7 +104,7 @@ new_chunk = chunk if 0 <= set_x < CHUNK_SIZE and 0 <= set_y < CHUNK_SIZE else ch
 ly, lx = set_y, set_x
 if new_chunk != chunk:
     ly, lx = set_y % CHUNK_SIZE, set_x % CHUNK_SIZE
-new_chunk.data[ly*CHUNK_SIZE + lx] = set_value# << 8
+new_chunk.data[ly*CHUNK_SIZE + lx] = set_value << 8
 new_chunk.visited.add((lx, ly))
 """
 is_visited_inline = "((visited_x,visited_y) in chunk.visited if 0 <= visited_x < CHUNK_SIZE and 0 <= visited_y < CHUNK_SIZE else (visited_x % CHUNK_SIZE, visited_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+visited_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+visited_y) // CHUNK_SIZE), dummy_chunk).visited)"
@@ -184,7 +185,7 @@ def middle_formatted(powder, offset, cells_cached=False):
         #mandatory_cond = inlines("({get_cell}(x-1, y)) != {id} and ({get_cell}(x+1, y)) != {id}").format(
         #               id = powder.index)#,
     return inlined.format(x=offset[0], y=offset[1],
-                        bitwise_interaction_cond = "True" if not powder.has_bitwise_operations else "not interaction[3]",
+                        bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
                         mandatory_cond=mandatory_cond,
                         dict_name = f"interact_{powder.index}",
                         set_other_cell_cond = set_other_cell_cond if (offset[0],offset[1] != (0,0)) else "interaction[1] != id",
@@ -227,7 +228,7 @@ def string_unroll():
         if powder.is_plant:
            pre_cond = inlines("""
 cached_left, cached_up, cached_right = ({get_cell}(x-1,y+{dir})), ({get_cell}(x,y+{dir})), ({get_cell}(x+1,y+{dir}))
-if (cached_left == {id} or cached_right == {id} or cached_up == {id}): 
+if (cached_left>> 8 == {id} or cached_right>> 8 == {id} or cached_up>> 8 == {id}): 
     keep = False
 else:
     replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right

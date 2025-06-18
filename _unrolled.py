@@ -53,33 +53,33 @@ def powder_1(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_1[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_1[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_1[(0, -1, False)], interact_1[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -107,33 +107,33 @@ def powder_1(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_1[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_1[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_1[(-1, -1, False)], interact_1[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -161,33 +161,33 @@ def powder_1(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_1[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_1[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_1[(1, -1, False)], interact_1[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -219,33 +219,33 @@ def powder_1(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_1[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_1[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_1[(0, -1, False)], interact_1[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -273,33 +273,33 @@ def powder_1(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_1[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_1[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_1[(1, -1, False)], interact_1[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -327,33 +327,33 @@ def powder_1(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_1[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_1[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_1[(-1, -1, False)], interact_1[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -423,33 +423,33 @@ def powder_2(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_2[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_2[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_2[(0, -1, False)], interact_2[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -477,33 +477,33 @@ def powder_2(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_2[(-1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_2[(-1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_2[(-1, 0, False)], interact_2[(-1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -531,33 +531,33 @@ def powder_2(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_2[(1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_2[(1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_2[(1, 0, False)], interact_2[(1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -589,33 +589,33 @@ def powder_2(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_2[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_2[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_2[(0, -1, False)], interact_2[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -643,33 +643,33 @@ def powder_2(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_2[(1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_2[(1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_2[(1, 0, False)], interact_2[(1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -697,33 +697,33 @@ def powder_2(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_2[(-1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_2[(-1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_2[(-1, 0, False)], interact_2[(-1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -793,33 +793,33 @@ def powder_5(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_5[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_5[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_5[(0, -1, False)], interact_5[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -847,33 +847,33 @@ def powder_5(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_5[(-1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_5[(-1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_5[(-1, 0, False)], interact_5[(-1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -901,33 +901,33 @@ def powder_5(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_5[(1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_5[(1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_5[(1, 0, False)], interact_5[(1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -959,33 +959,33 @@ def powder_5(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_5[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_5[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_5[(0, -1, False)], interact_5[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1013,33 +1013,33 @@ def powder_5(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_5[(1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_5[(1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_5[(1, 0, False)], interact_5[(1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1067,33 +1067,33 @@ def powder_5(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_5[(-1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_5[(-1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_5[(-1, 0, False)], interact_5[(-1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1163,33 +1163,33 @@ def powder_6(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + 1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_6[(0, 1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_6[(0, 1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_6[(0, 1, False)], interact_6[(0, 1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1217,33 +1217,33 @@ def powder_6(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_6[(-1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_6[(-1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_6[(-1, 0, False)], interact_6[(-1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1271,33 +1271,33 @@ def powder_6(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_6[(1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_6[(1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_6[(1, 0, False)], interact_6[(1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1329,33 +1329,33 @@ def powder_6(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + 1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_6[(0, 1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_6[(0, 1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_6[(0, 1, False)], interact_6[(0, 1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1383,33 +1383,33 @@ def powder_6(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_6[(1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_6[(1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_6[(1, 0, False)], interact_6[(1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1437,33 +1437,33 @@ def powder_6(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + 0
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_6[(-1, 0)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_6[(-1, 0)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_6[(-1, 0, False)], interact_6[(-1, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1533,33 +1533,33 @@ def powder_7(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_7[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_7[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_7[(0, -1, False)], interact_7[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1587,33 +1587,33 @@ def powder_7(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_7[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_7[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_7[(-1, -1, False)], interact_7[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1641,33 +1641,33 @@ def powder_7(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_7[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_7[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_7[(1, -1, False)], interact_7[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1699,33 +1699,33 @@ def powder_7(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_7[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_7[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_7[(0, -1, False)], interact_7[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1753,33 +1753,33 @@ def powder_7(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_7[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_7[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_7[(1, -1, False)], interact_7[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1807,33 +1807,33 @@ def powder_7(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_7[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_7[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_7[(-1, -1, False)], interact_7[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1903,33 +1903,33 @@ def powder_8(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_8[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_8[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_8[(0, -1, False)], interact_8[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -1957,33 +1957,33 @@ def powder_8(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_8[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_8[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_8[(-1, -1, False)], interact_8[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2011,33 +2011,33 @@ def powder_8(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_8[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_8[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_8[(1, -1, False)], interact_8[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2069,33 +2069,33 @@ def powder_8(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_8[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_8[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_8[(0, -1, False)], interact_8[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2123,33 +2123,33 @@ def powder_8(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_8[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_8[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_8[(1, -1, False)], interact_8[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2177,33 +2177,33 @@ def powder_8(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_8[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_8[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_8[(-1, -1, False)], interact_8[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
                         if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2273,33 +2273,33 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(0, -1, False)], interact_9[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2327,33 +2327,33 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(-1, -1, False)], interact_9[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2381,33 +2381,33 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(1, -1, False)], interact_9[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2435,33 +2435,87 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + 1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(0, 1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(0, 1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(0, 1, False)], interact_9[(0, 1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
+                            
+                            if 0 <= (x) < 12 and 0 <= (y) < 12:
+                                chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
+                            else:
+                                gx, gy = chunk.xo * 12 + (x), chunk.yo * 12 + (y)
+                                target = chunks.get((gx // 12, gy // 12), dummy_chunk)
+                                local_x, local_y = gx % 12, gy % 12
+                                target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | ((interaction[0]) & 0xFF)
+                            
+                            
+                            if 0 <= (new_x) < 12 and 0 <= (new_y) < 12:
+                                chunk.data[(new_y)*12+(new_x)] = (chunk.data[(new_y)*12+(new_x)] & 0xFF00) | ((interaction[1]) & 0xFF)
+                            else:
+                                gx, gy = chunk.xo * 12 + (new_x), chunk.yo * 12 + (new_y)
+                                target = chunks.get((gx // 12, gy // 12), dummy_chunk)
+                                local_x, local_y = gx % 12, gy % 12
+                                target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | ((interaction[1]) & 0xFF)
+                            
+                        
+                    sleep = False
+                    keep = False
+        
+        
+            
+        if keep:
+            new_x, new_y = x + 0, y + 0
+            if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(0, 0, False)], interact_9[(0, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
+                    if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2493,33 +2547,87 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(0, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(0, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(0, -1, False)], interact_9[(0, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
+                            
+                            if 0 <= (x) < 12 and 0 <= (y) < 12:
+                                chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
+                            else:
+                                gx, gy = chunk.xo * 12 + (x), chunk.yo * 12 + (y)
+                                target = chunks.get((gx // 12, gy // 12), dummy_chunk)
+                                local_x, local_y = gx % 12, gy % 12
+                                target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | ((interaction[0]) & 0xFF)
+                            
+                            
+                            if 0 <= (new_x) < 12 and 0 <= (new_y) < 12:
+                                chunk.data[(new_y)*12+(new_x)] = (chunk.data[(new_y)*12+(new_x)] & 0xFF00) | ((interaction[1]) & 0xFF)
+                            else:
+                                gx, gy = chunk.xo * 12 + (new_x), chunk.yo * 12 + (new_y)
+                                target = chunks.get((gx // 12, gy // 12), dummy_chunk)
+                                local_x, local_y = gx % 12, gy % 12
+                                target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | ((interaction[1]) & 0xFF)
+                            
+                        
+                    sleep = False
+                    keep = False
+        
+        
+            
+        if keep:
+            new_x, new_y = x + 0, y + 0
+            if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(0, 0, False)], interact_9[(0, 0, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
+                    if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2547,33 +2655,33 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 0, y + 1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(0, 1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(0, 1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(0, 1, False)], interact_9[(0, 1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2601,33 +2709,33 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + 1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(1, -1, False)], interact_9[(1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2655,33 +2763,33 @@ def powder_9(chunk, x: int, y: int):
         if keep:
             new_x, new_y = x + -1, y + -1
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
-                bottom_cell = chunk.prev[(new_y)*12+(new_x)] >> 8 if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12] >> 8
-                cond_1 = bottom_cell in interact_9[(-1, -1)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_9[(-1, -1)][bottom_cell]
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                dict1, dict2 = interact_9[(-1, -1, False)], interact_9[(-1, -1, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
-                        if not interaction[3]:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if True:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if True:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if interaction[3]:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2748,8 +2856,8 @@ def powder_10(chunk, x: int, y: int):
     
     
     
-    cached_left, cached_up, cached_right = (chunk.prev[(y+1)*12+(x-1)] >> 8 if (0 <= (x-1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x-1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x-1) % 12] >> 8), (chunk.prev[(y+1)*12+(x)] >> 8 if (0 <= (x) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x) % 12] >> 8), (chunk.prev[(y+1)*12+(x+1)] >> 8 if (0 <= (x+1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x+1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x+1) % 12] >> 8)
-    if (cached_left == 10 or cached_right == 10 or cached_up == 10): 
+    cached_left, cached_up, cached_right = (chunk.prev[(y+1)*12+(x-1)] if (0 <= (x-1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x-1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x-1) % 12]), (chunk.prev[(y+1)*12+(x)] if (0 <= (x) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x) % 12]), (chunk.prev[(y+1)*12+(x+1)] if (0 <= (x+1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x+1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x+1) % 12])
+    if (cached_left>> 8 == 10 or cached_right>> 8 == 10 or cached_up>> 8 == 10): 
         keep = False
     else:
         replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
@@ -2769,34 +2877,34 @@ def powder_10(chunk, x: int, y: int):
             new_x, new_y = x + add_x, y + add_y
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
                 bottom_cell = replaces[add_x]#(new_x,new_y)
-                cond_1 = bottom_cell in interact_10[(add_x, add_y)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_10[(add_x, add_y)][bottom_cell]
+                dict1, dict2 = interact_10[(add_x, add_y, False)], interact_10[(add_x, add_y, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-prob and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
                         old = chunk.prev[( y)*12+(x)] & 0xFF if (0 <= (x) < 12 and 0 <= ( y) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+( y)) // 12), dummy_chunk).prev[(( y) % 12) * 12 + (x) % 12] & 0xFF
                         
-                        if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if old > 0:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if old > 0:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2839,34 +2947,34 @@ def powder_10(chunk, x: int, y: int):
             new_x, new_y = x + add_x, y + add_y
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
                 bottom_cell = replaces[add_x]#(new_x,new_y)
-                cond_1 = bottom_cell in interact_10[(add_x, add_y)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_10[(add_x, add_y)][bottom_cell]
+                dict1, dict2 = interact_10[(add_x, add_y, False)], interact_10[(add_x, add_y, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-prob and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
                         old = chunk.prev[( y)*12+(x)] & 0xFF if (0 <= (x) < 12 and 0 <= ( y) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+( y)) // 12), dummy_chunk).prev[(( y) % 12) * 12 + (x) % 12] & 0xFF
                         
-                        if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if old > 0:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if old > 0:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)
@@ -2909,34 +3017,34 @@ def powder_10(chunk, x: int, y: int):
             new_x, new_y = x + add_x, y + add_y
             if (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
                 bottom_cell = replaces[add_x]#(new_x,new_y)
-                cond_1 = bottom_cell in interact_10[(add_x, add_y)]
-                cond_2 = False       
-                if cond_1 or cond_2:
-                    interaction = interact_10[(add_x, add_y)][bottom_cell]
+                dict1, dict2 = interact_10[(add_x, add_y, False)], interact_10[(add_x, add_y, True)]
+                bit_1 = bottom_cell >> 8
+                bit_2 = bottom_cell & 0xFF
+                if bit_1 in dict1 or bit_2 in dict2:
+                    interaction = dict1[bit_1] if bit_1 in dict1 else dict2[bit_2]
                     if 100*random() > 100-prob and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                         
                         old = chunk.prev[( y)*12+(x)] & 0xFF if (0 <= (x) < 12 and 0 <= ( y) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+( y)) // 12), dummy_chunk).prev[(( y) % 12) * 12 + (x) % 12] & 0xFF
                         
-                        if True:
-                            if interaction[0] != id:
-                                
-                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
-                                ly, lx = (y), (x)
-                                if new_chunk != chunk:
-                                    ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                            if old > 0:
-                                
-                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
-                                ly, lx = (new_y), (new_x)
-                                if new_chunk != chunk:
-                                    ly, lx = (new_y) % 12, (new_x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[1])# << 8
-                                new_chunk.visited.add((lx, ly))
-                                
-                        else:
+                        if interaction[0] != id:
+                            
+                            new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                            ly, lx = (y), (x)
+                            if new_chunk != chunk:
+                                ly, lx = (y) % 12, (x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[0]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if old > 0:
+                            
+                            new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                            ly, lx = (new_y), (new_x)
+                            if new_chunk != chunk:
+                                ly, lx = (new_y) % 12, (new_x) % 12
+                            new_chunk.data[ly*12 + lx] = (interaction[1]) << 8
+                            new_chunk.visited.add((lx, ly))
+                            
+                        if False:
                             
                             if 0 <= (x) < 12 and 0 <= (y) < 12:
                                 chunk.data[(y)*12+(x)] = (chunk.data[(y)*12+(x)] & 0xFF00) | ((interaction[0]) & 0xFF)

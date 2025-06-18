@@ -23,11 +23,13 @@ float rand(vec2 co) {
 }
 
 void main() {
-    vec4 baseColor = uPalette[vTileID];
+    int tile = vTileID >> 8;
+    vec4 baseColor = uPalette[tile];
+    if ((vTileID & 0xFF) > 0) {baseColor = vec4(1,0,0,1);}
     float noise = 1.0;
     vec2 mix_range = vec2(1,1);
 
-    if (vTileID != 6){
+    if (tile != 6){
     noise = rand(floor(outPos / 5.0)*5.0);
     mix_range = vec2(0.9,1.1);}
 
