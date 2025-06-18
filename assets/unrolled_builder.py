@@ -35,6 +35,7 @@ sleep: bool = True
 keep = True
 iter_counter: int = 0
 curr_bit: int = {curr_bit}
+res_x, res_y = None, None
 
 {pre_cond}
     """
@@ -55,7 +56,7 @@ if keep:
                 interaction = dict2[bit_2]
             else:
                 interaction = dict1[bit_1]
-            if not is_bit_2 or interaction[3] != curr_bit:
+            if (not is_bit_2 or interaction[3] != curr_bit) and (curr_bit == -1 or curr_bit in interaction[6]):
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                     {plant_insert}
                     if interaction[5]:
@@ -67,6 +68,7 @@ if keep:
                         {set_bit}(x,y,interaction[3])
                         {set_bit}(new_x,new_y,interaction[4])
                     {plant_inline_bottom}
+                res_x, res_y = new_x, new_y
                 sleep = False
                 keep = False
 {insert}
@@ -99,7 +101,9 @@ func_bottom = """
 if sleep:
     {skip_over}()
 else:
-    {keep_alive}()
+    {keep_alive}(chunk.xo*CHUNK_SIZE+x, chunk.yo*CHUNK_SIZE+y)
+    if res_x is not None:
+        {keep_alive}(chunk.xo*CHUNK_SIZE+res_x, chunk.yo*CHUNK_SIZE+res_y)
     """
 
 
@@ -166,7 +170,7 @@ class InlineFunc:
 funcs = {"get_cell": InlineFunc("get_cell", get_cell_inline, ["get_x", "get_y"]),
          "set_cell": InlineFunc("set_cell", set_cell_inline, ["set_x", "set_y", "set_value"]),
          "is_visited": InlineFunc("is_visited", is_visited_inline, ["visited_x", "visited_y"]),
-         "keep_alive": InlineFunc("keep_alive", keep_alive_inline, []),
+         "keep_alive": InlineFunc("keep_alive", keep_alive_inline, ["{x}", "{y}"]),
          "skip_over": InlineFunc("skip_over", skip_over_inline, []),
          "set_bit": InlineFunc("set_bit", set_bit_inline, ["bit_x", "bit_y", "bit_val"]),
          "get_bit": InlineFunc("get_bit", get_bit_inline, ["get_x", "get_y"]),
@@ -249,7 +253,7 @@ else:
            """).format(id=powder.index, dir=powder.gravity_direction)
            cached = True
 
-        curr_bit = "0"
+        curr_bit = "-1"
         if powder.has_bitwise_operations:
             curr_bit = inlines("({get_bit}(x,y))")
         result += f"\n\ndef powder_{index}(chunk, x: int, y: int):"

@@ -61,6 +61,12 @@ class Chunk:
         self.visited = set([])
         self.merge_visited = set([])
 
+        self.rect = render.ColorRect(
+            self.xo * CHUNK_SIZE * mainloop.PIXEL_SIZE, self.yo * CHUNK_SIZE * mainloop.PIXEL_SIZE,
+            (CHUNK_SIZE * mainloop.PIXEL_SIZE, CHUNK_SIZE * mainloop.PIXEL_SIZE),
+            (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
+        )
+
     def decrement_update(self):
         self.update_intensity -= update_delta
         if 0 < self.update_intensity < 0.03:
@@ -296,6 +302,10 @@ def _process(delta: float) -> None:
                 if c.is_alive():
                     c.update()
                     to_render.add(c)
+                    c.rect.color[3] = 0.2
+                else:
+                    c.rect.color[3] = 0
+        #dummy_chunk.data, dummy_chunk.prev = dummy_chunk.prev, dummy_chunk.data
 
         for c in chunks.values():
             c.update_ended()

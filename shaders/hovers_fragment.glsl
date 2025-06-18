@@ -23,7 +23,8 @@ bool getMaskBit(int x, int y) {
 }
 
 void main() {
-    vec2 snapped = floor((uPos+vec2(1.333,1.333)*uPointSize)/uPointSize)*uPointSize;
+    vec2 pos = uPos - vec2(-5*0.333,-5*0.333);
+    vec2 snapped = floor((pos+vec2(1.333,1.333)*uPointSize)/uPointSize)*uPointSize;
     vec2 mouse_snapped = floor((mousePos+vec2(1.333,1.333)*uPointSize) / uPointSize) * uPointSize;
     switch (mode){
         case 1u:
