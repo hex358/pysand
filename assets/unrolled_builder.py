@@ -34,7 +34,7 @@ set_cell = chunk.set_cell
 sleep: bool = True
 keep = True
 iter_counter: int = 0
-
+curr_bit: int = {curr_bit}
 
 {pre_cond}
     """
@@ -44,23 +44,31 @@ if keep:
     new_x, new_y = x + {x}, y + {y}
     if (not {is_visited}(new_x, new_y) {add_cond}) and {mandatory_cond}:
         bottom_cell = {get_cell}(new_x,new_y)
-        dict1, dict2 = {dict_name}[({x}, {y}, False)], {dict_name}[({x}, {y}, True)]
+        dict1, dict2 = {dict_name}[({x}, {y}, False)], {dict2} #
         bit_1 = bottom_cell >> 8
-        bit_2 = bottom_cell & 0xFF
-        if bit_1 in dict1 or bit_2 in dict2:
-            interaction = dict2[bit_2] if bit_2 in dict2 else dict1[bit_1]
-            if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                {plant_insert}
-                if interaction[0] != id:
-                    {set_cell}(x,y,interaction[0])
-                if {set_other_cell_cond}:
-                    {set_cell}(new_x,new_y,interaction[1])
-
-                {set_bit}(x,y,interaction[0])
-                {set_bit}(new_x,new_y,interaction[1])
-                {plant_inline_bottom}
-            sleep = False
-            keep = False
+        bit_2 = bottom_cell & 0xFF if {bit_2_cond} else 0
+        if bit_1 in dict1 or ({bit_2_cond} and bit_2 in dict2):
+            interaction = None
+            is_bit_2 = False
+            if {bit_2_cond} and bit_2 in dict2:
+                is_bit_2 = True
+                interaction = dict2[bit_2]
+            else:
+                interaction = dict1[bit_1]
+            if not is_bit_2 or interaction[3] != curr_bit:
+                if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                    {plant_insert}
+                    if interaction[5]:
+                        if interaction[0] != id:
+                            {set_cell}(x,y,interaction[0] << 8 | interaction[3])
+                        if {set_other_cell_cond}:
+                            {set_cell}(new_x,new_y,interaction[1] << 8 | interaction[4])
+                    else:
+                        {set_bit}(x,y,interaction[3])
+                        {set_bit}(new_x,new_y,interaction[4])
+                    {plant_inline_bottom}
+                sleep = False
+                keep = False
 {insert}
 
     """
@@ -104,7 +112,7 @@ new_chunk = chunk if 0 <= set_x < CHUNK_SIZE and 0 <= set_y < CHUNK_SIZE else ch
 ly, lx = set_y, set_x
 if new_chunk != chunk:
     ly, lx = set_y % CHUNK_SIZE, set_x % CHUNK_SIZE
-new_chunk.data[ly*CHUNK_SIZE + lx] = set_value << 8
+new_chunk.data[ly*CHUNK_SIZE + lx] = set_value# << 8
 new_chunk.visited.add((lx, ly))
 """
 is_visited_inline = "((visited_x,visited_y) in chunk.visited if 0 <= visited_x < CHUNK_SIZE and 0 <= visited_y < CHUNK_SIZE else (visited_x % CHUNK_SIZE, visited_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+visited_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+visited_y) // CHUNK_SIZE), dummy_chunk).visited)"
@@ -181,11 +189,17 @@ def middle_formatted(powder, offset, cells_cached=False):
     mandatory_cond = "True"
     if powder.is_plant:
         set_other_cell_cond = "old > 0"
-        plant_insert = indent(inlines(plant_inline), 4)
+        plant_insert = indent(inlines(plant_inline), 5)
+    rep = "None"
+    if powder.has_bitwise_operations:
+        rep = "{dict_name}[({x}, {y}, True)]"
+    inlined = inlined.replace("{dict2}", rep)
         #mandatory_cond = inlines("({get_cell}(x-1, y)) != {id} and ({get_cell}(x+1, y)) != {id}").format(
         #               id = powder.index)#,
     return inlined.format(x=offset[0], y=offset[1],
-                        bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
+                        bit_2_cond = str(powder.has_bitwise_operations),
+                        #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
+
                         mandatory_cond=mandatory_cond,
                         dict_name = f"interact_{powder.index}",
                         set_other_cell_cond = set_other_cell_cond if (offset[0],offset[1] != (0,0)) else "interaction[1] != id",
@@ -194,7 +208,7 @@ def middle_formatted(powder, offset, cells_cached=False):
                         else f"100*random() > 100-{offset[2]} and ",
                         insert="" if not powder.throw_dice else "iter_counter += 1",
                         plant_insert=plant_insert,
-                        plant_inline_bottom = indent(inlines(plant_inline_bottom),4) if powder.is_plant else ""
+                        plant_inline_bottom = indent(inlines(plant_inline_bottom),5) if powder.is_plant else ""
                         )
 
 
@@ -235,8 +249,11 @@ else:
            """).format(id=powder.index, dir=powder.gravity_direction)
            cached = True
 
+        curr_bit = "0"
+        if powder.has_bitwise_operations:
+            curr_bit = inlines("({get_bit}(x,y))")
         result += f"\n\ndef powder_{index}(chunk, x: int, y: int):"
-        result += indent(func_header.format(id=index, pre_cond=pre_cond))
+        result += indent(func_header.format(id=index, pre_cond=pre_cond, curr_bit=curr_bit))
         result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 
         if powder.throw_dice:
