@@ -168,7 +168,7 @@ class Chunk:
         self.visited.add((x, y))
         if self.local_is_in_bounds(x, y):
             #if not (x,y) in self.visited:
-            self.data[y*CHUNK_SIZE+x] = val << 8
+            self.data[y*CHUNK_SIZE+x] = val * 256
            # print(self.data)
             self.keep_alive()
             return True
@@ -180,7 +180,7 @@ class Chunk:
         target.keep_alive()
 
         target.visited.add((local_x, local_y))
-        target.data[local_y*CHUNK_SIZE+local_x] = val << 8
+        target.data[local_y*CHUNK_SIZE+local_x] = val * 256
 
         return True
 
@@ -239,8 +239,8 @@ def apply_snapshot(snapshot: bytearray):
 
 class DummyChunk:
     def __init__(self):
-        self.data = array("L", [99 << 8]*(CHUNK_SIZE*CHUNK_SIZE))
-        self.prev = array("L", [99 << 8]*(CHUNK_SIZE*CHUNK_SIZE))
+        self.data = array("L", [99 * 256]*(CHUNK_SIZE*CHUNK_SIZE))
+        self.prev = array("L", [99 * 256]*(CHUNK_SIZE*CHUNK_SIZE))
         self.visited = set([])
         self.update_intensity = 0
     def mark_dirty(self, x:int, y:int):
@@ -257,7 +257,7 @@ def global_set_cell(gx: int, gy: int, v: int, bit_value = False):
     if target:
        # target.force_border.add((gx % CHUNK_SIZE, gy % CHUNK_SIZE))
         target.keep_alive()
-        target.data[(gy % CHUNK_SIZE) * CHUNK_SIZE + gx % CHUNK_SIZE] = v << 8 if not bit_value else v
+        target.data[(gy % CHUNK_SIZE) * CHUNK_SIZE + gx % CHUNK_SIZE] = v * 256 if not bit_value else v
 
 
 dummy_chunk = DummyChunk()

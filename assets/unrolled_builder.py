@@ -61,9 +61,9 @@ if keep:
                     {plant_insert}
                     if interaction[5]:
                         if interaction[0] != id:
-                            {set_cell}(x,y,interaction[0] << 8 | interaction[3])
+                            {set_cell}(x,y,~interaction[0] * 256% | interaction[3])
                         if {set_other_cell_cond}:
-                            {set_cell}(new_x,new_y,interaction[1] << 8 | interaction[4])
+                            {set_cell}(new_x,new_y,~interaction[1] * 256% | interaction[4])
                     else:
                         {set_bit}(x,y,interaction[3])
                         {set_bit}(new_x,new_y,interaction[4])
@@ -116,7 +116,7 @@ new_chunk = chunk if 0 <= set_x < CHUNK_SIZE and 0 <= set_y < CHUNK_SIZE else ch
 ly, lx = set_y, set_x
 if new_chunk != chunk:
     ly, lx = set_y % CHUNK_SIZE, set_x % CHUNK_SIZE
-new_chunk.data[ly*CHUNK_SIZE + lx] = set_value# << 8
+new_chunk.data[ly*CHUNK_SIZE + lx] = set_value
 new_chunk.visited.add((lx, ly))
 """
 is_visited_inline = "((visited_x,visited_y) in chunk.visited if 0 <= visited_x < CHUNK_SIZE and 0 <= visited_y < CHUNK_SIZE else (visited_x % CHUNK_SIZE, visited_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+visited_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+visited_y) // CHUNK_SIZE), dummy_chunk).visited)"
@@ -156,7 +156,7 @@ class InlineFunc:
 
             inlined = self.script
             for arg_name, arg_value in zip(self.arg_names, raw_args.split(",")):
-                inlined = inlined.replace(arg_name, "(" + arg_value + ")")
+                inlined = inlined.replace(arg_name, "(" + arg_value.replace("~", "(").replace("%", ")") + ")")
 
             line_start = text.rfind('\n', 0, start) + 1
             indent_str = text[line_start:start]
@@ -306,6 +306,6 @@ def import_unrolled():
     indexes_bit_shifted = {}
     for id in indexes:
         for i in range(256):
-            indexes_bit_shifted[id << 8 | i] = indexes[id]
+            indexes_bit_shifted[id * 256 | i] = indexes[id]
 
     return indexes_bit_shifted

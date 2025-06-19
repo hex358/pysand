@@ -48,7 +48,6 @@ class Interaction:
                  itself_bit_state: int = 0,
                  other_bit_state: int = 0,
                  with_bit: int | list[int] = None,
-                 on_ground_touch: bool = False,
                  if_bit_state_is: int | list[int] = None
                  ):
         self.interactions = {}
@@ -78,7 +77,6 @@ class Interaction:
                                                                             itself_bit_state if itself_bit_state != other else other_type,
                                                                             other_bit_state if other_bit_state != other else other_type,
                                                                             is_bit_interaction,
-                                                                            on_ground_touch,
                                                                             set(if_bit_state_is))
        # if -9 in with_powder:
      #       print(self.interactions)
@@ -160,7 +158,7 @@ class Powder:
             for offset in offsets:
                 if offset in self.interaction_checks: continue
                 self.raw_interactions[(offset[0], offset[1], with_type[2])][with_type[0]] = (
-                interaction[0], interaction[1], interaction[2], interaction[4], interaction[5], interaction[0] is not None, interaction[8])
+                interaction[0], interaction[1], interaction[2], interaction[4], interaction[5], interaction[0] is not None, interaction[7])
 
         self.id_space = set([self.index << 8 | i for i in range(256)])
         for i in range(256):
@@ -190,7 +188,8 @@ class Powder:
                  custom_cond = "",
                  add_interaction_checks = [],
                  add_fall_offsets = [],
-                 density: int = 100):
+                 density: int = 100,
+                 turns_into: Interaction = None):
         self.raw_interactions = {}
         self.interact_with_types = {}
         self.is_plant = False
@@ -202,6 +201,10 @@ class Powder:
         self.throw_dice = throw_dice
         self.index = index
         self.density = density
+
+        # if turns_into is not None:
+        #     add_interaction_checks.append((0, 0))
+        #     custom_interactions.append(turns_into)
 
         self.interaction_checks = set(add_interaction_checks)
         add_fall_offsets += add_interaction_checks
@@ -225,6 +228,7 @@ class Plant(Powder):
                  growth_probability: int = 20,
                  growth_suitable: list[int] = [],
                  branch_probability: int = 5,
+                 powder_counterpart: int = 11,
                  height: int = 10):
         super().__init__(index,
                         class_tags=[PowderTags.Plant],
@@ -235,6 +239,7 @@ class Plant(Powder):
                                           (1, growth_direction, branch_probability),
                                           (0, growth_direction, growth_probability)
                                           ],
+                        custom_interactions=[Interaction(with_powder=Powder.gases, itself_turns_into=powder_counterpart, other_turns_into=other, )]
                         )
         self.is_plant = True
         plant_heights[index] = height
@@ -297,7 +302,7 @@ types = {
                 add_interaction_checks=[(0,1,100)],
                 custom_interactions=[#Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other, probability=0,
                                     #            itself_bit_state=20, in_offsets=[(0,1)]),
-                                     Interaction(itself_turns_into=None, other_turns_into=None, probability=5,
+                                     Interaction(itself_turns_into=9, other_turns_into=9, probability=5,
                                                 in_offsets=[(0,-1)],
                                                 itself_bit_state=1,other_bit_state=1,with_bit=1),
                                      Interaction(with_powder=Powder.solids+[-9], itself_turns_into=None, other_turns_into=None,
@@ -317,12 +322,19 @@ types = {
                 growth_probability=100,
                 growth_suitable=[0],
                 height=10,
-                )
+
+                ),
+    11: Powder(index=11,
+                gravity_direction=-1,
+                fall_direction=-1,
+                density=80,
+                move_probability=50),
 }
 
 import assets.unrolled_builder as unrolled_builder
 unrolled = None
 clears = {}
+
 def _ready() -> None:
     build_classes()
     global unrolled
