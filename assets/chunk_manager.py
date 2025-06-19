@@ -61,11 +61,11 @@ class Chunk:
         self.visited = set([])
         self.merge_visited = set([])
 
-        self.rect = render.ColorRect(
-            self.xo * CHUNK_SIZE * mainloop.PIXEL_SIZE, self.yo * CHUNK_SIZE * mainloop.PIXEL_SIZE,
-            (CHUNK_SIZE * mainloop.PIXEL_SIZE, CHUNK_SIZE * mainloop.PIXEL_SIZE),
-            (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
-        )
+        # self.rect = render.ColorRect(
+        #     self.xo * CHUNK_SIZE * mainloop.PIXEL_SIZE, self.yo * CHUNK_SIZE * mainloop.PIXEL_SIZE,
+        #     (CHUNK_SIZE * mainloop.PIXEL_SIZE, CHUNK_SIZE * mainloop.PIXEL_SIZE),
+        #     (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
+        # )
 
     def decrement_update(self):
         self.update_intensity -= update_delta
@@ -198,9 +198,9 @@ class Chunk:
             x = x if ticks % 2 == 0 else CHUNK_SIZE-x-1
             for y in range(CHUNK_SIZE):
                 if (x,y) in self.visited: continue
-                current = self.prev[y*CHUNK_SIZE+x] >> 8
-                if current in element_storage.types:
-                    element_storage.element_calls[current](self, x, y)
+                current = self.prev[y*CHUNK_SIZE+x]# >> 8
+                if current in element_storage.update_types:
+                    element_storage.element_calls[current](self, current, x, y)
                 else:
                     self.skip_over()
         if self.skipped_over_count >= CHUNK_SIZE * CHUNK_SIZE:
@@ -225,11 +225,13 @@ def make_snapshot() -> bytearray:
 def apply_snapshot(snapshot: bytearray):
 
     global chunks
-    chunks = pickle.loads(snapshot)
+    new_chunks = pickle.loads(snapshot)
+    for c in new_chunks:
+        chunks[(int(c[0]), int(c[1]))] = new_chunks[c]
     for c in chunks:
         chunks[c].keep_alive()
         chunks[c].render_chunk = render.add_chunk(*c, chunks[c].data)
-        chunks[c]._loaded_init()
+        #chunks[c]._loaded_init()
 
 
 
@@ -302,9 +304,9 @@ def _process(delta: float) -> None:
                 if c.is_alive():
                     c.update()
                     to_render.add(c)
-                    c.rect.color[3] = 0.2
-                else:
-                    c.rect.color[3] = 0
+                #     c.rect.color[3] = 0.2
+                # else:
+                #     c.rect.color[3] = 0
         #dummy_chunk.data, dummy_chunk.prev = dummy_chunk.prev, dummy_chunk.data
 
         for c in chunks.values():

@@ -22,12 +22,12 @@ from random import random, randint, randrange
 from collections import namedtuple
 dummy_chunk = None
 updated_this_round = set([])
+update_types = None
 chunks = None
 """
 
 func_header = """
-powder = types[{id}]
-id = {id}
+powder = update_types[id]
 get_cell = chunk.get_cell
 
 set_cell = chunk.set_cell
@@ -88,12 +88,12 @@ else:
 
 
 plant_inline = """
-old = {get_bit}(x, y)
+
 """
 
 plant_inline_bottom = """
-{set_bit}(new_x, new_y, old - 1)
-if old <= 0:
+{set_bit}(new_x, new_y, curr_bit - 1)
+if curr_bit <= 0:
     sleep = True 
 """
 
@@ -192,7 +192,7 @@ def middle_formatted(powder, offset, cells_cached=False):
     plant_insert = ""
     mandatory_cond = "True"
     if powder.is_plant:
-        set_other_cell_cond = "old > 0"
+        set_other_cell_cond = "curr_bit > 0"
         plant_insert = indent(inlines(plant_inline), 5)
     rep = "None"
     if powder.has_bitwise_operations:
@@ -246,17 +246,18 @@ def string_unroll():
         if powder.is_plant:
            pre_cond = inlines("""
 cached_left, cached_up, cached_right = ({get_cell}(x-1,y+{dir})), ({get_cell}(x,y+{dir})), ({get_cell}(x+1,y+{dir}))
-if (cached_left>> 8 == {id} or cached_right>> 8 == {id} or cached_up>> 8 == {id}): 
+if (cached_left in powder.id_space or cached_right in powder.id_space or cached_up in powder.id_space): 
     keep = False
+    sleep = True
 else:
     replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
            """).format(id=powder.index, dir=powder.gravity_direction)
            cached = True
 
         curr_bit = "-1"
-        if powder.has_bitwise_operations:
+        if powder.has_bitwise_operations or powder.is_plant:
             curr_bit = inlines("({get_bit}(x,y))")
-        result += f"\n\ndef powder_{index}(chunk, x: int, y: int):"
+        result += f"\n\ndef powder_{index}(chunk, id, x: int, y: int):"
         result += indent(func_header.format(id=index, pre_cond=pre_cond, curr_bit=curr_bit))
         result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 
@@ -299,5 +300,12 @@ def import_unrolled():
     #imported.csize = mainloop.CHUNK_SIZE
     imported.MAX_UPDATE_INTENSITY = chunk_manager.MAX_UPDATE_INTENSITY
     imported.dummy_chunk = chunk_manager.dummy_chunk
+    imported.update_types = update_types
 
-    return {index: getattr(imported, f"powder_{index}") for index in types if index != 0}
+    indexes = {index: getattr(imported, f"powder_{index}") for index in types if index != 0}
+    indexes_bit_shifted = {}
+    for id in indexes:
+        for i in range(256):
+            indexes_bit_shifted[id << 8 | i] = indexes[id]
+
+    return indexes_bit_shifted

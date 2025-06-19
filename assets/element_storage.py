@@ -97,6 +97,7 @@ class Interaction:
     def to_tuples(self):
         return self.interactions.copy()
 
+update_types = {}
 class Powder:
     all_elements: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 99]
     bit_states: list = list(range(0,256))
@@ -120,6 +121,8 @@ class Powder:
     }
 
     def create_interactions(self):
+        if self.index == 0: return
+
         self.interact_with_types = {}
         to_add_interactions: list[Interaction] = []
         add = 100 if self.gravity_direction == 1 else 0
@@ -158,6 +161,10 @@ class Powder:
                 if offset in self.interaction_checks: continue
                 self.raw_interactions[(offset[0], offset[1], with_type[2])][with_type[0]] = (
                 interaction[0], interaction[1], interaction[2], interaction[4], interaction[5], interaction[0] is not None, interaction[8])
+
+        self.id_space = set([self.index << 8 | i for i in range(256)])
+        for i in range(256):
+            update_types[self.index << 8 | i] = self
         #print(self.raw_interactions)
 
     def bind_interactions(self):
@@ -274,13 +281,13 @@ types = {
                 fall_direction=-1,
                 density=80,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=8, itself_turns_into=7, other_turns_into=7, probability=11, double_sided=True)]),
+                custom_interactions=[Interaction(with_powder=8, itself_turns_into=7, other_turns_into=7, probability=10)]),
     8: Powder(index=8,
                 gravity_direction=-1,
                 fall_direction=-1,
                 density=120,
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=7, itself_turns_into=8, other_turns_into=8, probability=10.9)],
+                custom_interactions=[Interaction(with_powder=7, itself_turns_into=8, other_turns_into=8, probability=2)],
                 ),
     9: Powder(index=9,
                 gravity_direction=-1,
@@ -290,11 +297,11 @@ types = {
                 add_interaction_checks=[(0,1,100)],
                 custom_interactions=[#Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other, probability=0,
                                     #            itself_bit_state=20, in_offsets=[(0,1)]),
-                                     Interaction(itself_turns_into=None, other_turns_into=None, probability=100,
+                                     Interaction(itself_turns_into=None, other_turns_into=None, probability=5,
                                                 in_offsets=[(0,-1)],
                                                 itself_bit_state=1,other_bit_state=1,with_bit=1),
                                      Interaction(with_powder=Powder.solids+[-9], itself_turns_into=None, other_turns_into=None,
-                                                 probability=100,
+                                                 probability=5,
                                                  in_offsets=[(0, -1)],
                                                  itself_bit_state=1, other_bit_state=1, if_bit_state_is=0),
                                     Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other,
@@ -321,6 +328,7 @@ def _ready() -> None:
     global unrolled
     unrolled_builder.chunk_manager = chunk_manager
     unrolled_builder.types = types
+    unrolled_builder.update_types = update_types
     global element_calls
     del types[0]
     element_calls = unrolled_builder.import_unrolled()
