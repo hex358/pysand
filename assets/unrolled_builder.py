@@ -27,7 +27,7 @@ chunks = None
 """
 
 func_header = """
-powder = update_types[id]
+powder = update_types[id_and_bit]
 get_cell = chunk.get_cell
 
 set_cell = chunk.set_cell
@@ -45,28 +45,15 @@ if keep:
     new_x, new_y = x + {x}, y + {y}
     if (not {is_visited}(new_x, new_y) {add_cond}) and {mandatory_cond}:
         bottom_cell = {get_cell}(new_x,new_y)
-        dict1, dict2 = {dict_name}[({x}, {y}, False)], {dict2} #
-        bit_1 = bottom_cell >> 8
-        bit_2 = bottom_cell & 0xFF if {bit_2_cond} else 0
-        if bit_1 in dict1 or ({bit_2_cond} and bit_2 in dict2):
-            interaction = None
-            is_bit_2 = False
-            if {bit_2_cond} and bit_2 in dict2:
-                is_bit_2 = True
-                interaction = dict2[bit_2]
-            else:
-                interaction = dict1[bit_1]
-            if (not is_bit_2 or interaction[3] != curr_bit) and (curr_bit == -1 or curr_bit in interaction[6]):
+        if bottom_cell in powder.bit_interactions[({x}, {y})]:
+            interaction = powder.bit_interactions[({x}, {y})][bottom_cell]
+            if id_and_bit in interaction[3]:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                     {plant_insert}
-                    if interaction[5]:
-                        if interaction[0] != id:
-                            {set_cell}(x,y,~interaction[0] * 256% | interaction[3])
-                        if {set_other_cell_cond}:
-                            {set_cell}(new_x,new_y,~interaction[1] * 256% | interaction[4])
-                    else:
-                        {set_bit}(x,y,interaction[3])
-                        {set_bit}(new_x,new_y,interaction[4])
+                    if interaction[0] != id_and_bit:
+                        {set_cell}(x,y,interaction[0])
+                    if {set_other_cell_cond}:
+                        {set_cell}(new_x,new_y,interaction[1])
                     {plant_inline_bottom}
                 res_x, res_y = new_x, new_y
                 sleep = False
@@ -257,7 +244,7 @@ else:
         curr_bit = "-1"
         if powder.has_bitwise_operations or powder.is_plant:
             curr_bit = inlines("({get_bit}(x,y))")
-        result += f"\n\ndef powder_{index}(chunk, id, x: int, y: int):"
+        result += f"\n\ndef powder_{index}(chunk, id_and_bit, x: int, y: int):"
         result += indent(func_header.format(id=index, pre_cond=pre_cond, curr_bit=curr_bit))
         result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 
