@@ -54,6 +54,7 @@ class Interaction:
         self.double_sided = double_sided
         if if_bit_state_is is None: if_bit_state_is = list(range(0,256))
         if isinstance(if_bit_state_is, int): if_bit_state_is = [if_bit_state_is]
+        other_bit = with_bit
         is_bit_interaction = not with_bit is None
         if in_offsets is None: in_offsets = []
 
@@ -70,7 +71,7 @@ class Interaction:
             types = [types]# if not is_negative(types) else [element for element in Powder.all_elements]
             for other_type in types:
                 if other_type in skip or -other_type in skip: continue
-                self.interactions[(other_type, tuple(in_offsets), is_bit_interaction)] = (itself_turns_into if itself_turns_into != other else other_type,
+                self.interactions[(other_type, other_bit, is_bit_interaction)] = (itself_turns_into if itself_turns_into != other else other_type,
                                                                             other_turns_into if other_turns_into != other else other_type,
                                                                             probability,
                                                                             in_offsets,
@@ -163,6 +164,34 @@ class Powder:
         self.id_space = set([self.index << 8 | i for i in range(256)])
         for i in range(256):
             update_types[self.index << 8 | i] = self
+
+        offset_interactions = {}
+        bits = list(range(0,256))
+        for with_type, interaction in self.interact_with_types.items():
+            other_types = [with_type[0]] if not with_type[2] else Powder.all_elements
+            other_bit_states = [with_type[1]] if with_type[1] is not None else bits
+            for other_type in other_types:
+                if other_type == self.index: continue
+                for other_bit in other_bit_states:
+                    set_itself = interaction[0] if interaction[0] is not None else self.index
+                    set_other = interaction[1] if interaction[1] is not None else other_type
+                    set_itself_bit = interaction[4] if interaction[4] is not None else 0
+                    set_other_bit = interaction[5] if interaction[5] is not None else 0
+                    in_offsets = interaction[3] if interaction[3] else self.fall_offsets
+                    offset_interactions[(other_type << 8 | other_bit, tuple(in_offsets))] = (
+                set_itself << 8 | set_itself_bit,
+                set_other << 8 | set_other_bit,
+                interaction[2]
+                    )
+
+        self.bit_interactions = {}
+        for key, tuple_interaction in offset_interactions.items():
+            for offset in key[1]:
+                if not offset[:2] in self.bit_interactions:
+                    self.bit_interactions[offset[:2]] = {}
+                self.bit_interactions[offset[:2]][key[0]] = tuple_interaction
+
+
         #print(self.raw_interactions)
 
     def bind_interactions(self):
@@ -337,6 +366,8 @@ clears = {}
 
 def _ready() -> None:
     build_classes()
+    print((types[1].bit_interactions))
+    quit()
     global unrolled
     unrolled_builder.chunk_manager = chunk_manager
     unrolled_builder.types = types
@@ -344,3 +375,4 @@ def _ready() -> None:
     global element_calls
     del types[0]
     element_calls = unrolled_builder.import_unrolled()
+
