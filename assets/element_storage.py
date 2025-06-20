@@ -108,7 +108,7 @@ class Powder:
     bits_frozen: frozenset = frozenset(bit_states)
     gases: set = {0, 6}
     liquids: set = {2, 5}
-    solids: list = [1, 3, 4, 7, 8, 9, 10, 99]
+    solids: list = [1, 3, 4, 7, 8, 9, 99]
     #index: int = 1
     gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=current, probability=None)
                         for gas in gases]
@@ -152,21 +152,6 @@ class Powder:
         for interaction in self.add_interactions.values():
             self.interact_with_types |= interaction.to_tuples()
 
-        # self.raw_interactions = {(offset[0], offset[1], True): {} for offset in self.fall_offsets}
-        # self.raw_interactions |= {(offset[0], offset[1], False): {} for offset in self.fall_offsets}
-        # for with_type, interaction in self.interact_with_types.items():
-        #     if with_type[2]: self.has_bitwise_operations = True
-        #     if with_type[0] == self.index: continue
-        #     offsets = []
-        #     if not interaction[3]:
-        #         offsets = self.fall_offsets
-        #     else:
-        #         offsets = interaction[3]
-        #     for offset in offsets:
-        #         if offset in self.interaction_checks: continue
-        #         self.raw_interactions[(offset[0], offset[1], with_type[2])][with_type[0]] = (
-        #         interaction[0], interaction[1], interaction[2], interaction[4], interaction[5], interaction[0] is not None, interaction[7])
-
         self.id_space = set([self.index << 8 | i for i in range(256)])
         for i in range(256):
             update_types[self.index << 8 | i] = self
@@ -204,7 +189,7 @@ class Powder:
         for key, tuple_interaction in offset_interactions.items():
             for offset in key[1]:
                 if offset in self.interaction_checks: continue
-                new_offset = (offset[0], offset[1], self.bit_by_offset[(offset[:2])])
+                new_offset = (offset[0], offset[1])
                 if not new_offset in self.bit_interactions:
                     self.bit_interactions[new_offset] = {}
                 self.bit_interactions[new_offset][key[0]] = tuple_interaction
@@ -257,7 +242,9 @@ class Powder:
             if len(new) > 3:
                 new[3] = frozenset(new[3])
             else:
-                new.append(Powder.powders_frozen)
+                new.append(Powder.bits_frozen)
+            #if new[1] == 1 and index == 9:
+            #    print(new)
             add_interaction_checks[i] = tuple(new)
 
         self.interaction_checks = set(add_interaction_checks)
@@ -276,8 +263,9 @@ class Powder:
             self.add_interactions |= {key: interaction for key, _tuple in interaction.to_tuples().items()}
 
         self.bit_by_offset = {}
-        for offset in self.fall_offsets:
-            self.bit_by_offset
+        for offset in self.fall_offsets + add_interaction_checks:
+            bits = Powder.bit_states if len(offset) < 4 else offset[3]
+            self.bit_by_offset[offset[:2]] = frozenset([self.index << 8 | bit for bit in bits])
 
 plant_heights = {}
 class Plant(Powder):

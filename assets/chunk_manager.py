@@ -216,13 +216,13 @@ class Chunk:
             curr_range = Chunk.iter_regular if not self.is_uniform or x == 0 or x == CHUNK_SIZE-1 else Chunk.iter_uniform
             for y in curr_range:
                 total_iters += 1
-                if self.is_uniform: continue
                 if (x,y) in self.visited:
                     assign_is_uniform = False
                     continue
                 current = self.prev[y*CHUNK_SIZE+x]# >> 8
                 if current != first:
                     assign_is_uniform = False
+
                 #if self.is_uniform and 0 < x < CHUNK_SIZE-1 and 0 < y < CHUNK_SIZE-1:
                 #   self.skip_over(); continue
 

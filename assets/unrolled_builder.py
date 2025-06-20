@@ -41,7 +41,7 @@ res_x, res_y = None, None
 func_middle = """
 if keep:
     new_x, new_y = x + {x}, y + {y}
-    if (not {is_visited}(new_x, new_y) {add_cond}) and {mandatory_cond}:
+    if {pre_cond} (not {is_visited}(new_x, new_y) {add_cond}) and {mandatory_cond}:
         bottom_cell = {get_cell}(new_x,new_y)
         if bottom_cell in powder.bit_interactions[({x}, {y})]:
             interaction = powder.bit_interactions[({x}, {y})][bottom_cell]
@@ -175,8 +175,13 @@ def middle_formatted(powder, offset, cells_cached=False):
     if powder.is_plant:
         set_other_cell_cond = "True"
         plant_insert = indent(inlines(plant_inline), 5)
+    pre_cond = ""
     if len(offset) >= 4 and isinstance(offset[3], frozenset):
-        mandatory_cond += " and "
+        if powder.throw_dice or len(powder.bit_by_offset[offset[:2]]) > 1:
+            pre_cond += " id_and_bit in acc_bits_{id}[{offset}] and ".format(id=powder.index, offset=offset[:2])
+        else:
+            pre_cond += "  id_and_bit == {bit} and ".format(id=powder.index,
+                                                                bit=list(powder.bit_by_offset[offset[:2]])[0])
     rep = "None"
     if powder.has_bitwise_operations:
         rep = "{dict_name}[({x}, {y}, True)]"
@@ -184,6 +189,7 @@ def middle_formatted(powder, offset, cells_cached=False):
         #mandatory_cond = inlines("({get_cell}(x-1, y)) != {id} and ({get_cell}(x+1, y)) != {id}").format(
         #               id = powder.index)#,
     return inlined.format(x=offset[0], y=offset[1],
+                          pre_cond = pre_cond,
                         bit_2_cond = str(powder.has_bitwise_operations),
                         bit_or = "" if not powder.is_plant else "| curr_bit",
                         set_cond="interaction[0] != id_and_bit" if not powder.is_plant else "False",
@@ -247,6 +253,7 @@ else:
         #curr_bit = "-1"
         #if powder.has_bitwise_operations or powder.is_plant:
        #    curr_bit = inlines("({get_bit}(x,y))")
+        result += "\nacc_bits_{index} = None\n".format(index=powder.index)
         result += f"""
 
 def powder_{index}(chunk, id_and_bit, curr_bit, x: int, y: int):
@@ -301,5 +308,7 @@ def import_unrolled():
     for id in indexes:
         for i in range(256):
             indexes_bit_shifted[id * 256 | i] = indexes[id]
+    for index, powder in types.items():
+        setattr(imported, f"acc_bits_{index}", powder.bit_by_offset)
 
     return indexes_bit_shifted
