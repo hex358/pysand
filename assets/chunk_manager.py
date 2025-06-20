@@ -2,6 +2,7 @@ import pickle
 from multiprocessing import shared_memory, Manager
 import numpy as np
 import ui
+#from numba import
 
 USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
@@ -51,6 +52,7 @@ class Chunk:
 
     def __init__(self, xo: int, yo: int):
         self.data = array("L", [0]*(CHUNK_SIZE*CHUNK_SIZE))
+        self.first_assign = False
 
         self.xo, self.yo = xo, yo
         #self.data = np.zeros((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
@@ -61,6 +63,7 @@ class Chunk:
         self.render_chunk = render.add_chunk(xo, yo, self.data)
         self.visited = set([])
         self.merge_visited = set([])
+        self.is_uniform = False
 
         self.rect = render.ColorRect(
             self.xo * CHUNK_SIZE * mainloop.CHUNK_PIXEL_SIZE - render.plane_offset_x*0.1,
@@ -80,7 +83,7 @@ class Chunk:
         self.skipped_over_count = 0
         self.visited.clear()
         self.prev = self.data
-        self.force_border.clear()
+        self.first_assign = True
 
     def keep_alive(self, and_neighbours: bool = False):
         if is_paused:
@@ -169,6 +172,7 @@ class Chunk:
         #     return False
         self.visited.add((x, y))
         if self.local_is_in_bounds(x, y):
+            self.is_uniform = False
             #if not (x,y) in self.visited:
             self.data[y*CHUNK_SIZE+x] = val * 256
            # print(self.data)
@@ -184,9 +188,17 @@ class Chunk:
         target.visited.add((local_x, local_y))
         target.data[local_y*CHUNK_SIZE+local_x] = val * 256
 
+        if target.was_updated:
+            target.is_uniform = False
+        else:
+            target.first_assign = False
+
         return True
 
    # get_cell = lambda self,x,y: self.prev[y,x] if (0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE) else chunks.get(((self.xo*CHUNK_SIZE+x) // CHUNK_SIZE, (self.yo*CHUNK_SIZE+y) // CHUNK_SIZE), dummy_chunk).prev[y % CHUNK_SIZE, x % CHUNK_SIZE]
+
+    iter_regular = range(CHUNK_SIZE)
+    iter_uniform = [0, 1, CHUNK_SIZE-1, CHUNK_SIZE-2]
 
     def update(self):
         self.ticks = ticks
@@ -196,11 +208,19 @@ class Chunk:
         self.prev = array("L", self.data)
         self.even_tick = ticks % 2 == 0
 
-        for x in range(CHUNK_SIZE):
+        iter_list = Chunk.iter_regular# if not self.is_uniform else Chunk.iter_uniform
+        assign_is_uniform = self.first_assign
+        first = self.prev[0]
+
+        for x in iter_list:
             x = x if ticks % 2 == 0 else CHUNK_SIZE-x-1
-            for y in range(CHUNK_SIZE):
+            for y in iter_list:
                 if (x,y) in self.visited: continue
                 current = self.prev[y*CHUNK_SIZE+x]# >> 8
+                if current != first:
+                    assign_is_uniform = False
+                if self.is_uniform and 0 < x < CHUNK_SIZE-1 and 0 < y < CHUNK_SIZE-1:
+                   self.skip_over(); continue
 
                 if current in element_storage.update_types:
                     curr_bit = 0
@@ -209,6 +229,12 @@ class Chunk:
                     element_storage.element_calls[current](self, current, curr_bit, x, y)
                 else:
                     self.skip_over()
+        #
+        # if self.is_uniform:
+        #     self.skipped_over_count += (CHUNK_SIZE-4) ** 2
+
+        self.is_uniform = assign_is_uniform
+
         if self.skipped_over_count >= CHUNK_SIZE * CHUNK_SIZE:
             self.update_intensity = 0.0
         #self.prev = self.data
@@ -248,6 +274,10 @@ class DummyChunk:
         self.data = array("L", [99 * 256]*(CHUNK_SIZE*CHUNK_SIZE))
         self.prev = array("L", [99 * 256]*(CHUNK_SIZE*CHUNK_SIZE))
         self.visited = set([])
+        self.first_assign = False
+        self.was_updated = False
+        self.is_uniform = False
+       # self.merge_
         self.update_intensity = 0
     def mark_dirty(self, x:int, y:int):
         pass
@@ -262,6 +292,7 @@ def global_set_cell(gx: int, gy: int, v: int, bit_value = False):
     target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
     if target:
        # target.force_border.add((gx % CHUNK_SIZE, gy % CHUNK_SIZE))
+        target.is_uniform = False
         target.keep_alive()
         target.data[(gy % CHUNK_SIZE) * CHUNK_SIZE + gx % CHUNK_SIZE] = v * 256 if not bit_value else v
 
@@ -297,6 +328,7 @@ def _ready() -> None:
 def _process(delta: float) -> None:
     global render_timestamp, timestamp, update_delta, update_tick
     dummy_chunk.visited.clear()
+    #dummy_chunk.merge_.clear()
 
     if mainloop.time_passed - timestamp > 1 / UPDATES_PER_SECOND:
         global ticks
@@ -313,6 +345,10 @@ def _process(delta: float) -> None:
                     c.rect.color[3] = 0.2
                 else:
                     c.rect.color[3] = 0
+                if not c.is_uniform:
+                    c.rect.color[:2] = (1.0, 0.0)
+                else:
+                    c.rect.color[:2] = (0.0, 1.0)
         #dummy_chunk.data, dummy_chunk.prev = dummy_chunk.prev, dummy_chunk.data
 
         for c in chunks.values():

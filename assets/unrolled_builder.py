@@ -17,7 +17,7 @@ file_header = """
 
 
 
-
+from numba import njit
 from random import random, randint, randrange
 from collections import namedtuple
 dummy_chunk = None
@@ -49,7 +49,7 @@ if keep:
             if id_and_bit in interaction[3]:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                     {plant_insert}
-                    if interaction[0] != id_and_bit:
+                    if {set_cond}:
                         {set_cell}(x,y,interaction[0] {bit_or})
                     if {set_other_cell_cond}:
                         {set_cell}(new_x,new_y,interaction[1])
@@ -102,6 +102,10 @@ if new_chunk != chunk:
     ly, lx = set_y % CHUNK_SIZE, set_x % CHUNK_SIZE
 new_chunk.data[ly*CHUNK_SIZE + lx] = set_value
 new_chunk.visited.add((lx, ly))
+if new_chunk.was_updated:
+    new_chunk.is_uniform = False
+else:
+    new_chunk.first_assign = False
 """
 is_visited_inline = "((visited_x,visited_y) in chunk.visited if 0 <= visited_x < CHUNK_SIZE and 0 <= visited_y < CHUNK_SIZE else (visited_x % CHUNK_SIZE, visited_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+visited_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+visited_y) // CHUNK_SIZE), dummy_chunk).visited)"
 
@@ -183,6 +187,7 @@ def middle_formatted(powder, offset, cells_cached=False):
     return inlined.format(x=offset[0], y=offset[1],
                         bit_2_cond = str(powder.has_bitwise_operations),
                         bit_or = "" if not powder.is_plant else "| curr_bit",
+                        set_cond="interaction[0] != id_and_bit" if not powder.is_plant else "False",
                         #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
 
                         mandatory_cond=mandatory_cond,
