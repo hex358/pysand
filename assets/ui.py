@@ -54,7 +54,7 @@ def _ready() -> None:
     rect2 = render.ColorRect(
         ox - PIXEL_SIZE*1.333,oy - PIXEL_SIZE*1.333,
         (CHUNK_SIZE * pix * CHUNKS_RECT[2] - ox - pix * 2/3 + mainloop.size_inc[0], CHUNK_SIZE * pix * (CHUNKS_RECT[3]) - oy - pix * 2/3 - pix * 2 + mainloop.size_inc[1]),
-        (0,0,0,0),5.0,(0.7,0.7,0.7,1),offsets_fix=1
+        (0,0,0,0),5,(0.7,0.7,0.7,1),offsets_fix=1
     )
     render.plane_offset_x, render.plane_offset_y = ox, oy
 

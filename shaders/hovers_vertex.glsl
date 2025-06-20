@@ -6,7 +6,7 @@ layout(location = 1) in vec4 aColor;
 uniform mat4 uProj;
 uniform float uPointSize;
 uniform vec2 mousePos;
-uniform float shapeSize = 5;
+uniform highp float shapeSize = 5;
 uniform uint mode = 1u;
 
 out vec2 uPos;

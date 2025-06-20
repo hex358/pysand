@@ -47,12 +47,10 @@ if keep:
             interaction = powder.bit_interactions[({x}, {y})][bottom_cell]
             if id_and_bit in interaction[3]:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
-                    {plant_insert}
                     if {set_cond}:
-                        {set_cell}(x,y,interaction[0] {bit_or})
-                    if {set_other_cell_cond}:
-                        {set_cell}(new_x,new_y,interaction[1])
-                    {plant_inline_bottom}
+                        {set_cell}(x,y,{set_itself})
+                    if interaction[1] != bottom_cell:
+                        {set_cell}(new_x,new_y,{set_other})
                 res_x, res_y = new_x, new_y
                 sleep = False
                 keep = False
@@ -72,13 +70,6 @@ else:
 """
 
 
-plant_inline = """
-
-"""
-
-plant_inline_bottom = """
-{set_bit}(new_x, new_y, curr_bit - 1)
-"""
 
 func_bottom = """
 if sleep:
@@ -167,17 +158,14 @@ def indent(text: str, count: int = 1):
 def middle_formatted(powder, offset, cells_cached=False):
     custom_cond_formatted = inlines(powder.custom_cond)
     inlined = inlines(func_middle, get_cell_skip=cells_cached)
-    set_other_cell_cond = "True"
     if cells_cached:
         inlined = inlined.replace("{get_cell}", "replaces[add_x]#")
     plant_insert = ""
     mandatory_cond = "True"
-    if powder.is_plant:
-        set_other_cell_cond = "True"
-        plant_insert = indent(inlines(plant_inline), 5)
+#        plant_insert = indent(inlines(plant_inline), 5)
     pre_cond = ""
     if len(offset) >= 4 and isinstance(offset[3], frozenset):
-        if powder.throw_dice or len(powder.bit_by_offset[offset[:2]]) > 1:
+        if 1 or powder.throw_dice or len(powder.bit_by_offset[offset[:2]]) > 1:
             pre_cond += " id_and_bit in acc_bits_{id}[{offset}] and ".format(id=powder.index, offset=offset[:2])
         else:
             pre_cond += "  id_and_bit == {bit} and ".format(id=powder.index,
@@ -189,21 +177,20 @@ def middle_formatted(powder, offset, cells_cached=False):
         #mandatory_cond = inlines("({get_cell}(x-1, y)) != {id} and ({get_cell}(x+1, y)) != {id}").format(
         #               id = powder.index)#,
     return inlined.format(x=offset[0], y=offset[1],
-                          pre_cond = pre_cond,
+                        pre_cond = pre_cond,
+                        set_itself="interaction[0]",
+                        set_other="id_and_bit+interaction[4] if interaction[4] is not None else interaction[1]",
                         bit_2_cond = str(powder.has_bitwise_operations),
-                        bit_or = "" if not powder.is_plant else "| curr_bit",
                         set_cond="interaction[0] != id_and_bit" if not powder.is_plant else "False",
                         #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
 
                         mandatory_cond=mandatory_cond,
                         dict_name = f"interact_{powder.index}",
-                        set_other_cell_cond = set_other_cell_cond if (offset[0],offset[1] != (0,0)) else "interaction[1] != id",
                         add_cond=custom_cond_formatted,
                         prob_eval="" if not isinstance(offset[2], str) and offset[2] >= 100
                         else f"100*random() > 100-{offset[2]} and ",
                         insert="" if not powder.throw_dice else "iter_counter += 1",
-                        plant_insert=plant_insert,
-                        plant_inline_bottom = indent(inlines(plant_inline_bottom),5) if powder.is_plant else ""
+                        #     plant_inline_bottom = indent(inlines(plant_inline_bottom),5) if powder.is_plant else ""
                         )
 
 
@@ -237,7 +224,7 @@ def string_unroll():
         if powder.is_plant:
            pre_cond = inlines("""
 
-if curr_bit <= 0:
+if id_and_bit <= {thres}:
     keep = False
     sleep = True
 else:
@@ -247,7 +234,7 @@ else:
         sleep = True
     else:
         replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
-           """).format(id=powder.index, dir=powder.gravity_direction)
+           """).format(id=powder.index, dir=powder.gravity_direction, thres=(powder.index << 8))
            cached = True
 
         #curr_bit = "-1"
@@ -310,5 +297,7 @@ def import_unrolled():
             indexes_bit_shifted[id * 256 | i] = indexes[id]
     for index, powder in types.items():
         setattr(imported, f"acc_bits_{index}", powder.bit_by_offset)
+        if index == 9:
+            print(powder.bit_by_offset[(0,1)])
 
     return indexes_bit_shifted
