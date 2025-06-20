@@ -105,6 +105,7 @@ update_types = {}
 class Powder:
     all_elements: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 99]
     bit_states: list = list(range(0,256))
+    bits_frozen: frozenset = frozenset(bit_states)
     gases: set = {0, 6}
     liquids: set = {2, 5}
     solids: list = [1, 3, 4, 7, 8, 9, 10, 99]
@@ -203,9 +204,10 @@ class Powder:
         for key, tuple_interaction in offset_interactions.items():
             for offset in key[1]:
                 if offset in self.interaction_checks: continue
-                if not offset[:2] in self.bit_interactions:
-                    self.bit_interactions[offset[:2]] = {}
-                self.bit_interactions[offset[:2]][key[0]] = tuple_interaction
+                new_offset = (offset[0], offset[1], self.bit_by_offset[(offset[:2])])
+                if not new_offset in self.bit_interactions:
+                    self.bit_interactions[new_offset] = {}
+                self.bit_interactions[new_offset][key[0]] = tuple_interaction
        # if self.index == 9:
        #     print(self.bit_interactions[(0,-1)][9 << 8 | 1])
 
@@ -221,8 +223,6 @@ class Powder:
                     if not self.index in other_powder.add_interactions:
                         other_powder.add_interactions[(self.index, ())] = Interaction(self.index, interaction_tuple[1], interaction_tuple[0], interaction_tuple[2],
                                                                                 itself_bit_state=interaction_tuple[5], other_bit_state=interaction_tuple[4])
-
-
 
     def __init__(self, index: int,
                  class_tags: list = [PowderTags.Default],
@@ -252,6 +252,14 @@ class Powder:
         #     add_interaction_checks.append((0, 0))
         #     custom_interactions.append(turns_into)
 
+        for i in range(len(add_interaction_checks)):
+            new = list(add_interaction_checks[i])
+            if len(new) > 3:
+                new[3] = frozenset(new[3])
+            else:
+                new.append(Powder.powders_frozen)
+            add_interaction_checks[i] = tuple(new)
+
         self.interaction_checks = set(add_interaction_checks)
         add_fall_offsets += add_interaction_checks
 
@@ -266,6 +274,10 @@ class Powder:
         self.add_interactions = {}
         for interaction in custom_interactions:
             self.add_interactions |= {key: interaction for key, _tuple in interaction.to_tuples().items()}
+
+        self.bit_by_offset = {}
+        for offset in self.fall_offsets:
+            self.bit_by_offset
 
 plant_heights = {}
 class Plant(Powder):
@@ -346,7 +358,7 @@ types = {
                 fall_direction=-1,
                 density=120,
                 move_probability=50,
-                add_interaction_checks=[(0,1,100)],#(0,1,100)],#(0,1,100)],
+                add_interaction_checks=[(0,1,100,[1])],#(0,1,100)],#(0,1,100)],
                 custom_interactions=[#Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other, probability=0,
                                     #            itself_bit_state=20, in_offsets=[(0,1)]),
                                      Interaction(itself_turns_into=9, other_turns_into=9, probability=20,

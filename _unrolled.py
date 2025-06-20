@@ -8,7 +8,6 @@
 
 
 
-from numba import njit
 from random import random, randint, randrange
 from collections import namedtuple
 dummy_chunk = None
@@ -36,6 +35,8 @@ interact_11 = None
 
 
 def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -70,10 +71,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -83,10 +82,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -112,10 +109,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -125,10 +120,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -154,10 +147,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -167,10 +158,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -200,10 +189,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -213,10 +200,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -242,10 +227,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -255,10 +238,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -284,10 +265,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -297,10 +276,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -321,7 +298,7 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -331,6 +308,8 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -365,10 +344,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -378,10 +355,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -407,10 +382,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -420,10 +393,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -449,10 +420,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -462,10 +431,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -495,10 +462,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -508,10 +473,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -537,10 +500,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -550,10 +511,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -579,10 +538,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -592,10 +549,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -616,7 +571,7 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -626,6 +581,8 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -660,10 +617,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -673,10 +628,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -702,10 +655,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -715,10 +666,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -744,10 +693,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -757,10 +704,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -790,10 +735,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -803,10 +746,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -832,10 +773,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -845,10 +784,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -874,10 +811,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -887,10 +822,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -911,7 +844,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -921,6 +854,8 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -955,10 +890,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -968,10 +901,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -997,10 +928,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1010,10 +939,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1039,10 +966,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1052,10 +977,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1085,10 +1008,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1098,10 +1019,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1127,10 +1046,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1140,10 +1057,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1169,10 +1084,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1182,10 +1095,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1206,7 +1117,7 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -1216,6 +1127,8 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1250,10 +1163,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1263,10 +1174,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1292,10 +1201,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1305,10 +1212,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1334,10 +1239,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1347,10 +1250,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1380,10 +1281,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1393,10 +1292,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1422,10 +1319,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1435,10 +1330,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1464,10 +1357,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1477,10 +1368,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1501,7 +1390,7 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -1511,6 +1400,8 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1545,10 +1436,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1558,10 +1447,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1587,10 +1474,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1600,10 +1485,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1629,10 +1512,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1642,10 +1523,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1675,10 +1554,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1688,10 +1565,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1717,10 +1592,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1730,10 +1603,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1759,10 +1630,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1772,10 +1641,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1796,7 +1663,7 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -1806,6 +1673,8 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1840,10 +1709,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1853,10 +1720,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1882,10 +1747,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1895,10 +1758,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1924,10 +1785,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1937,10 +1796,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -1966,10 +1823,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -1979,10 +1834,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2012,10 +1865,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2025,10 +1876,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2054,10 +1903,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2067,10 +1914,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2096,10 +1941,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2109,10 +1952,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2138,10 +1979,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2151,10 +1990,8 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2175,7 +2012,7 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -2192,6 +2029,8 @@ permuts_10 = (
 replaces = {-1: 0, 0: 0, 1: 0}
 
 def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -2244,10 +2083,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] | curr_bit)
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2257,10 +2094,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                             
@@ -2300,10 +2135,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] | curr_bit)
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2313,10 +2146,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                             
@@ -2356,10 +2187,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] | curr_bit)
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2369,10 +2198,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                             
@@ -2403,7 +2230,7 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -2413,6 +2240,8 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 
 def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -2447,10 +2276,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2460,10 +2287,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2489,10 +2314,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2502,10 +2325,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2531,10 +2352,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2544,10 +2363,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2573,10 +2390,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2586,10 +2401,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2619,10 +2432,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2632,10 +2443,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2661,10 +2470,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2674,10 +2481,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2703,10 +2508,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2716,10 +2519,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2745,10 +2546,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (y) % 12, (x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             if True:
                                 
@@ -2758,10 +2557,8 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
                                     ly, lx = (new_y) % 12, (new_x) % 12
                                 new_chunk.data[ly*12 + lx] = (interaction[1])
                                 new_chunk.visited.add((lx, ly))
-                                if new_chunk.was_updated:
-                                    new_chunk.is_uniform = False
-                                else:
-                                    new_chunk.first_assign = False
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
                                 
                             
                         res_x, res_y = new_x, new_y
@@ -2782,7 +2579,7 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
             chunk.update_intensity = MAX_UPDATE_INTENSITY
             if not chunk in updated_this_round:
                 updated_this_round.add(chunk)
-                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY

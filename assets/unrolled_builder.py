@@ -17,7 +17,6 @@ file_header = """
 
 
 
-from numba import njit
 from random import random, randint, randrange
 from collections import namedtuple
 dummy_chunk = None
@@ -102,10 +101,8 @@ if new_chunk != chunk:
     ly, lx = set_y % CHUNK_SIZE, set_x % CHUNK_SIZE
 new_chunk.data[ly*CHUNK_SIZE + lx] = set_value
 new_chunk.visited.add((lx, ly))
-if new_chunk.was_updated:
-    new_chunk.is_uniform = False
-else:
-    new_chunk.first_assign = False
+new_chunk.is_uniform = False
+new_chunk.first_assign = False
 """
 is_visited_inline = "((visited_x,visited_y) in chunk.visited if 0 <= visited_x < CHUNK_SIZE and 0 <= visited_y < CHUNK_SIZE else (visited_x % CHUNK_SIZE, visited_y % CHUNK_SIZE) in chunks.get(((chunk.xo*CHUNK_SIZE+visited_x) // CHUNK_SIZE, (chunk.yo*CHUNK_SIZE+visited_y) // CHUNK_SIZE), dummy_chunk).visited)"
 
@@ -114,7 +111,7 @@ xo,yo = chunk.xo, chunk.yo
 chunk.update_intensity = MAX_UPDATE_INTENSITY
 if not chunk in updated_this_round:
     updated_this_round.add(chunk)
-    chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+    new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -178,6 +175,8 @@ def middle_formatted(powder, offset, cells_cached=False):
     if powder.is_plant:
         set_other_cell_cond = "True"
         plant_insert = indent(inlines(plant_inline), 5)
+    if len(offset) >= 4 and isinstance(offset[3], frozenset):
+        mandatory_cond += " and "
     rep = "None"
     if powder.has_bitwise_operations:
         rep = "{dict_name}[({x}, {y}, True)]"
@@ -248,7 +247,11 @@ else:
         #curr_bit = "-1"
         #if powder.has_bitwise_operations or powder.is_plant:
        #    curr_bit = inlines("({get_bit}(x,y))")
-        result += f"\n\ndef powder_{index}(chunk, id_and_bit, curr_bit, x: int, y: int):"
+        result += f"""
+
+def powder_{index}(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+"""
         result += indent(func_header.format(id=index, pre_cond=pre_cond))#, curr_bit=curr_bit))
         result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 

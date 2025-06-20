@@ -2,7 +2,6 @@ import pickle
 from multiprocessing import shared_memory, Manager
 import numpy as np
 import ui
-#from numba import
 
 USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
@@ -83,7 +82,7 @@ class Chunk:
         self.skipped_over_count = 0
         self.visited.clear()
         self.prev = self.data
-        self.first_assign = True
+
 
     def keep_alive(self, and_neighbours: bool = False):
         if is_paused:
@@ -177,6 +176,8 @@ class Chunk:
             self.data[y*CHUNK_SIZE+x] = val * 256
            # print(self.data)
             self.keep_alive()
+            self.is_uniform = False
+            self.first_assign = False
             return True
         gx, gy = self.xo * CHUNK_SIZE + x, self.yo * CHUNK_SIZE + y
         target = chunks.get((gx // CHUNK_SIZE, gy // CHUNK_SIZE))
@@ -188,17 +189,15 @@ class Chunk:
         target.visited.add((local_x, local_y))
         target.data[local_y*CHUNK_SIZE+local_x] = val * 256
 
-        if target.was_updated:
-            target.is_uniform = False
-        else:
-            target.first_assign = False
+        target.is_uniform = False
+        target.first_assign = False
 
         return True
 
    # get_cell = lambda self,x,y: self.prev[y,x] if (0 <= x < CHUNK_SIZE and 0 <= y < CHUNK_SIZE) else chunks.get(((self.xo*CHUNK_SIZE+x) // CHUNK_SIZE, (self.yo*CHUNK_SIZE+y) // CHUNK_SIZE), dummy_chunk).prev[y % CHUNK_SIZE, x % CHUNK_SIZE]
 
     iter_regular = range(CHUNK_SIZE)
-    iter_uniform = [0, 1, CHUNK_SIZE-1, CHUNK_SIZE-2]
+    iter_uniform = [0, CHUNK_SIZE-1]
 
     def update(self):
         self.ticks = ticks
@@ -208,19 +207,24 @@ class Chunk:
         self.prev = array("L", self.data)
         self.even_tick = ticks % 2 == 0
 
-        iter_list = Chunk.iter_regular# if not self.is_uniform else Chunk.iter_uniform
         assign_is_uniform = self.first_assign
         first = self.prev[0]
 
-        for x in iter_list:
+        total_iters = 0
+        for x in Chunk.iter_regular:
             x = x if ticks % 2 == 0 else CHUNK_SIZE-x-1
-            for y in iter_list:
-                if (x,y) in self.visited: continue
+            curr_range = Chunk.iter_regular if not self.is_uniform or x == 0 or x == CHUNK_SIZE-1 else Chunk.iter_uniform
+            for y in curr_range:
+                total_iters += 1
+                if self.is_uniform: continue
+                if (x,y) in self.visited:
+                    assign_is_uniform = False
+                    continue
                 current = self.prev[y*CHUNK_SIZE+x]# >> 8
                 if current != first:
                     assign_is_uniform = False
-                if self.is_uniform and 0 < x < CHUNK_SIZE-1 and 0 < y < CHUNK_SIZE-1:
-                   self.skip_over(); continue
+                #if self.is_uniform and 0 < x < CHUNK_SIZE-1 and 0 < y < CHUNK_SIZE-1:
+                #   self.skip_over(); continue
 
                 if current in element_storage.update_types:
                     curr_bit = 0
@@ -228,15 +232,17 @@ class Chunk:
                         curr_bit = current & 0xFF
                     element_storage.element_calls[current](self, current, curr_bit, x, y)
                 else:
-                    self.skip_over()
+                    self.skipped_over_count += 1
         #
-        # if self.is_uniform:
-        #     self.skipped_over_count += (CHUNK_SIZE-4) ** 2
+
+        if self.is_uniform:
+            self.skipped_over_count += CHUNK_SIZE ** 2 - total_iters
+
+        if self.skipped_over_count >= CHUNK_SIZE ** 2:
+            self.update_intensity = 0.0
+        self.first_assign = True
 
         self.is_uniform = assign_is_uniform
-
-        if self.skipped_over_count >= CHUNK_SIZE * CHUNK_SIZE:
-            self.update_intensity = 0.0
         #self.prev = self.data
 
     def render(self):
