@@ -35,7 +35,7 @@ interact_10 = None
 interact_11 = None
 
 
-def powder_1(chunk, id_and_bit, x: int, y: int):
+def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -43,7 +43,6 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -69,7 +68,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -103,7 +102,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -137,7 +136,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -175,7 +174,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -209,7 +208,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -243,7 +242,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -267,20 +266,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -289,10 +275,6 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -300,7 +282,7 @@ def powder_1(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_2(chunk, id_and_bit, x: int, y: int):
+def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -308,7 +290,6 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -334,7 +315,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -368,7 +349,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -402,7 +383,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -440,7 +421,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -474,7 +455,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -508,7 +489,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -532,20 +513,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -554,10 +522,6 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -565,7 +529,7 @@ def powder_2(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_5(chunk, id_and_bit, x: int, y: int):
+def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -573,7 +537,6 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -599,7 +562,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -633,7 +596,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -667,7 +630,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -705,7 +668,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -739,7 +702,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -773,7 +736,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -797,20 +760,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -819,10 +769,6 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -830,7 +776,7 @@ def powder_5(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_6(chunk, id_and_bit, x: int, y: int):
+def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -838,7 +784,6 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -864,7 +809,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -898,7 +843,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -932,7 +877,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -970,7 +915,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1004,7 +949,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1038,7 +983,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1062,20 +1007,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1084,10 +1016,6 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -1095,7 +1023,7 @@ def powder_6(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_7(chunk, id_and_bit, x: int, y: int):
+def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1103,7 +1031,6 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -1129,7 +1056,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1163,7 +1090,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1197,7 +1124,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1235,7 +1162,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1269,7 +1196,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1303,7 +1230,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1327,20 +1254,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1349,10 +1263,6 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -1360,7 +1270,7 @@ def powder_7(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_8(chunk, id_and_bit, x: int, y: int):
+def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1368,7 +1278,6 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -1394,7 +1303,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1428,7 +1337,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1462,7 +1371,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1500,7 +1409,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1534,7 +1443,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1568,7 +1477,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1592,20 +1501,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1614,10 +1510,6 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -1625,7 +1517,7 @@ def powder_8(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_9(chunk, id_and_bit, x: int, y: int):
+def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1633,7 +1525,6 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -1659,7 +1550,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1693,7 +1584,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1727,7 +1618,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1761,7 +1652,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1799,7 +1690,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1833,7 +1724,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1867,7 +1758,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1901,7 +1792,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -1925,20 +1816,7 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1947,10 +1825,6 @@ def powder_9(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -1965,7 +1839,7 @@ permuts_10 = (
 ((1, 1, 15), (-1, 1, 15), (0, 1, 100)),)
 replaces = {-1: 0, 0: 0, 1: 0}
 
-def powder_10(chunk, id_and_bit, x: int, y: int):
+def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -1973,16 +1847,20 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = (chunk.prev[(y)*12+(x)] & 0xFF if (0 <= (x) < 12 and 0 <= (y) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk).prev[((y) % 12) * 12 + (x) % 12] & 0xFF)
     res_x, res_y = None, None
     
     
-    cached_left, cached_up, cached_right = (chunk.prev[(y+1)*12+(x-1)] if (0 <= (x-1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x-1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x-1) % 12]), (chunk.prev[(y+1)*12+(x)] if (0 <= (x) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x) % 12]), (chunk.prev[(y+1)*12+(x+1)] if (0 <= (x+1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x+1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x+1) % 12])
-    if (cached_left in powder.id_space or cached_right in powder.id_space or cached_up in powder.id_space): 
+    
+    if curr_bit <= 0:
         keep = False
         sleep = True
     else:
-        replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
+        cached_left, cached_up, cached_right = (chunk.prev[(y+1)*12+(x-1)] if (0 <= (x-1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x-1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x-1) % 12]), (chunk.prev[(y+1)*12+(x)] if (0 <= (x) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x) % 12]), (chunk.prev[(y+1)*12+(x+1)] if (0 <= (x+1) < 12 and 0 <= (y+1) < 12) else chunks.get(((chunk.xo*12+(x+1)) // 12, (chunk.yo*12+(y+1)) // 12), dummy_chunk).prev[((y+1) % 12) * 12 + (x+1) % 12])
+        if (cached_left in powder.id_space or cached_right in powder.id_space or cached_up in powder.id_space): 
+            keep = False
+            sleep = True
+        else:
+            replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
                
         
 
@@ -2012,10 +1890,10 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] | curr_bit)
                                 new_chunk.visited.add((lx, ly))
                                 
-                            if curr_bit > 0:
+                            if True:
                                 
                                 new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
                                 ly, lx = (new_y), (new_x)
@@ -2034,8 +1912,6 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                                 local_x, local_y = gx % 12, gy % 12
                                 target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | (( curr_bit - 1) & 0xFF)
                             
-                            if curr_bit <= 0:
-                                sleep = True 
                             
                         res_x, res_y = new_x, new_y
                         sleep = False
@@ -2062,10 +1938,10 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] | curr_bit)
                                 new_chunk.visited.add((lx, ly))
                                 
-                            if curr_bit > 0:
+                            if True:
                                 
                                 new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
                                 ly, lx = (new_y), (new_x)
@@ -2084,8 +1960,6 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                                 local_x, local_y = gx % 12, gy % 12
                                 target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | (( curr_bit - 1) & 0xFF)
                             
-                            if curr_bit <= 0:
-                                sleep = True 
                             
                         res_x, res_y = new_x, new_y
                         sleep = False
@@ -2112,10 +1986,10 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] | curr_bit)
                                 new_chunk.visited.add((lx, ly))
                                 
-                            if curr_bit > 0:
+                            if True:
                                 
                                 new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
                                 ly, lx = (new_y), (new_x)
@@ -2134,8 +2008,6 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                                 local_x, local_y = gx % 12, gy % 12
                                 target.data[local_y*12+local_x] = (target.data[local_y*12+local_x] & 0xFF00) | (( curr_bit - 1) & 0xFF)
                             
-                            if curr_bit <= 0:
-                                sleep = True 
                             
                         res_x, res_y = new_x, new_y
                         sleep = False
@@ -2148,20 +2020,7 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -2170,10 +2029,6 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             
@@ -2181,7 +2036,7 @@ def powder_10(chunk, id_and_bit, x: int, y: int):
 
 
 
-def powder_11(chunk, id_and_bit, x: int, y: int):
+def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
     powder = update_types[id_and_bit]
     get_cell = chunk.get_cell
     
@@ -2189,7 +2044,6 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
     sleep: bool = True
     keep = True
     iter_counter: int = 0
-    curr_bit: int = -1
     res_x, res_y = None, None
     
     
@@ -2215,7 +2069,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2249,7 +2103,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2283,7 +2137,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2317,7 +2171,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2355,7 +2209,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2389,7 +2243,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2423,7 +2277,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2457,7 +2311,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                                 ly, lx = (y), (x)
                                 if new_chunk != chunk:
                                     ly, lx = (y) % 12, (x) % 12
-                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.data[ly*12 + lx] = (interaction[0] )
                                 new_chunk.visited.add((lx, ly))
                                 
                             if True:
@@ -2481,20 +2335,7 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        
-        xo,yo = chunk.xo, chunk.yo
         chunk.update_intensity = MAX_UPDATE_INTENSITY
-        if not chunk in updated_this_round:
-            updated_this_round.add(chunk)
-            chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-            chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-        
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -2503,10 +2344,6 @@ def powder_11(chunk, id_and_bit, x: int, y: int):
                 updated_this_round.add(chunk)
                 chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-                chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
                 chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
             

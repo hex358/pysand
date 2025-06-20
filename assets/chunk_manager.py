@@ -1,6 +1,7 @@
 import pickle
 from multiprocessing import shared_memory, Manager
 import numpy as np
+import ui
 
 USE_DEBUG = False
 USE_MODULES = ["element_storage", "render", "mainloop"]
@@ -61,11 +62,12 @@ class Chunk:
         self.visited = set([])
         self.merge_visited = set([])
 
-        # self.rect = render.ColorRect(
-        #     self.xo * CHUNK_SIZE * mainloop.PIXEL_SIZE, self.yo * CHUNK_SIZE * mainloop.PIXEL_SIZE,
-        #     (CHUNK_SIZE * mainloop.PIXEL_SIZE, CHUNK_SIZE * mainloop.PIXEL_SIZE),
-        #     (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
-        # )
+        self.rect = render.ColorRect(
+            self.xo * CHUNK_SIZE * mainloop.CHUNK_PIXEL_SIZE - render.plane_offset_x*0.1,
+            self.yo * CHUNK_SIZE * mainloop.CHUNK_PIXEL_SIZE - render.plane_offset_y*0.1,
+            (CHUNK_SIZE * mainloop.CHUNK_PIXEL_SIZE, CHUNK_SIZE * mainloop.CHUNK_PIXEL_SIZE),
+            (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
+        )
 
     def decrement_update(self):
         self.update_intensity -= update_delta
@@ -199,8 +201,12 @@ class Chunk:
             for y in range(CHUNK_SIZE):
                 if (x,y) in self.visited: continue
                 current = self.prev[y*CHUNK_SIZE+x]# >> 8
+
                 if current in element_storage.update_types:
-                    element_storage.element_calls[current](self, current, x, y)
+                    curr_bit = 0
+                    if element_storage.update_types[current].is_plant:
+                        curr_bit = current & 0xFF
+                    element_storage.element_calls[current](self, current, curr_bit, x, y)
                 else:
                     self.skip_over()
         if self.skipped_over_count >= CHUNK_SIZE * CHUNK_SIZE:
@@ -304,9 +310,9 @@ def _process(delta: float) -> None:
                 if c.is_alive():
                     c.update()
                     to_render.add(c)
-                #     c.rect.color[3] = 0.2
-                # else:
-                #     c.rect.color[3] = 0
+                    c.rect.color[3] = 0.2
+                else:
+                    c.rect.color[3] = 0
         #dummy_chunk.data, dummy_chunk.prev = dummy_chunk.prev, dummy_chunk.data
 
         for c in chunks.values():

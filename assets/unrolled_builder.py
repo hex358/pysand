@@ -34,7 +34,6 @@ set_cell = chunk.set_cell
 sleep: bool = True
 keep = True
 iter_counter: int = 0
-curr_bit: int = {curr_bit}
 res_x, res_y = None, None
 
 {pre_cond}
@@ -51,7 +50,7 @@ if keep:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                     {plant_insert}
                     if interaction[0] != id_and_bit:
-                        {set_cell}(x,y,interaction[0])
+                        {set_cell}(x,y,interaction[0] {bit_or})
                     if {set_other_cell_cond}:
                         {set_cell}(new_x,new_y,interaction[1])
                     {plant_inline_bottom}
@@ -80,15 +79,13 @@ plant_inline = """
 
 plant_inline_bottom = """
 {set_bit}(new_x, new_y, curr_bit - 1)
-if curr_bit <= 0:
-    sleep = True 
 """
 
 func_bottom = """
 if sleep:
     {skip_over}()
 else:
-    {keep_alive}(chunk.xo*CHUNK_SIZE+x, chunk.yo*CHUNK_SIZE+y)
+    chunk.update_intensity = MAX_UPDATE_INTENSITY
     if res_x is not None:
         {keep_alive}(chunk.xo*CHUNK_SIZE+res_x, chunk.yo*CHUNK_SIZE+res_y)
     """
@@ -115,10 +112,6 @@ if not chunk in updated_this_round:
     updated_this_round.add(chunk)
     chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-    chunks.get((xo-1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-    chunks.get((xo-1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-    chunks.get((xo+1,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
-    chunks.get((xo+1,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
 """
@@ -179,7 +172,7 @@ def middle_formatted(powder, offset, cells_cached=False):
     plant_insert = ""
     mandatory_cond = "True"
     if powder.is_plant:
-        set_other_cell_cond = "curr_bit > 0"
+        set_other_cell_cond = "True"
         plant_insert = indent(inlines(plant_inline), 5)
     rep = "None"
     if powder.has_bitwise_operations:
@@ -189,6 +182,7 @@ def middle_formatted(powder, offset, cells_cached=False):
         #               id = powder.index)#,
     return inlined.format(x=offset[0], y=offset[1],
                         bit_2_cond = str(powder.has_bitwise_operations),
+                        bit_or = "" if not powder.is_plant else "| curr_bit",
                         #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
 
                         mandatory_cond=mandatory_cond,
@@ -232,20 +226,25 @@ def string_unroll():
             result += 'replaces = {-1: 0, 0: 0, 1: 0}'
         if powder.is_plant:
            pre_cond = inlines("""
-cached_left, cached_up, cached_right = ({get_cell}(x-1,y+{dir})), ({get_cell}(x,y+{dir})), ({get_cell}(x+1,y+{dir}))
-if (cached_left in powder.id_space or cached_right in powder.id_space or cached_up in powder.id_space): 
+
+if curr_bit <= 0:
     keep = False
     sleep = True
 else:
-    replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
+    cached_left, cached_up, cached_right = ({get_cell}(x-1,y+{dir})), ({get_cell}(x,y+{dir})), ({get_cell}(x+1,y+{dir}))
+    if (cached_left in powder.id_space or cached_right in powder.id_space or cached_up in powder.id_space): 
+        keep = False
+        sleep = True
+    else:
+        replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
            """).format(id=powder.index, dir=powder.gravity_direction)
            cached = True
 
-        curr_bit = "-1"
-        if powder.has_bitwise_operations or powder.is_plant:
-            curr_bit = inlines("({get_bit}(x,y))")
-        result += f"\n\ndef powder_{index}(chunk, id_and_bit, x: int, y: int):"
-        result += indent(func_header.format(id=index, pre_cond=pre_cond, curr_bit=curr_bit))
+        #curr_bit = "-1"
+        #if powder.has_bitwise_operations or powder.is_plant:
+       #    curr_bit = inlines("({get_bit}(x,y))")
+        result += f"\n\ndef powder_{index}(chunk, id_and_bit, curr_bit, x: int, y: int):"
+        result += indent(func_header.format(id=index, pre_cond=pre_cond))#, curr_bit=curr_bit))
         result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 
         if powder.throw_dice:
