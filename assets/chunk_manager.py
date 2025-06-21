@@ -10,7 +10,7 @@ USE_MODULES = ["element_storage", "render", "mainloop"]
 CHUNK_SIZE = 12
 UPDATES_PER_SECOND = 60
 RENDERS_PER_SECOND = 60
-MAX_UPDATE_INTENSITY = 3.0
+MAX_UPDATE_INTENSITY = 1.0
 WINDOW_WIDTH = None
 WINDOW_HEIGHT = None
 PEN_SIZE = 6
@@ -52,11 +52,11 @@ class Chunk:
     def __init__(self, xo: int, yo: int):
         self.data = array("L", [0]*(CHUNK_SIZE*CHUNK_SIZE))
         self.first_assign = False
+        self.force_update = False
 
         self.xo, self.yo = xo, yo
         #self.data = np.zeros((CHUNK_SIZE, CHUNK_SIZE), dtype=np.uint8)
         self.prev = array("L", [0]*(CHUNK_SIZE*CHUNK_SIZE))#np.zeros_like(self.data)
-        self.force_border = set([])
 
         self.even_tick = False
         self.render_chunk = render.add_chunk(xo, yo, self.data)
@@ -64,9 +64,15 @@ class Chunk:
         self.merge_visited = set([])
         self.is_uniform = False
 
+        # self.rect = render.ColorRect(
+        #     self.xo * CHUNK_SIZE * PIXEL_SIZE, self.yo * CHUNK_SIZE * PIXEL_SIZE,
+        #     (CHUNK_SIZE * PIXEL_SIZE, CHUNK_SIZE * PIXEL_SIZE),
+        #     (1, 0, 0, 0.0), 0, (1, 1, 1, 1)
+        # )
+
 
     def decrement_update(self):
-        self.update_intensity -= update_delta
+        self.update_intensity -= update_delta * 16
         if 0 < self.update_intensity < 0.03:
             self.update_intensity = 0.0
 
@@ -76,6 +82,7 @@ class Chunk:
         self.skipped_over_count = 0
         self.visited.clear()
         self.prev = self.data
+        self.first_assign = True
 
 
     def keep_alive(self, and_neighbours: bool = False):
@@ -203,6 +210,11 @@ class Chunk:
 
         assign_is_uniform = self.first_assign
         first = self.prev[0]
+        # if self.force_update:
+        #     self.force_update = False
+        #     self.is_uniform = False
+        #     assign_is_uniform = False
+        #     self.update_intensity = MAX_UPDATE_INTENSITY
 
         total_iters = 0
         for x in Chunk.iter_regular:
@@ -233,8 +245,8 @@ class Chunk:
             self.skipped_over_count += CHUNK_SIZE ** 2 - total_iters
 
         if self.skipped_over_count >= CHUNK_SIZE ** 2:
-            self.update_intensity = 0.0
-        self.first_assign = True
+            self.decrement_update()
+
 
         self.is_uniform = assign_is_uniform
         #self.prev = self.data
@@ -342,6 +354,13 @@ def _process(delta: float) -> None:
                 if c.is_alive():
                     c.update()
                     to_render.add(c)
+                #     if not c.is_uniform:
+                #         c.rect.color[0], c.rect.color[1] = 1, 0
+                #     else:
+                #         c.rect.color[0], c.rect.color[1] = 0, 1
+                #     c.rect.color[3] = 0.3
+                # else:
+                #     c.rect.color[3] = 0.0
         #dummy_chunk.data, dummy_chunk.prev = dummy_chunk.prev, dummy_chunk.data
 
         for c in chunks.values():

@@ -1,7 +1,7 @@
 import importlib
 import textwrap
 
-pre_built = False
+pre_built = 0
 
 chunk_manager = None
 imported = None
@@ -45,7 +45,7 @@ if keep:
         bottom_cell = {get_cell}(new_x,new_y)
         if bottom_cell in powder.bit_interactions[({x}, {y})]:
             interaction = powder.bit_interactions[({x}, {y})][bottom_cell]
-            if id_and_bit in interaction[3]:
+            if {bit_cond}:#id_and_bit in interaction[3]:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                     if {set_cond}:
                         {set_cell}(x,y,{set_itself})
@@ -99,9 +99,11 @@ is_visited_inline = "((visited_x,visited_y) in chunk.visited if 0 <= visited_x <
 keep_alive_inline = """
 xo,yo = chunk.xo, chunk.yo
 chunk.update_intensity = MAX_UPDATE_INTENSITY
+chunk.is_uniform = False
+chunk.first_assign = False
 if not chunk in updated_this_round:
     updated_this_round.add(chunk)
-    new_chunk = chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+    chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
     chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
@@ -176,11 +178,13 @@ def middle_formatted(powder, offset, cells_cached=False):
         #mandatory_cond = inlines("({get_cell}(x-1, y)) != {id} and ({get_cell}(x+1, y)) != {id}").format(
         #               id = powder.index)#,
     return inlined.format(x=offset[0], y=offset[1],
+                        bit_cond = "True" if not powder.uses_bit_conds else "id_and_bit in interaction[3]",
                         pre_cond = pre_cond,
-                        set_itself="interaction[0]",
-                        set_other="id_and_bit+interaction[4] if interaction[4] is not None else interaction[1]",
+                        set_itself="interaction[0] if interaction[0] > 255 else id_and_bit + interaction[0]" if powder.uses_bit_change else "interaction[0]",
+                        set_other="interaction[1] if interaction[1] > 255 else id_and_bit + interaction[1]" if powder.uses_bit_change else "interaction[1]",
                         bit_2_cond = str(powder.has_bitwise_operations),
-                        set_cond="interaction[0] != id_and_bit" if not powder.is_plant else "False",
+                        set_cond="interaction[0] != id_and_bit" if not powder.is_plant
+                                                                   and not (not powder.throw_dice and offset == (0,0)) else "False",
                         #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
 
                         mandatory_cond=mandatory_cond,

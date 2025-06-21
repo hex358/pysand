@@ -10,34 +10,49 @@ element_calls = {}
 
 from enum import Enum
 class PowderTags(Enum):
-    Default = 0
-    Liquid = 1
-    Gas = 2
-    Plant = 3
+    Default = 1
+    Liquid = 2
+    Gas = 4
+    Plant = 8
+    Hot = 16
 
+class Keywords(Enum):
+    temp_corrode = 252
+    density_diff = 253
+    other = 254
+    current = 255
 
-other = 254
-current = 255
 
 def clear():
     unrolled_builder.imported.updated_this_round.clear()
 
 def build_classes():
     for powder in types.values():
+        if isinstance(powder, StablePowder): continue
         powder.bind_interactions()
     for powder in types.values():
+        if isinstance(powder, StablePowder): continue
         powder.create_interactions()
 
 import math
-def is_negative(x): return math.copysign(1.0, x) < 0.0
+def is_negative(x):
+    return math.copysign(1.0, x) < 0.0
 
 
 name_map = {"sand": 1, "water": 2, "stone": 3, "wood": 4, "lava": 5, "vapor": 6, "dirt": 7, "wet_dirt": 8, "grass": 9}
 def PowderName(name: str):
     return name_map[name]
 
-
 from collections import namedtuple
+
+
+class BitRelative:
+    def __init__(self, value: int, relative_to_itself = True):
+        self.value = value
+        self.relative_to_itself = relative_to_itself
+
+
+
 class Interaction:
     def __init__(self, with_powder: int | list[int] = None,
                  itself_turns_into: int = None,
@@ -49,7 +64,8 @@ class Interaction:
                  other_bit_state: int = 0,
                  with_bit: int | list[int] = None,
                  if_bit_state_is: int | list[int] = None,
-                 bit_change: int = None,
+                 change_itself_bit: BitRelative = None,
+                 change_other_bit: BitRelative = None,
                  ):
         self.interactions = {}
         self.double_sided = double_sided
@@ -62,29 +78,29 @@ class Interaction:
         self.is_with_bit = is_bit_interaction
         self.in_offsets = in_offsets
 
-        with_bits = [with_bit] if isinstance(with_bit, int) else with_bit
-        if with_bits is None: with_bits = [None]
+        with_bits = [with_bit] if isinstance(with_bit, int) or with_bit is None else with_bit
         #if with_bit is not None: with_powder = with_bit
-        if isinstance(with_powder, int): with_powder = [with_powder]
+        with_powder = [with_powder] if isinstance(with_powder, int) or with_powder is None else with_powder
 
         skip = []
-        for types in with_powder:
-            if is_negative(types): skip.append(-types)
+        for powder in with_powder:
+            if is_negative(powder): skip.append(-powder)
 
         for other_type in with_powder:
           #  if other_type == 9:
            #     print(if_bit_state_is)
             if other_type in skip or -other_type in skip: continue
             for other_bit in with_bits:
-                new_tuple = (itself_turns_into if itself_turns_into != other else other_type,
-                            other_turns_into if other_turns_into != other else other_type,
+                new_tuple = (itself_turns_into if itself_turns_into != Keywords.other else other_type,
+                            other_turns_into if other_turns_into != Keywords.other else other_type,
                             probability,
                             in_offsets,
-                            itself_bit_state if itself_bit_state != other else other_bit,
-                            other_bit_state if other_bit_state != other else other_bit,
+                            itself_bit_state if itself_bit_state != Keywords.other else other_bit,
+                            other_bit_state if other_bit_state != Keywords.other else other_bit,
                             is_bit_interaction,
                             if_bit_state_is,
-                            bit_change
+                            change_itself_bit,
+                            change_other_bit
                              )
 
                 self.interactions[(other_type, other_bit, is_bit_interaction, tuple(in_offsets), tuple(if_bit_state_is))] = new_tuple
@@ -101,17 +117,17 @@ class SubPowder:
         self.bit_interactions = bit_interactions
         self.id_space = id_space
 
+
+
 class Powder:
     all_elements: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 99]
-    bit_states: list = list(range(0,256))
-    bits_frozen: frozenset = frozenset(bit_states)
     gases: set = {0, 6}
     liquids: set = {2, 5}
     solids: list = [1, 3, 4, 7, 8, 9, 99]
     #index: int = 1
-    gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=current, probability=None)
+    gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=Keywords.current, probability=Keywords.density_diff)
                         for gas in gases]
-    liquid_interactions = [Interaction(with_powder=liquid, itself_turns_into=liquid, other_turns_into=current, probability=None)
+    liquid_interactions = [Interaction(with_powder=liquid, itself_turns_into=liquid, other_turns_into=Keywords.current, probability=Keywords.density_diff)
                      for liquid in liquids]
     class_tag_interactions = {
         PowderTags.Default:
@@ -121,7 +137,9 @@ class Powder:
         PowderTags.Gas:
             [*liquid_interactions, *gas_interactions ],
         PowderTags.Plant:
-            []
+            [],
+        PowderTags.Hot:
+            [Interaction(with_powder=solids+[-99], itself_turns_into=0, other_turns_into=Keywords.current, probability=Keywords.temp_corrode)]
     }
 
     def create_interactions(self):
@@ -139,11 +157,16 @@ class Powder:
             for with_powder, tuple_interaction in interaction.to_tuples().items():
                 new = list(tuple_interaction)
 
-                if new[2] is None: new[2] = add + -self.gravity_direction * (self.density - types[with_powder[0]].density)
+                match new[2]:
+                    case Keywords.density_diff:
+                        new[2] = add + -self.gravity_direction * (self.density - types[with_powder[0]].density)
+                    case Keywords.temp_corrode:
+                        other = types[with_powder[0]].meltability if with_powder[0] in types else 0
+                        new[2] = self.temperature * other / 100.0
                 if with_powder in types and self.density < types[with_powder[0]].density: continue
                 if with_powder == self.index: continue
-                if new[0] == current: new[0] = self.index
-                if new[1] == current: new[1] = self.index
+                if new[0] == Keywords.current: new[0] = self.index
+                if new[1] == Keywords.current: new[1] = self.index
 
                 tuples[with_powder] = tuple(new)
             self.interact_with_types |= tuples
@@ -151,43 +174,58 @@ class Powder:
         for interaction in self.add_interactions.values():
             self.interact_with_types |= interaction.to_tuples()
 
-        self.id_space = set([self.index << 8 | i for i in range(256)])
+        self.id_space = set([self.index << 8 | i for i in self.use_bits])
 
         offset_interactions = {}
-        bits = list(range(0,256))
         for with_type, interaction in self.interact_with_types.items():
-           # print(with_type[4])
             other_types = [with_type[0]] if with_type[0] is not None else Powder.all_elements
             other_bit_states = None
             is_custom_bit = False
             if with_type[1] is None:
-                other_bit_states = bits
+                other_bit_states = self.use_bits
             else:
                 is_custom_bit = True
                 other_bit_states = [with_type[1]] if isinstance(with_type[1], int) else with_type[1]
-            iter_over = interaction[7] if not interaction[7][0] is None else set(list(range(256)))
+            iter_over = interaction[7] if not interaction[7][0] is None else self.use_bits
+            if interaction[7][0] is not None:
+                self.uses_bit_conds = True
             if_bit = set([self.index << 8 | i for i in iter_over])
-            #if len(if_bit) < 255:
-           #     print(if_bit)
+
             for other_type in other_types:
                 if other_type == self.index and not is_custom_bit: continue
                 for other_bit in other_bit_states:
-                   # if self.index == 9:
-                   #     print("fjj")
+                    result_bit = other_type << 8 | other_bit
+
                     set_itself = interaction[0] if interaction[0] is not None else self.index
                     set_other = interaction[1] if interaction[1] is not None else other_type
                     set_itself_bit = interaction[4] if interaction[4] is not None else 0
                     set_other_bit = interaction[5] if interaction[5] is not None else 0
                     in_offsets = interaction[3] if interaction[3] else self.fall_offsets
-                   # if self.index == 9 and len(with_type[4]) < 4:
-                    #    print((with_type[4]))
 
-                    offset_interactions[(other_type << 8 | other_bit, tuple(in_offsets), tuple(with_type[4]))] = (
-                    set_itself << 8 | set_itself_bit,
-                    set_other << 8 | set_other_bit,
+                    bit_change_first = None
+                    if interaction[8] is not None:
+                        if interaction[8].relative_to_itself:
+                            self.uses_bit_change = True
+                            bit_change_first = interaction[8].value
+                        else:
+                            bit_change_first = other_type << 8 | other_bit + interaction[8].value
+
+                    bit_change_second = None
+                    if interaction[9] is not None:
+                        if interaction[9].relative_to_itself:
+                            self.uses_bit_change = True
+                            bit_change_second = interaction[9].value
+                        else:
+                            bit_change_second = other_type << 8 | other_bit + interaction[9].value
+
+                    val = [
+                    set_itself << 8 | set_itself_bit if bit_change_first is None else bit_change_first,
+                    set_other << 8 | set_other_bit if bit_change_second is None else bit_change_second,
                     interaction[2],
-                    if_bit,
-                    interaction[8])
+                    if_bit]
+                    offset_interactions[(result_bit, tuple(in_offsets), tuple(with_type[4]))] = tuple(val)
+                    #change_itself_bit,
+                    #change_other_bit)
                     #if self.index == 10:
                     #    print(offset_interactions[(other_type << 8 | other_bit, tuple(in_offsets))][4])
 
@@ -195,10 +233,9 @@ class Powder:
                    #     print(offset_interactions[(other_type << 8 | other_bit, tuple(in_offsets))][4])
 
         self.bit_interactions = {}
-        ids = [0,1,2,3,4,5,6,7,8,9,10,11]
 
         for key, tuple_interaction in offset_interactions.items():
-            bits = ids if key[2][0] is None else key[2]
+            bits = self.use_bits if key[2][0] is None else key[2]
             for bit in bits:
                 new_bit = self.index << 8 | bit
                 if not new_bit in self.bit_interactions:
@@ -213,7 +250,7 @@ class Powder:
                 # if self.index == 10 and bit == 1:
                 #     print(tuple_interaction)
 
-        for i in ids:
+        for i in self.use_bits:
             bit_id = self.index << 8 | i
             update_types[bit_id] = SubPowder(self.bit_interactions[bit_id], self.id_space)
 
@@ -243,34 +280,50 @@ class Powder:
                  gravity_direction: int = -1,
                  fall_direction: int = -1,
                  move_probability: int = 50,
-                 custom_interactions: list[Interaction] = {},
+                 custom_interactions: list[Interaction] = [],
                  custom_scipt = "",
                  custom_cond = "",
-                 add_interaction_checks = [],
+                 use_bits = [0],
+                 add_interaction_checks = None,
                  add_fall_offsets = [],
-                 density: int = 100,):
+
+                 density: int = 100,
+                 flammability: int = 0,
+                 temperature: int = 0,
+                 meltability: int = 0,
+
+                 turns_into: tuple[int, int, int] = None #into, probability, if bit state is..
+                 ):
         self.raw_interactions = {}
         self.interact_with_types = {}
         self.is_plant = False
         self.has_bitwise_operations = False
+        self.uses_bit_change = False
+        self.uses_bit_conds = False
         #print(no_interactions_with)
         self.custom_script, self.custom_cond = custom_scipt, custom_cond
         self.gravity_direction = gravity_direction
         self.class_tags = list(class_tags)
         self.throw_dice = throw_dice
         self.index = index
-        self.density = density
+        self.use_bits = use_bits
 
-        # if turns_into is not None:
-        #     add_interaction_checks.append((0, 0))
-        #     custom_interactions.append(turns_into)
+        self.density = density
+        self.temperature = temperature
+        self.meltability = meltability
+        self.flammability = flammability
+
+        if add_interaction_checks is None: add_interaction_checks = []
+        if turns_into is not None:
+            add_interaction_checks.append((0, 0, turns_into[1], turns_into[2] if len(turns_into) > 2 else use_bits))
+
 
         for i in range(len(add_interaction_checks)):
             new = list(add_interaction_checks[i])
             if len(new) > 3:
                 new[3] = frozenset(new[3])
             else:
-                new.append(Powder.bits_frozen)
+                new.append(frozenset(self.use_bits))
             #if new[1] == 1 and index == 9:
             #    print(new)
             add_interaction_checks[i] = tuple(new)
@@ -292,7 +345,7 @@ class Powder:
 
         self.bit_by_offset = {}
         for offset in self.fall_offsets + add_interaction_checks:
-            bits = Powder.bit_states if len(offset) < 4 else offset[3]
+            bits = self.use_bits if len(offset) < 4 else offset[3]
             if not offset[:2] in self.bit_by_offset:
                 self.bit_by_offset[offset[:2]] = []
             self.bit_by_offset[offset[:2]] += [self.index << 8 | bit for bit in bits]
@@ -300,6 +353,11 @@ class Powder:
             self.bit_by_offset[offset] = frozenset(bits)
         #if self.bit_by_offset:
         #    print(self.bit_by_offset)
+
+
+class StablePowder(Powder):
+    def __init__(self, index: int, **kwargs):
+        super().__init__(index=index, **kwargs)
 
 plant_heights = {}
 class Plant(Powder):
@@ -319,23 +377,20 @@ class Plant(Powder):
                                           (1, growth_direction, branch_probability),
                                           (0, growth_direction, growth_probability)
                                           ],
+                        use_bits=list(range(0, height+1))
                         #custom_interactions=[Interaction(with_powder=Powder.gases, itself_turns_into=powder_counterpart, other_turns_into=other, bit_change=-1)]
                         )
         self.is_plant = True
         plant_heights[index] = height
         self.height = height
         for gas in growth_suitable:
-            self.add_interactions[gas] = Interaction(with_powder=gas, itself_turns_into=index, other_turns_into=index, probability=100, bit_change=-1)
+            self.add_interactions[gas] = Interaction(with_powder=gas, itself_turns_into=index, other_turns_into=index, probability=100,
+                                                     change_other_bit=BitRelative(relative_to_itself=True, value=-1))
 
 
 
 types = {
-    0: Powder(index=0,
-                gravity_direction=-1,
-                class_tags=[],
-                fall_direction=-1,
-                density=-100,
-                move_probability=50),
+    0: StablePowder(0, density=-100),
     1: Powder(index=1,
                 gravity_direction=-1,
                 fall_direction=-1,
@@ -347,11 +402,14 @@ types = {
                 fall_direction=0,
                 custom_interactions=[Interaction(with_powder=5, double_sided=True, itself_turns_into=6, other_turns_into=5),
                                      Interaction(with_powder=7, itself_turns_into=2, other_turns_into=8, probability=100, double_sided=True)]),
+    3: StablePowder(3),
+    4: StablePowder(4, meltability=40),
     5: Powder(index=5,
                 density=70,
-                class_tags=[PowderTags.Liquid],
+                temperature=100,
+                class_tags=[PowderTags.Liquid, PowderTags.Hot],
                 move_probability=30,
-                custom_interactions=[Interaction(with_powder=[4, 9], itself_turns_into=0, other_turns_into=5, probability=30, double_sided=True),
+                custom_interactions=[#Interaction(with_powder=[4, 9], itself_turns_into=0, other_turns_into=5, probability=30, double_sided=True),
                                     Interaction(with_powder=10, itself_turns_into=0, other_turns_into=5, probability=70),
                                     Interaction(with_powder=8, itself_turns_into=5, other_turns_into=7, probability=4)],
                 fall_direction=0),
@@ -379,13 +437,13 @@ types = {
                 gravity_direction=-1,
                 fall_direction=-1,
                 density=120,
+                use_bits=[0,1,2],
                 move_probability=50,
                 add_interaction_checks=[(0,1,100,[1,2])],#(0,1,100)],#(0,1,100)],
-                custom_interactions=[#Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other, probability=0,
-                                    #            itself_bit_state=20, in_offsets=[(0,1)]),
+                custom_interactions=[
                                      Interaction(itself_turns_into=9, other_turns_into=9, probability=50,
                                                in_offsets=[(0,-1)],
-                                               itself_bit_state=other,other_bit_state=other,with_powder=9,with_bit=[1,2], if_bit_state_is=0),
+                                               itself_bit_state=Keywords.other,other_bit_state=Keywords.other,with_powder=9,with_bit=[1,2], if_bit_state_is=0),
                                     Interaction(with_powder=8, itself_turns_into=None, other_turns_into=None,
                                                 probability=100,
                                                 in_offsets=[(0, -1)],
@@ -394,11 +452,11 @@ types = {
                                                 probability=100,
                                                 in_offsets=[(0, -1)],
                                                 itself_bit_state=1, other_bit_state=0, if_bit_state_is=0),
-                                    Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other,
+                                    Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
                                                 probability=5,
                                                 in_offsets=[(0, 1)],
                                                 itself_bit_state=5, other_bit_state=0, if_bit_state_is=1),
-                                    Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=other,
+                                    Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
                                                 probability=5,
                                                 in_offsets=[(0, 1)],
                                                 itself_bit_state=10, other_bit_state=0, if_bit_state_is=2),
