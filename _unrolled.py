@@ -281,7 +281,6 @@ def powder_1(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -544,7 +543,6 @@ def powder_2(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -807,7 +805,6 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1070,7 +1067,6 @@ def powder_6(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1333,7 +1329,6 @@ def powder_7(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1596,7 +1591,6 @@ def powder_8(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -1931,7 +1925,6 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -2109,7 +2102,6 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo
@@ -2444,7 +2436,6 @@ def powder_11(chunk, id_and_bit, curr_bit, x: int, y: int):
         chunk.skipped_over_count += 1
         
     else:
-        chunk.update_intensity = MAX_UPDATE_INTENSITY
         if res_x is not None:
             
             xo,yo = chunk.xo, chunk.yo

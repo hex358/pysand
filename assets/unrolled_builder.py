@@ -75,9 +75,8 @@ func_bottom = """
 if sleep:
     {skip_over}()
 else:
-    chunk.update_intensity = MAX_UPDATE_INTENSITY
     if res_x is not None:
-        {keep_alive}(chunk.xo*CHUNK_SIZE+res_x, chunk.yo*CHUNK_SIZE+res_y)
+        {keep_alive}()
     """
 
 
@@ -142,7 +141,7 @@ class InlineFunc:
 funcs = {"get_cell": InlineFunc("get_cell", get_cell_inline, ["get_x", "get_y"]),
          "set_cell": InlineFunc("set_cell", set_cell_inline, ["set_x", "set_y", "set_value"]),
          "is_visited": InlineFunc("is_visited", is_visited_inline, ["visited_x", "visited_y"]),
-         "keep_alive": InlineFunc("keep_alive", keep_alive_inline, ["{x}", "{y}"]),
+         "keep_alive": InlineFunc("keep_alive", keep_alive_inline, []),
          "skip_over": InlineFunc("skip_over", skip_over_inline, []),
          "set_bit": InlineFunc("set_bit", set_bit_inline, ["bit_x", "bit_y", "bit_val"]),
          "get_bit": InlineFunc("get_bit", get_bit_inline, ["get_x", "get_y"]),
@@ -165,7 +164,7 @@ def middle_formatted(powder, offset, cells_cached=False):
 #        plant_insert = indent(inlines(plant_inline), 5)
     pre_cond = ""
     if len(offset) >= 4 and isinstance(offset[3], frozenset):
-        if 1 or powder.throw_dice or len(powder.bit_by_offset[offset[:2]]) > 1:
+        if powder.throw_dice or len(powder.bit_by_offset[offset[:2]]) > 1:
             pre_cond += " id_and_bit in acc_bits_{id}[{offset}] and ".format(id=powder.index, offset=offset[:2])
         else:
             pre_cond += "  id_and_bit == {bit} and ".format(id=powder.index,
@@ -297,7 +296,5 @@ def import_unrolled():
             indexes_bit_shifted[id * 256 | i] = indexes[id]
     for index, powder in types.items():
         setattr(imported, f"acc_bits_{index}", powder.bit_by_offset)
-        if index == 9:
-            print(powder.bit_by_offset[(0,1)])
 
     return indexes_bit_shifted
