@@ -12,6 +12,7 @@ UI_MATCH = {
     7: ["DIRT", (0.33,  0.19,  0.19, 1.0)],
     8: ["WET\nDIRT", (0.23,  0.09,  0.11, 1.0)],
     9: ["SEEDS", (0.6,  0.8,  0, 1.0)],
+    11: ["FLAME", (1,  0,  0, 1.0)],
 #10: ["GRASS", (0,  1,  0, 1.0)],
 
 }
@@ -52,8 +53,9 @@ def _ready() -> None:
     global rect2
     pix = render.CHUNK_PIXEL_SIZE
     rect2 = render.ColorRect(
-        ox - PIXEL_SIZE*1.333,oy - PIXEL_SIZE*1.333,
-        (CHUNK_SIZE * pix * CHUNKS_RECT[2] - ox - pix * 2/3 + mainloop.size_inc[0], CHUNK_SIZE * pix * (CHUNKS_RECT[3]) - oy - pix * 2/3 - pix * 2 + mainloop.size_inc[1]),
+        ox + 2.666 - mainloop.CHUNK_PIXEL_SIZE*1,oy + 2.666 - mainloop.CHUNK_PIXEL_SIZE*1,
+        (CHUNK_SIZE * pix * CHUNKS_RECT[2] - ox - pix * 2/3 + mainloop.size_inc[0] - 4,
+         CHUNK_SIZE * pix * (CHUNKS_RECT[3]) - oy - pix * 2/3 - pix * 2 + mainloop.size_inc[1] - 2.666),
         (0,0,0,0),6,(0.7,0.7,0.7,1),offsets_fix=1
     )
     render.plane_offset_x, render.plane_offset_y = ox, oy

@@ -42,10 +42,10 @@ func_middle = """
 if keep:
     new_x, new_y = x + {x}, y + {y}
     if {pre_cond} (not {is_visited}(new_x, new_y) {add_cond}) and {mandatory_cond}:
-        bottom_cell = {get_cell}(new_x,new_y)
+        bottom_cell = {bottom_cell_inline}
         if bottom_cell in powder.bit_interactions[({x}, {y})]:
             interaction = powder.bit_interactions[({x}, {y})][bottom_cell]
-            if {bit_cond}:#id_and_bit in interaction[3]:
+            if {bit_cond}:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                     if {set_cond}:
                         {set_cell}(x,y,{set_itself})
@@ -177,14 +177,22 @@ def middle_formatted(powder, offset, cells_cached=False):
     inlined = inlined.replace("{dict2}", rep)
         #mandatory_cond = inlines("({get_cell}(x-1, y)) != {id} and ({get_cell}(x+1, y)) != {id}").format(
         #               id = powder.index)#,
+
+    get_cell = ""
+    if powder.throw_dice:
+        get_cell = inlines("{get_cell}(new_x,new_y) if (add_x,add_y) != 0 else id_and_bit")
+    else:
+        get_cell = inlines("{get_cell}(new_x,new_y)") if offset != (0,0) else "id_and_bit"
+
     return inlined.format(x=offset[0], y=offset[1],
+                        bottom_cell_inline = get_cell,
                         bit_cond = "True" if not powder.uses_bit_conds else "id_and_bit in interaction[3]",
                         pre_cond = pre_cond,
-                        set_itself="interaction[0] if interaction[0] > 255 else id_and_bit + interaction[0]" if powder.uses_bit_change else "interaction[0]",
-                        set_other="interaction[1] if interaction[1] > 255 else id_and_bit + interaction[1]" if powder.uses_bit_change else "interaction[1]",
+                        set_itself="interaction[0] if not interaction[4] else id_and_bit + interaction[0]" if powder.uses_bit_change else "interaction[0]",
+                        set_other="interaction[1] if not interaction[5] else id_and_bit + interaction[1]" if powder.uses_bit_change else "interaction[1]",
                         bit_2_cond = str(powder.has_bitwise_operations),
-                        set_cond="interaction[0] != id_and_bit" if not powder.is_plant
-                                                                   and not (not powder.throw_dice and offset == (0,0)) else "False",
+                        set_cond="True" if not powder.is_plant #interaction[0] != id_and_bit
+                                                    and not (not powder.throw_dice and offset == (0,0)) else "False",
                         #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
 
                         mandatory_cond=mandatory_cond,
@@ -220,7 +228,8 @@ def string_unroll():
         pre_cond = ""
         cached = False
         if powder.throw_dice:
-            permuts = list(permutations(powder.fall_offsets))
+            offsets = [offset[:3] for offset in powder.fall_offsets]
+            permuts = list(permutations(offsets))
             permut_tuples = [f"\n{permut}," for permut in permuts]
             result += f"permuts_{index} = (" + "".join(permut_tuples) + ")\n"
             result += 'replaces = {-1: 0, 0: 0, 1: 0}'
