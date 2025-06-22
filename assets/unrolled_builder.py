@@ -23,6 +23,7 @@ dummy_chunk = None
 updated_this_round = set([])
 update_types = None
 chunks = None
+dirs = {(-1,0): 0, (0,-1):0, (1,0):0, (0,1): 0}
 """
 
 func_header = """
@@ -47,13 +48,14 @@ if keep:
             interaction = powder.bit_interactions[({x}, {y})][bottom_cell]
             if {bit_cond}:
                 if {prob_eval} (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                    keep = False
                     if {set_cond}:
                         {set_cell}(x,y,{set_itself})
                     if interaction[1] != bottom_cell:
                         {set_cell}(new_x,new_y,{set_other})
                 res_x, res_y = new_x, new_y
                 sleep = False
-                keep = False
+                
 {insert}
 
     """
@@ -156,7 +158,7 @@ def indent(text: str, count: int = 1):
     return text
 
 
-def middle_formatted(powder, offset, cells_cached=False):
+def middle_formatted(powder, offset, cells_cached=False, force=False):
     custom_cond_formatted = inlines(powder.custom_cond)
     inlined = inlines(func_middle, get_cell_skip=cells_cached)
     if cells_cached:
@@ -180,18 +182,22 @@ def middle_formatted(powder, offset, cells_cached=False):
 
     get_cell = ""
     if powder.throw_dice:
-        get_cell = inlines("{get_cell}(new_x,new_y) if (add_x,add_y) != 0 else id_and_bit")
+        get_cell = inlines("{get_cell}(new_x,new_y) if (add_x,add_y) != (0,0) else id_and_bit")
     else:
         get_cell = inlines("{get_cell}(new_x,new_y)") if offset != (0,0) else "id_and_bit"
+    if powder.has_prioritized:
+        get_cell = "dirs[(add_x,add_y)] if (add_x,add_y) != (0,0) else id_and_bit"
 
     return inlined.format(x=offset[0], y=offset[1],
+                       # exclude="False" if not powder.has_prioritized or force else f"({offset[0]}, {offset[1]}) == exclude",
+                        #set_keep = "keep = False" if not powder.has_prioritized else "if interaction[7]: keep = False",
                         bottom_cell_inline = get_cell,
                         bit_cond = "True" if not powder.uses_bit_conds else "id_and_bit in interaction[3]",
                         pre_cond = pre_cond,
                         set_itself="interaction[0] if not interaction[4] else id_and_bit + interaction[0]" if powder.uses_bit_change else "interaction[0]",
                         set_other="interaction[1] if not interaction[5] else id_and_bit + interaction[1]" if powder.uses_bit_change else "interaction[1]",
                         bit_2_cond = str(powder.has_bitwise_operations),
-                        set_cond="True" if not powder.is_plant #interaction[0] != id_and_bit
+                        set_cond="not interaction[6]" if not powder.is_plant #interaction[0] != id_and_bit
                                                     and not (not powder.throw_dice and offset == (0,0)) else "False",
                         #bitwise_interaction_cond = "False" if not powder.has_bitwise_operations else "interaction[3]",
 
@@ -258,7 +264,41 @@ else:
 def powder_{index}(chunk, id_and_bit, curr_bit, x: int, y: int):
 
 """
+
         result += indent(func_header.format(id=index, pre_cond=pre_cond))#, curr_bit=curr_bit))
+
+        if powder.has_prioritized:
+            result += inlines(indent("""
+left = {get_cell}(x-1,y)
+right = {get_cell}(x+1,y)
+bottom = {get_cell}(x,y-1)
+top = {get_cell}(x,y+1)
+
+dirs[(-1,0)], dirs[(1,0)], dirs[(0,-1)], dirs[(0,1)] = left, right, bottom, top
+exclude = (-2,-2)
+
+if chunk.even_tick:
+    if left in powder.priority_types:
+        exclude = (-1,0)
+    elif right in powder.priority_types:
+        exclude = (1,0)
+else:
+    if bottom in powder.priority_types:
+        exclude = (0,-1)
+    elif top in powder.priority_types:
+        exclude = (0,1)
+
+
+                    """))
+
+
+        if powder.has_prioritized:
+            result += indent("""
+if exclude != (-2,-2):""")
+            result += indent("\nadd_x, add_y, prob = exclude[0], exclude[1], 100", 2)
+            result += indent(middle_formatted(powder, ("add_x", "add_y", "prob"), cells_cached=cached, force=True), 2)
+            result += indent("\nkeep = False", 2)
+            result += indent("\niter_counter -= 1", 2)
         result += "\n" + indent("\n" + inlines(powder.custom_script)) + "\n"
 
         if powder.throw_dice:
@@ -287,6 +327,7 @@ def powder_{index}(chunk, id_and_bit, curr_bit, x: int, y: int):
     with open("_unrolled.py", "w+") as f:
         f.write(result)
 
+StablePowder = None
 def import_unrolled():
     if not pre_built:
         string_unroll()
@@ -302,12 +343,12 @@ def import_unrolled():
     imported.dummy_chunk = chunk_manager.dummy_chunk
     imported.update_types = update_types
 
-    indexes = {index: getattr(imported, f"powder_{index}") for index in types if index != 0}
+    indexes = {index: getattr(imported, f"powder_{index}") for index in types if not isinstance(types[index], StablePowder)}
     indexes_bit_shifted = {}
     for id in indexes:
         for i in range(256):
             indexes_bit_shifted[id * 256 | i] = indexes[id]
-    for index, powder in types.items():
-        setattr(imported, f"acc_bits_{index}", powder.bit_by_offset)
+    for index in indexes:
+        setattr(imported, f"acc_bits_{index}", types[index].bit_by_offset)
 
     return indexes_bit_shifted

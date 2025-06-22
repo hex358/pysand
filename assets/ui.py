@@ -55,10 +55,10 @@ def _ready() -> None:
     rect2 = render.ColorRect(
         ox + 2.666 - mainloop.CHUNK_PIXEL_SIZE*1,oy + 2.666 - mainloop.CHUNK_PIXEL_SIZE*1,
         (CHUNK_SIZE * pix * CHUNKS_RECT[2] - ox - pix * 2/3 + mainloop.size_inc[0] - 4,
-         CHUNK_SIZE * pix * (CHUNKS_RECT[3]) - oy - pix * 2/3 - pix * 2 + mainloop.size_inc[1] - 2.666),
+         CHUNK_SIZE * pix * (CHUNKS_RECT[3]) - oy - pix * 2/3 - pix * 2 + mainloop.size_inc[1] - 2.666 + mainloop.CHUNK_PIXEL_SIZE*2),
         (0,0,0,0),6,(0.7,0.7,0.7,1),offsets_fix=1
     )
-    render.plane_offset_x, render.plane_offset_y = ox, oy
+    render.plane_offset_x, render.plane_offset_y = ox, oy + mainloop.CHUNK_PIXEL_SIZE
 
 
     render.set_control_scale(0.7)
@@ -123,6 +123,7 @@ def _ready() -> None:
                            topright=(0.3, 0.3, 0.3, 1), botright=(0.3, 0.3, 0.3, 1))
     for key in UI_MATCH:
         #if not key in UI_MATCH: key = 3
+
         color = UI_MATCH[key][1]
         new_button = render.Button(
             0,0,#342,117,
@@ -137,6 +138,9 @@ def _ready() -> None:
         new_button.stay_pressed = True
         new_button.set_meta("type", key)
         scroll2.add_child(new_button)
+        if key == 1:
+            new_button.press()
+
     scroll2.snap = 65*0.7+17
     scroll2.smooth_scroll = True
     scroll2.scroll_k = -500.0

@@ -63,6 +63,7 @@ class Chunk:
         self.visited = set([])
         self.merge_visited = set([])
         self.is_uniform = False
+        self.tick_modulus = [True]+[False]*5
 
         # self.rect = render.ColorRect(
         #     self.xo * CHUNK_SIZE * PIXEL_SIZE, self.yo * CHUNK_SIZE * PIXEL_SIZE,
@@ -206,15 +207,13 @@ class Chunk:
 
         self.skipped_over_count = 0
         self.prev = array("L", self.data)
-        self.even_tick = ticks % 2 == 0
 
         assign_is_uniform = self.first_assign
         first = self.prev[0]
-        # if self.force_update:
-        #     self.force_update = False
-        #     self.is_uniform = False
-        #     assign_is_uniform = False
-        #     self.update_intensity = MAX_UPDATE_INTENSITY
+
+        for i in range(5):
+            i += 1
+            self.tick_modulus[i] = ticks % i == True
 
         total_iters = 0
         for x in Chunk.iter_regular:

@@ -12,7 +12,7 @@ uniform uint mode = 1u;
 out vec2 uPos;
 
 void main() {
-    gl_Position = uProj * vec4(aPos, 0.0, 1.0);
+    gl_Position = uProj * vec4(aPos + vec2(0.333,0), 0.0, 1.0);
     uPos = aPos;
     gl_PointSize = uPointSize;
 }
