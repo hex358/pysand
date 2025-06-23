@@ -70,6 +70,7 @@ class Interaction:
                  change_other_bit: BitRelative = None,
                  expand: bool = False,
                  prioritized: bool = False,
+                 tick_modulus: int = 1,
                  ):
         self.interactions = {}
         self.double_sided = double_sided
@@ -108,7 +109,8 @@ class Interaction:
                             change_itself_bit,
                             change_other_bit,
                             expand,
-                            prioritized
+                            prioritized,
+                            tick_modulus
                             )
 
                 self.interactions[(other_type, other_bit, is_bit_interaction, tuple(in_offsets), tuple(if_bit_state_is))] = new_tuple
@@ -259,10 +261,13 @@ class Powder:
                     first_bit_changed,
                     second_bit_changed,
                     interaction[10],
-                    interaction[11]
+                    interaction[11],
+                    interaction[12]
                     ]
                     if interaction[11]:
                         self.has_prioritized = True
+                    #if  (0,0) in in_offsets:
+                     #   print((result_bit, tuple(in_offsets), tuple(with_type[4])))
                     offset_interactions[(result_bit, tuple(in_offsets), tuple(with_type[4]))] = tuple(val)
                     #change_itself_bit,
                     #change_other_bit)
@@ -532,16 +537,28 @@ types = {
     11: Powder(index=11,
                 class_tags=[],
                 use_bits=list(range(50)),
-                custom_interactions=[Interaction(with_powder=0, itself_turns_into=11, other_turns_into=11, probability=3, itself_bit_state=0, if_bit_state_is=list(range(60)),
-                                                 change_other_bit=BitRelative(relative_to_itself=True, value=1), expand=True),
-                                    Interaction(with_powder=11, itself_bit_state=0, itself_turns_into=0,#change_itself_bit=BitRelative(relative_to_itself=True, value=1),
-                                                other_turns_into=0, other_bit_state=0, in_offsets=[(0,0)], probability=20),
-                                    Interaction(with_powder=4, itself_turns_into=11, other_turns_into=11, probability=20, itself_bit_state=0,
+                custom_interactions=[Interaction(with_powder=0, itself_turns_into=11, other_turns_into=11, probability=3, itself_bit_state=0,
+                                                 if_bit_state_is=list(range(0,5)),
+                                                 #change_itself_bit=BitRelative(relative_to_itself=True, value=1),
+
+                                                change_other_bit=BitRelative(relative_to_itself=True, value=1),
+                                                 expand=True),
+                                    Interaction(with_powder=11, itself_bit_state=0, itself_turns_into=0,
+                                                if_bit_state_is=list(range(5,60)),
+                                                #change_itself_bit=BitRelative(relative_to_itself=True, value=1),
+                                                other_turns_into=0, other_bit_state=0, in_offsets=[(0,0)], probability=100),
+                                    Interaction(with_powder=11, itself_turns_into=11,
+                                                change_other_bit=BitRelative(relative_to_itself=True, value=1), expand=True,
+                                                 other_turns_into=11,# other_bit_state=Keywords.other, e
+                                                 if_bit_state_is=list(range(0,5)),
+                                                 #in_offsets=[(-1,0), (0,1), (0,-1), (1,0)],
+                                                 probability=50),
+                                    Interaction(with_powder=4, itself_turns_into=11, other_turns_into=11, probability=40, itself_bit_state=0,
                                                 prioritized=True,
-                                                expand=True),
+                                                expand=True, ),
                                      ],
                 add_fall_offsets=[(0,-1,100), (0,1,100), (1,0,100), (-1,0,100)],
-                add_interaction_checks=[(0,0,100,list(range(65)))],
+                add_interaction_checks=[(0,0,100)],
                 throw_dice=True,
                 density=-100,
                 override_fall_offsets = True),

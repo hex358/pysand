@@ -192,7 +192,7 @@ def middle_formatted(powder, offset, cells_cached=False, force=False):
                        # exclude="False" if not powder.has_prioritized or force else f"({offset[0]}, {offset[1]}) == exclude",
                         #set_keep = "keep = False" if not powder.has_prioritized else "if interaction[7]: keep = False",
                         bottom_cell_inline = get_cell,
-                        bit_cond = "True" if not powder.uses_bit_conds else "id_and_bit in interaction[3]",
+                        bit_cond = "chunk.tick_modulus[interaction[8]]" if not powder.uses_bit_conds else "id_and_bit in interaction[3] and chunk.tick_modulus[interaction[8]]",
                         pre_cond = pre_cond,
                         set_itself="interaction[0] if not interaction[4] else id_and_bit + interaction[0]" if powder.uses_bit_change else "interaction[0]",
                         set_other="interaction[1] if not interaction[5] else id_and_bit + interaction[1]" if powder.uses_bit_change else "interaction[1]",
@@ -277,7 +277,7 @@ top = {get_cell}(x,y+1)
 dirs[(-1,0)], dirs[(1,0)], dirs[(0,-1)], dirs[(0,1)] = left, right, bottom, top
 exclude = (-2,-2)
 
-if chunk.even_tick:
+if not chunk.even_tick:
     if left in powder.priority_types:
         exclude = (-1,0)
     elif right in powder.priority_types:
@@ -289,7 +289,7 @@ else:
         exclude = (0,1)
 
 
-                    """))
+"""))
 
 
         if powder.has_prioritized:
