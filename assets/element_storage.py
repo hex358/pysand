@@ -449,6 +449,46 @@ class Plant(Powder):
 
 
 
+class Flame(Powder):
+    def __init__(self, index: int,
+                 dissolve_time: int,
+                 shift_probability: int = 5,
+                 dissolve_probability: int = 100,
+                 spread_probability: int = 5,
+                 flammables = [4],
+                 non_flammables = [0],
+                 ):
+        super().__init__(
+                index = index,
+                class_tags=[],
+                use_bits=list(range(dissolve_time+1)),
+                custom_interactions=[Interaction(with_powder=non_flammables, itself_turns_into=index, other_turns_into=index, probability=shift_probability, itself_bit_state=0,
+                                                if_bit_state_is=list(range(0,dissolve_time)),
+                                                change_other_bit=BitRelative(relative_to_itself=True, value=1),
+                                                expand=True),
+                                    Interaction(with_powder=index, itself_bit_state=0, itself_turns_into=0,
+                                                if_bit_state_is=dissolve_time,
+                                                other_turns_into=0, other_bit_state=0, in_offsets=[(0,0)], probability=dissolve_probability),
+                                    Interaction(with_powder=index, itself_turns_into=index,
+                                                change_other_bit=BitRelative(relative_to_itself=True, value=1), expand=True,
+                                                other_turns_into=index,
+                                                if_bit_state_is=list(range(0,dissolve_time)),
+                                                probability=50),
+                                    Interaction(with_powder=flammables, itself_turns_into=index, other_turns_into=index, probability=spread_probability, itself_bit_state=0,
+                                                prioritized=True,
+                                                expand=True, ),
+                                     ],
+                add_fall_offsets=[(0,-1,100), (0,1,100), (1,0,100), (-1,0,100)],
+                add_interaction_checks=[(0,0,100)],
+                throw_dice=True,
+                density=-200,
+                override_fall_offsets = True
+                        #custom_interactions=[Interaction(with_powder=Powder.gases, itself_turns_into=powder_counterpart, other_turns_into=other, bit_change=-1)]
+                        )
+
+
+
+
 types = {
     99: StablePowder(99, density=900, class_tags=[]),
     0: StablePowder(0, density=-100),
@@ -534,34 +574,7 @@ types = {
                 height=10,
 
                 ),
-    11: Powder(index=11,
-                class_tags=[],
-                use_bits=list(range(50)),
-                custom_interactions=[Interaction(with_powder=0, itself_turns_into=11, other_turns_into=11, probability=3, itself_bit_state=0,
-                                                 if_bit_state_is=list(range(0,5)),
-                                                 #change_itself_bit=BitRelative(relative_to_itself=True, value=1),
-
-                                                change_other_bit=BitRelative(relative_to_itself=True, value=1),
-                                                 expand=True),
-                                    Interaction(with_powder=11, itself_bit_state=0, itself_turns_into=0,
-                                                if_bit_state_is=list(range(5,60)),
-                                                #change_itself_bit=BitRelative(relative_to_itself=True, value=1),
-                                                other_turns_into=0, other_bit_state=0, in_offsets=[(0,0)], probability=100),
-                                    Interaction(with_powder=11, itself_turns_into=11,
-                                                change_other_bit=BitRelative(relative_to_itself=True, value=1), expand=True,
-                                                 other_turns_into=11,# other_bit_state=Keywords.other, e
-                                                 if_bit_state_is=list(range(0,5)),
-                                                 #in_offsets=[(-1,0), (0,1), (0,-1), (1,0)],
-                                                 probability=50),
-                                    Interaction(with_powder=4, itself_turns_into=11, other_turns_into=11, probability=40, itself_bit_state=0,
-                                                prioritized=True,
-                                                expand=True, ),
-                                     ],
-                add_fall_offsets=[(0,-1,100), (0,1,100), (1,0,100), (-1,0,100)],
-                add_interaction_checks=[(0,0,100)],
-                throw_dice=True,
-                density=-100,
-                override_fall_offsets = True),
+    11: Flame(11, 5, 5, 100, spread_probability=30, flammables=[4,9,10], non_flammables=[0, 1, 2, 6]),
 }
 
 import assets.unrolled_builder as unrolled_builder
