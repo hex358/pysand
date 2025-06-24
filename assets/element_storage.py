@@ -16,8 +16,10 @@ class PowderTags(Enum):
     Gas = 4
     Plant = 8
     Hot = 16
+    Fire = 32
 
 class Keywords(Enum):
+    temp_burn = 250
     temp_corrode = 252
     density_diff = 253
     other = 254
@@ -71,6 +73,7 @@ class Interaction:
                  expand: bool = False,
                  prioritized: bool = False,
                  tick_modulus: int = 1,
+
                  ):
         self.interactions = {}
         self.double_sided = double_sided
@@ -131,26 +134,35 @@ class SubPowder:
 
 class Powder:
     all_elements: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 99]
-    gases: set = {0, 6, 11}
+    gases: set = {0, 6}
+    fires: set = {11}
     liquids: set = {2, 5}
     solids: list = [1, 3, 4, 7, 8, 9, 99]
-    meltables: list = [4, 9]
+    meltables: list = []
+    burnables: list = [4, 9, 10]
     #index: int = 1
     gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=Keywords.current, probability=Keywords.density_diff)
                         for gas in gases]
     liquid_interactions = [Interaction(with_powder=liquid, itself_turns_into=liquid, other_turns_into=Keywords.current, probability=Keywords.density_diff)
                      for liquid in liquids]
+    fire_interactions = [Interaction(with_powder=fire, itself_turns_into=fire, other_turns_into=Keywords.current, probability=100)
+                     for fire in fires]
     class_tag_interactions = {
         PowderTags.Default:
-            [*liquid_interactions, *gas_interactions ],
+            [*liquid_interactions, *gas_interactions, *fire_interactions ],
         PowderTags.Liquid:
-            [*liquid_interactions, *gas_interactions ],
+            [*liquid_interactions, *gas_interactions, *fire_interactions ],
         PowderTags.Gas:
             [*gas_interactions],#, *gas_interactions ],
         PowderTags.Plant:
             [],
+        PowderTags.Fire:
+            [],
         PowderTags.Hot:
-            [Interaction(with_powder=meltables, itself_turns_into=0, other_turns_into=Keywords.current, probability=Keywords.temp_corrode)]
+            [Interaction(with_powder=meltables, itself_turns_into=0, other_turns_into=Keywords.current, probability=Keywords.temp_corrode),
+             Interaction(with_powder=burnables, itself_turns_into=Keywords.current, other_turns_into=11,
+                         probability=Keywords.temp_burn, expand=True),
+             ]
     }
 
     def create_interactions(self):
@@ -176,9 +188,14 @@ class Powder:
                     case Keywords.temp_corrode:
                         other = types[with_powder[0]].meltability if with_powder[0] in types else 0
                         new[2] = self.temperature * other / 100.0
+                    case Keywords.temp_burn:
+                        other = types[with_powder[0]].flammability if with_powder[0] in types else 0
+                        new[2] = self.temperature * other / 100.0
+
                 if tuple_key in types and self.density < types[with_powder[0]].density: continue
                 if new[0] == Keywords.current: new[0] = self.index
                 if new[1] == Keywords.current: new[1] = self.index
+
                 if with_powder[0] == self.index: continue
                 if not with_powder[3]:
                     with_powder[3] = []#self.fall_offsets.copy()
@@ -264,6 +281,10 @@ class Powder:
                     interaction[11],
                     interaction[12]
                     ]
+                    if interaction[10]:
+                        self.has_expand = True
+                    if interaction[12] != 1:
+                        self.has_tick_modulus = True
                     if interaction[11]:
                         self.has_prioritized = True
                     #if  (0,0) in in_offsets:
@@ -342,6 +363,8 @@ class Powder:
 
                  turns_into: tuple[int, int, int] = None #into, probability, if bit state is..
                  ):
+        self.has_expand = False
+        self.has_tick_modulus = False
         self.raw_interactions = {}
         self.priority_types = set([])
         self.interact_with_types = {}
@@ -460,7 +483,7 @@ class Flame(Powder):
                  ):
         super().__init__(
                 index = index,
-                class_tags=[],
+                class_tags=[PowderTags.Fire],
                 use_bits=list(range(dissolve_time+1)),
                 custom_interactions=[Interaction(with_powder=non_flammables, itself_turns_into=index, other_turns_into=index, probability=shift_probability, itself_bit_state=0,
                                                 if_bit_state_is=list(range(0,dissolve_time)),
@@ -504,10 +527,10 @@ types = {
                 custom_interactions=[Interaction(with_powder=5, double_sided=True, itself_turns_into=6, other_turns_into=5),
                                      Interaction(with_powder=7, itself_turns_into=2, other_turns_into=8, probability=100, double_sided=True)]),
     3: StablePowder(3),
-    4: StablePowder(4, meltability=40),
+    4: StablePowder(4, flammability=40),
     5: Powder(index=5,
                 density=70,
-                temperature=100,
+                temperature=2,
                 class_tags=[PowderTags.Liquid, PowderTags.Hot],
                 move_probability=30,
                 custom_interactions=[#Interaction(with_powder=[4, 9], itself_turns_into=0, other_turns_into=5, probability=30, double_sided=True),
@@ -537,7 +560,7 @@ types = {
                 ),
     9: Powder(index=9,
                 gravity_direction=-1,
-                meltability=30,
+                flammability=30,
                 fall_direction=-1,
                 density=60,
                 use_bits=[0,1,2,3,4,5],
@@ -574,7 +597,7 @@ types = {
                 height=10,
 
                 ),
-    11: Flame(11, 5, 5, 100, spread_probability=30, flammables=[4,9,10], non_flammables=[0, 1, 2, 6]),
+    11: Flame(11, 5, 5, 10, spread_probability=60, flammables=[4, 9, 10], non_flammables=[0, 1, 2, 6]),
 }
 
 import assets.unrolled_builder as unrolled_builder

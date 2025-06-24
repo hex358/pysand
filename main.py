@@ -1,5 +1,7 @@
 import sys
 
+import ui
+
 PROJECT_CLASSNAMES = [
     "variant", "ui", "render", "element_storage", "chunk_manager", "example"
 ]
@@ -72,14 +74,21 @@ def _ready() -> None:
 
 mouse_scroll_y = 0
 mouse_just_pressed = False
+just_space_pressed = False
 def input_poll():
     global screen_mouse_position, mouse_just_pressed
     global mouse_pressed, prev_pressed
     global SELECTED_TYPE, index, mouse_scroll_y
 
-    #key = pygame.key.get_pressed()
-    # if key[pygame.K_a]:
-    #     render.ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
+    key = pygame.key.get_pressed()
+    global just_space_pressed
+    if key[pygame.K_SPACE]:
+        if not just_space_pressed:
+            ui.buttons["pause_button"].press()
+        just_space_pressed = True
+    else:
+        just_space_pressed = False
+        #render.ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl")
 
     mouse_just_pressed = False
     mouse_scroll_y = 0

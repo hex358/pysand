@@ -7,12 +7,12 @@ UI_MATCH = {
     2: ["WATER", (0.1,  0.6,  1.0, 1.0)],
     3: ["STONE", (0.7,  0.7,  0.7, 1.0)],
     4: ["WOOD", (0.33,  0.24,  0.19, 1.0)],
-    5: ["LAVA", (0.9,  0.4,  0.2, 0.9)],
+    5: ["LAVA", (0.9,  0.3,  0.2, 0.9)],
     6: ["VAPOR", (0.7,  0.7,  0.8, 0.7)],
     7: ["DIRT", (0.33,  0.19,  0.19, 1.0)],
     8: ["WET\nDIRT", (0.23,  0.09,  0.11, 1.0)],
     9: ["SEEDS", (0.6,  0.8,  0, 1.0)],
-    11: ["FLAME", (1,  0,  0, 1.0)],
+    11: ["FIRE", (1,  0.5,  0, 1.0)],
 #10: ["GRASS", (0,  1,  0, 1.0)],
 
 }
@@ -432,11 +432,13 @@ def pen(delta:float):
     global_pos = Vector2((screen_pos[0]+1.333 - off[0]) / render.CHUNK_PIXEL_SIZE, (WINDOW_HEIGHT - screen_pos[1] + 1.333 - off[1]) / render.CHUNK_PIXEL_SIZE, i=True)
     global MODE, _float_pen_size
     # - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
+    p = render.CHUNK_PIXEL_SIZE
 
-    display_pos = Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]), i=True)
+    display_pos = Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]))
     plane.set_shader_parameter("mousePos",
-    display_pos.x,
-    display_pos.y)
+    math.floor((display_pos.x + 1.333 * p) / p) * p,
+    math.floor((display_pos.y + 1.4 * p) / p) * p)
+
     plane.set_shader_parameter("shapeSize", pen_size)
     plane.set_shader_parameter("mode", MODE)
     #if chunk_manager.get_chunk(int(global_pos.x), int(global_pos.y), None) is None: return
@@ -484,7 +486,6 @@ def pen(delta:float):
                 draw_here(i)
         else:
             draw_here(int(length)-1)
-
 
     prev_pos = global_pos
 

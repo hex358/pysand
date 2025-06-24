@@ -743,6 +743,7 @@ class ShaderPlane:
         self.uniform_changes_enqueued.clear()
 
     def generate_buffers(self, x,y,w,h):
+
         quad = np.array([
             # x, y,   r, g, b, a
             x,   y,   1, 1, 1, 1,

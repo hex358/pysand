@@ -25,7 +25,7 @@ bool getMaskBit(int x, int y) {
 void main() {
     vec2 pos = uPos - vec2(-5.5*0.333,-5.5*0.333);
     vec2 snapped = floor((pos+vec2(1.333,1.333)*uPointSize)/uPointSize)*uPointSize;
-    vec2 mouse_snapped = floor((mousePos+vec2(1.333,1.333)*uPointSize) / uPointSize) * uPointSize;
+    highp vec2 mouse_snapped = mousePos;//floor((mousePos+vec2(1.333,1.333)*uPointSize) / uPointSize) * uPointSize;
     switch (mode){
         case 1u:
             FragColor = vec4(1,1,1,0.3)*step(distance(snapped, mouse_snapped), shapeSize*uPointSize);

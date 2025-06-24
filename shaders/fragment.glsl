@@ -8,13 +8,13 @@ const vec4 uPalette[12] = vec4[](
     vec4(0.0,  0.5,  1.0, 0.8),
     vec4(0.7,  0.7,  0.7, 1.0),
     vec4(0.33,  0.24,  0.19, 1.0),
-    vec4(0.9,  0.4,  0.2, 0.9),
+    vec4(0.9,  0.3,  0.2, 0.9),
     vec4(0.6,  0.6,  0.8, 0.5),
     vec4(0.33,  0.19,  0.19, 1.0),
     vec4(0.23,  0.09,  0.11, 1.0),
     vec4(0.6,  0.8,  0, 1.0),
     vec4(0,  1,  0, 1.0),
-    vec4(1,  0,  0, 1.0)
+    vec4(1,  0.5,  0, 1.0)
 );
 
 out vec4 FragColor;
@@ -26,7 +26,13 @@ float rand(vec2 co) {
 void main() {
     int tile = vTileID >> 8;
     vec4 baseColor = uPalette[tile];
-if ((vTileID & 0xFF) > 0) {baseColor += vec4(0,0,(vTileID & 0xFF)/9.0,1);}
+    if (tile == 11) {
+        float k = (vTileID & 0xFF)/9.0;
+        baseColor.a *= clamp(1.0-k*2, 0, 1);
+        baseColor.r *= clamp(k*6, 1, 10);
+        baseColor.g *= clamp(1.0-k*2, 0, 1);
+        baseColor.b *= clamp(1.0-k*4, 0, 1);
+    }
     float noise = 1.0;
     vec2 mix_range = vec2(1,1);
 
