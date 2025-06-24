@@ -1,6 +1,7 @@
 import sys
 
-USE_MODULES = ["mainloop", "variant"]
+USE_MODULES = ["mainloop", "variant", "post_processing"]
+post_processing = None
 PIXEL_SIZE = None
 CHUNK_PIXEL_SIZE = None
 plane_offset_x, plane_offset_y = 0,0
@@ -672,9 +673,10 @@ def _ready():
 
     _init_quad_vbo()
     glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE)
+    glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE)
     # for control_type in [Control, Label, ColorRect, Button, ScrollContainer]:
     #     _control_types[control_type] = control_type.self_storage
-    glClearColor(0.3, 0.3, 0.3, 1)
+    glClearColor(0.3, 0.3, 0.3, 0)
 
     global _program, _pos_vbo, _id_vbo, _id_buffer
     glut.glutInit()
@@ -929,8 +931,16 @@ def _draw_matrix_clear():
 
 def _process(delta: float):
     glClear(GL_COLOR_BUFFER_BIT)
+    post_processing.open_framebuffer()
+
+
     _draw_chunk_pass()
+    post_processing.close_framebuffer()
+    post_processing.draw_framebuffer()
+
     _shader_plane_pass()
     _draw_control_pass()
     _draw_gradient_pass()
     _draw_matrix_clear()
+
+

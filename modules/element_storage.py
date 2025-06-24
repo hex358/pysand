@@ -19,6 +19,7 @@ class PowderTags(Enum):
     Fire = 32
 
 class Keywords(Enum):
+    burn_prob = 256
     temp_burn = 257
     temp_corrode = 258
     density_diff = 259
@@ -157,7 +158,9 @@ class Powder:
         PowderTags.Plant:
             [],
         PowderTags.Fire:
-            [],
+            [Interaction(with_powder=burnables, itself_turns_into=Keywords.current, other_turns_into=Keywords.current, probability=Keywords.temp_burn, itself_bit_state=0,
+            prioritized=True,
+            expand=True),],
         PowderTags.Hot:
             [Interaction(with_powder=meltables, itself_turns_into=0, other_turns_into=Keywords.current, probability=Keywords.temp_corrode),
              Interaction(with_powder=burnables, itself_turns_into=Keywords.current, other_turns_into=11,
@@ -497,11 +500,11 @@ class Flame(Powder):
                  dissolve_time: int,
                  shift_probability: int = 5,
                  dissolve_probability: int = 100,
-                 spread_probability: int = 5,
-                 flammables = [4],
+                 spread_speed: int = 50,
                  non_flammables = [0],
                  ):
         super().__init__(
+                temperature=spread_speed,
                 index = index,
                 class_tags=[PowderTags.Fire],
                 use_bits=list(range(dissolve_time+1)),
@@ -517,9 +520,7 @@ class Flame(Powder):
                                                 other_turns_into=index,
                                                 if_bit_state_is=list(range(0,dissolve_time)),
                                                 probability=50),
-                                    Interaction(with_powder=flammables, itself_turns_into=index, other_turns_into=index, probability=spread_probability, itself_bit_state=0,
-                                                prioritized=True,
-                                                expand=True, ),
+
                                      ],
                 add_fall_offsets=[(0,-1,100), (0,1,100), (1,0,100), (-1,0,100)],
                 add_interaction_checks=[(0,0,100)],
@@ -580,7 +581,7 @@ types = {
                 ),
     9: Powder(index=9,
                 gravity_direction=-1,
-                flammability=30,
+                flammability=90,
                 fall_direction=-1,
                 density=60,
                 use_bits=[0,1,2,3,4,5],
@@ -617,7 +618,7 @@ types = {
                 height=10,
 
                 ),
-    11: Flame(11, 5, 5, 50, spread_probability=10, flammables=[4, 9, 10], non_flammables=[0, 1, 2, 6]),
+    11: Flame(11, 5, 5, 100, spread_speed=60, non_flammables=[0, 1, 2, 6]),
 }
 
 import modules.unrolled_builder as unrolled_builder

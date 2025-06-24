@@ -3,7 +3,7 @@ import sys
 import ui
 
 PROJECT_CLASSNAMES = [
-    "variant", "ui", "render", "bloom", "element_storage", "chunk_manager", "example"
+    "variant", "ui", "render", "post_processing", "element_storage", "chunk_manager", "example"
 ]
 GLOBAL_VARS = [
     "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT", "CHUNK_PIXEL_SIZE"
@@ -69,8 +69,8 @@ def _ready() -> None:
 
         if not "--no-processing" in tags:
             to_process.append(object)
-        if not "--no-processing" in tags and hasattr(object, "_before_process"):
-            to_before_process.append(object)
+            if hasattr(object, "_before_process"):
+                to_before_process.append(object)
 
     for object in modules:
         object._ready()
