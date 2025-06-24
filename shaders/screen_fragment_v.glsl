@@ -27,15 +27,28 @@ const float[9] weights = float[](0.016216, 0.054054,  0.1216216, 0.1945946, 0.22
 
 void main() {
     vec4 orig = texture(sceneTex, uv);
-//    vec2 invRes = 1.0 / vec2(vSize);
-//
-//    vec4 sum = vec4(0.0);
-//    float o = 4 * strength * invRes.y;
-//    for (int i = 0; i < 9; i ++){
-//        float y = uv.y + strength*invRes.y*i - o;
-//        vec4 curr = texture(sceneTex, vec2(uv.x, y));
-//        sum += vec4(curr.rgb, 1.0)*weights[i];
-//    }
-//    sum.a *= 0.8;
-    FragColor = vec4(orig.r, orig.r, orig.r, 1.0);//vec4(orig.rgb, 1.0);
+    vec2 invRes = 1.0 / vec2(vSize);
+
+
+    vec4 sum = orig;
+    float o = 4 * strength * invRes.y;
+    for (int i = 0; i < 9; i ++){
+        float y = uv.y + strength*invRes.y*i - o;
+        vec4 curr = texture(sceneTex, vec2(uv.x, y));
+        int tile = int(curr.a);
+        highp float k = 0.0;
+        switch (tile){
+            case 5:
+                k = 0.2;
+                break;
+            case 11:
+                k = 0.4;
+                break;
+
+        }
+
+            if (true){
+        sum += vec4(curr.rgb*k*3, 1.0)*weights[i];}
+    }
+    FragColor = sum;
 }

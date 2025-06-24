@@ -28,15 +28,15 @@ void main() {
     highp vec2 mouse_snapped = mousePos;//floor((mousePos+vec2(1.333,1.333)*uPointSize) / uPointSize) * uPointSize;
     switch (mode){
         case 1u:
-            FragColor = vec4(1,1,1,0.3)*step(distance(snapped, mouse_snapped), shapeSize*uPointSize);
+            FragColor = vec4(1,1,1,0.1)*step(distance(snapped, mouse_snapped), shapeSize*uPointSize);
             break;
         case 2u:
-            FragColor = vec4(1,1,1,0.2)*step(abs(snapped.x-mouse_snapped.x), shapeSize*uPointSize)*step(abs(snapped.y-mouse_snapped.y), shapeSize*uPointSize);
+            FragColor = vec4(1,1,1,0.1)*step(abs(snapped.x-mouse_snapped.x), shapeSize*uPointSize)*step(abs(snapped.y-mouse_snapped.y), shapeSize*uPointSize);
             break;
         case 3u:
             ivec2 world = ivec2(snapped / uPointSize) - ivec2(mouse_snapped / uPointSize) + ivec2(shapeSize);
             bool mask = getMaskBit(world.x, world.y);
-            FragColor = vec4(1,1,1,0.3)*step(distance(snapped, mouse_snapped), shapeSize*uPointSize) * float(mask);
+            FragColor = vec4(1,1,1,0.1)*step(distance(snapped, mouse_snapped), shapeSize*uPointSize) * float(mask);
             break;
     }
 

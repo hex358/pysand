@@ -930,6 +930,8 @@ def _draw_matrix_clear():
 
 
 def _process(delta: float):
+    glDisable(GL_BLEND)
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE)
     glClear(GL_COLOR_BUFFER_BIT)
     post_processing.open_framebuffer()
 
@@ -937,6 +939,8 @@ def _process(delta: float):
     _draw_chunk_pass()
     post_processing.close_framebuffer()
     post_processing.draw_framebuffer()
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     _shader_plane_pass()
     _draw_control_pass()

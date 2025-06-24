@@ -26,17 +26,27 @@ const float[9] weights = float[](0.016216, 0.054054,  0.1216216, 0.1945946, 0.22
 
 void main() {
     vec4 orig = texture(sceneTex, uv);
-//    vec2 invRes = 1.0 / vec2(vSize);
-//
-//    vec4 sum = vec4(0.0);
-//    float o = 4 * strength * invRes.x;
-//    for (int i = 0; i < 9; i ++){
-//        float x = uv.x + strength*invRes.x*i - o;
-//        vec4 curr = texture(sceneTex, vec2(x, uv.y));
-//        sum += vec4(curr.rgb, 1.0)*weights[i];
-//    }
-//    sum.a *= 0.8;
-//    FragColor = vec4(blendMix(vec4(orig.rgb, 1.0), sum).rgb, 1.0);
+    vec2 invRes = 1.0 / vec2(vSize);
 
-    FragColor = vec4(orig.rgb, 1.0);
+    vec4 sum = orig;
+    float o = 4 * strength * invRes.x;
+    for (int i = 0; i < 9; i ++){
+        float x = uv.x + strength*invRes.x*i - o;
+        vec4 curr = texture(sceneTex, vec2(x, uv.y));
+        int tile = int(curr.a);
+        highp float k = 0.0;
+        switch (tile){
+            case 5:
+                k = 0.2;
+                break;
+            case 11:
+                k = 0.4;
+                break;
+
+        }
+
+            if (curr.r > 0.1 || curr.g > 0.1 || curr.b > 0.1){
+        sum += vec4(curr.rgb*k*4, 1.0)*weights[i];}
+    }
+    FragColor = vec4(sum.rgb, int(orig.a));//vec4(blendMix(vec4(orig.rgb, 1.0), sum).rgb, orig.a);
 }

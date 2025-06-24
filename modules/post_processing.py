@@ -121,7 +121,7 @@ def close_framebuffer() -> None:
 def draw_framebuffer() -> None:
 
 
-    #glBindFramebuffer(GL_FRAMEBUFFER, fbo_pingpong)
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_pingpong)
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
     glClear(GL_COLOR_BUFFER_BIT)
 
@@ -133,14 +133,14 @@ def draw_framebuffer() -> None:
     glBindVertexArray(0)
     glUseProgram(0)
 
-    # glBindFramebuffer(GL_FRAMEBUFFER, 0)
-    # glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
-    # glClear(GL_COLOR_BUFFER_BIT)
-    #
-    # glUseProgram(blur_shader_v.program_id)
-    # glActiveTexture(GL_TEXTURE0)
-    # glBindTexture(GL_TEXTURE_2D, pingpong_tex)
-    # glBindVertexArray(quadVAO)
-    # glDrawArrays(GL_TRIANGLE_FAN, 0, 4)
-    # glBindVertexArray(0)
-    # glUseProgram(0)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0)
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
+    glClear(GL_COLOR_BUFFER_BIT)
+
+    glUseProgram(blur_shader_v.program_id)
+    glActiveTexture(GL_TEXTURE0)
+    glBindTexture(GL_TEXTURE_2D, pingpong_tex)
+    glBindVertexArray(quadVAO)
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4)
+    glBindVertexArray(0)
+    glUseProgram(0)
