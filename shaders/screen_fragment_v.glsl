@@ -39,10 +39,10 @@ void main() {
         highp float k = 0.0;
         switch (tile){
             case 5:
-                k = 0.2;
+                k = 0.15;
                 break;
             case 11:
-                k = 0.4;
+                k = 0.25;
                 break;
 
         }
