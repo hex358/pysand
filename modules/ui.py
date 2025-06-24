@@ -177,7 +177,7 @@ def _ready() -> None:
 
     if "--create-arrows" in config:
         global texture
-        texture = render.TextureRect("../main/shaders/arrowr.png", "arrowr")
+        texture = render.TextureRect("../main/assets/arrowr.png", "arrowr")
         texture.x, texture.y = 10*0.7, 5*0.7
         texture.scale_x = 5*0.7
         texture.scale_y = 5*0.7
@@ -195,7 +195,7 @@ def _ready() -> None:
         )
         buttons["scroll_r"].z_index = 8
 
-        texture2 = render.TextureRect("../main/shaders/arrowl.png", "arrowl")
+        texture2 = render.TextureRect("../main/assets/arrowl.png", "arrowl")
         texture2.x, texture2.y = 7*0.7, 5*0.7
         texture2.scale_x = 5*0.7
         texture2.scale_y = 5*0.7
@@ -214,8 +214,8 @@ def _ready() -> None:
         buttons["scroll_l"].z_index = 8
 
     global pause_texture
-    render.add_texture("../main/shaders/resume.png", "resume")
-    pause_texture = render.TextureRect("../main/shaders/pause.png", "pause")
+    render.add_texture("../main/assets/resume.png", "resume")
+    pause_texture = render.TextureRect("../main/assets/pause.png", "pause")
     pause_texture.z_index = 19
     pause_texture.x, pause_texture.y = 10,3
     pause_texture.scale_x, pause_texture.scale_y = 3.4,3.4
@@ -239,7 +239,7 @@ def _ready() -> None:
     rect.z_index = 7
     #scroll.add_children(buttons["load"],buttons["save"],buttons["clear"])
     for i,name in enumerate(["circle_brush", "square_brush", "noise_brush"]):
-        brush_texture = render.TextureRect(f"../main/shaders/{name}.png", name)
+        brush_texture = render.TextureRect(f"../main/assets/{name}.png", name)
         brush_texture.x, brush_texture.y = 8,5
         brush_texture.scale_x, brush_texture.scale_y = 4,4
         brush_texture.z_index = 19

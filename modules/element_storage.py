@@ -19,12 +19,12 @@ class PowderTags(Enum):
     Fire = 32
 
 class Keywords(Enum):
-    temp_burn = 250
-    temp_corrode = 252
-    density_diff = 253
-    other = 254
-    current = 255
-    swap = 251
+    temp_burn = 257
+    temp_corrode = 258
+    density_diff = 259
+    other = 260
+    current = 261
+    swap = 262
 
 
 def clear():
@@ -161,19 +161,27 @@ class Powder:
         PowderTags.Hot:
             [Interaction(with_powder=meltables, itself_turns_into=0, other_turns_into=Keywords.current, probability=Keywords.temp_corrode),
              Interaction(with_powder=burnables, itself_turns_into=Keywords.current, other_turns_into=11,
-                         probability=Keywords.temp_burn, expand=True),
-             ]
+                         probability=Keywords.temp_burn, expand=True, double_sided=True),
+             ],
     }
+
+    def prob_eval(self, prob: float, other_powder: "Powder") -> float:
+        add = 100 if self.gravity_direction == 1 else 0
+        match prob:
+            case Keywords.density_diff:
+                prob = add + -self.gravity_direction * (self.density - other_powder.density)
+            case Keywords.temp_corrode:
+                other = other_powder.meltability
+                prob = self.temperature * other / 100.0
+            case Keywords.temp_burn:
+                prob = self.temperature * other_powder.flammability / 100.0
+        return prob
 
     def create_interactions(self):
         if self.index == 0: return
 
         self.interact_with_types = {}
-        to_add_interactions: list[Interaction] = []
-        add = 100 if self.gravity_direction == 1 else 0
-
-        for tag in self.class_tags:
-            to_add_interactions += Powder.class_tag_interactions[tag]
+        to_add_interactions = self.to_add_interactions
 
 
         for interaction in to_add_interactions:
@@ -182,16 +190,7 @@ class Powder:
                 new = list(tuple_interaction)
                 with_powder = list(tuple_key)
 
-                match new[2]:
-                    case Keywords.density_diff:
-                        new[2] = add + -self.gravity_direction * (self.density - types[with_powder[0]].density)
-                    case Keywords.temp_corrode:
-                        other = types[with_powder[0]].meltability if with_powder[0] in types else 0
-                        new[2] = self.temperature * other / 100.0
-                    case Keywords.temp_burn:
-                        other = types[with_powder[0]].flammability if with_powder[0] in types else 0
-                        new[2] = self.temperature * other / 100.0
-
+                new[2] = self.prob_eval(new[2], types[with_powder[0]])
                 if tuple_key in types and self.density < types[with_powder[0]].density: continue
                 if new[0] == Keywords.current: new[0] = self.index
                 if new[1] == Keywords.current: new[1] = self.index
@@ -339,8 +338,25 @@ class Powder:
                     if not with_powder[0] in types: continue
                     other_powder = types[with_powder[0]]
                     if not self.index in other_powder.add_interactions:
-                        other_powder.add_interactions[(self.index, ())] = Interaction(self.index, interaction_tuple[1], interaction_tuple[0], interaction_tuple[2],
-                                                                                itself_bit_state=interaction_tuple[5], other_bit_state=interaction_tuple[4])
+                        other_powder.add_interactions[(self.index, ())] = Interaction(self.index, interaction_tuple[1],
+                                                                                      interaction_tuple[0],
+                                                                                      interaction_tuple[2],
+                                                                                      itself_bit_state=interaction_tuple[5],
+                                                                                      other_bit_state=interaction_tuple[
+                                                                                          4])
+        for interaction in list(self.to_add_interactions):
+            if interaction.double_sided and not interaction.is_with_bit:
+                for with_powder, interaction_tuple in interaction.to_tuples().items():
+                    if not with_powder[0] in types: continue
+                    other_powder = types[with_powder[0]]
+                    if 1:#not self.index in other_powder.add_interactions:
+                        other_powder.to_add_interactions.append(Interaction(self.index, interaction_tuple[1] if interaction_tuple[1] != Keywords.current else self.index,
+                                                                                      interaction_tuple[0] if interaction_tuple[0] != Keywords.current else self.index,
+                                                                                      self.prob_eval(interaction_tuple[2], other_powder),
+                                                                                      itself_bit_state=interaction_tuple[5],
+                                                                                      other_bit_state=interaction_tuple[4],
+                                                                                      ))
+
 
     def __init__(self, index: int,
                  class_tags: list = [PowderTags.Default],
@@ -363,6 +379,10 @@ class Powder:
 
                  turns_into: tuple[int, int, int] = None #into, probability, if bit state is..
                  ):
+        self.to_add_interactions: list[Interaction] = []
+        for tag in class_tags:
+            self.to_add_interactions += Powder.class_tag_interactions[tag]
+
         self.has_expand = False
         self.has_tick_modulus = False
         self.raw_interactions = {}
@@ -597,10 +617,10 @@ types = {
                 height=10,
 
                 ),
-    11: Flame(11, 5, 5, 10, spread_probability=60, flammables=[4, 9, 10], non_flammables=[0, 1, 2, 6]),
+    11: Flame(11, 5, 5, 50, spread_probability=10, flammables=[4, 9, 10], non_flammables=[0, 1, 2, 6]),
 }
 
-import assets.unrolled_builder as unrolled_builder
+import modules.unrolled_builder as unrolled_builder
 unrolled = None
 clears = {}
 

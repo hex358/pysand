@@ -202,7 +202,7 @@ class Label(Control):
         value = value.lower()
         self._text = value
         self.width, self.height, self.raw = _make_text_bitmap(self._text,
-        "../main/shaders/Pixel Emulator.otf", 25,
+        "../main/assets/Pixel Emulator.otf", 25,
         margin=10)
 
     @text.getter
@@ -727,7 +727,7 @@ def draw_colored_quad(x,y,w,h, topright = (0,0,0,0), botright = (0,0,0,0), tople
 compiled_shaders = {}
 compiled_programs = {}
 
-import assets.reimport as re
+import modules.reimport as re
 @re.reimport("render", variant=variant)
 class ShaderPlane:
     __slots__ = ("program_id", "uniforms", "vs_path", "fs_path", "uniform_changes_enqueued", "uniform_type_map", "vao", "vbo")
@@ -767,7 +767,7 @@ class ShaderPlane:
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
 
-    def __init__(self, vs_path, fs_path, get_uniforms = None, program_reuse_name: str = "", x=0, y=0, w=200, h=200, generate_vao = True):
+    def __init__(self, vs_path, fs_path, get_uniforms = None, program_reuse_name: str = "", x=0, y=0, w=200, h=200, generate_vao = True, set_default_uniforms = True):
 
         get_uniforms = ["uPointSize", "uProj"] if get_uniforms is None else get_uniforms + ["uPointSize", "uProj"]
         self.uniforms, self.uniform_changes_enqueued = {}, {}
@@ -796,12 +796,13 @@ class ShaderPlane:
             [0, 0, -1, 0],
             [0, 0, 0, 1]
         ], dtype=np.float32)
-        self.set_shader_parameter("uProj", 1, GL_TRUE, proj.flatten())
-        self.set_shader_parameter("uPointSize", CHUNK_PIXEL_SIZE)
 
-        glUseProgram(self.program_id)
-        self.set_uniforms()
-        glUseProgram(0)
+        if set_default_uniforms:
+            self.set_shader_parameter("uProj", 1, GL_TRUE, proj.flatten())
+            self.set_shader_parameter("uPointSize", CHUNK_PIXEL_SIZE)
+            glUseProgram(self.program_id)
+            self.set_uniforms()
+            glUseProgram(0)
 
     def _process(self):
         self.set_uniforms()

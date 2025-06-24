@@ -1422,7 +1422,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                     if True :
                         if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
-                            if True:
+                            if not interaction[6]:
                                 
                                 new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
                                 ly, lx = (y), (x)
@@ -1459,7 +1459,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                     if True :
                         if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
-                            if True:
+                            if not interaction[6]:
                                 
                                 new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
                                 ly, lx = (y), (x)
@@ -1496,7 +1496,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                     if True :
                         if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
-                            if True:
+                            if not interaction[6]:
                                 
                                 new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
                                 ly, lx = (y), (x)
@@ -1537,7 +1537,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                     if True :
                         if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
-                            if True:
+                            if not interaction[6]:
                                 
                                 new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
                                 ly, lx = (y), (x)
@@ -1574,7 +1574,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                     if True :
                         if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
-                            if True:
+                            if not interaction[6]:
                                 
                                 new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
                                 ly, lx = (y), (x)
@@ -1611,7 +1611,7 @@ def powder_5(chunk, id_and_bit, curr_bit, x: int, y: int):
                     if True :
                         if 100*random() > 100-30 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
-                            if True:
+                            if not interaction[6]:
                                 
                                 new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
                                 ly, lx = (y), (x)
