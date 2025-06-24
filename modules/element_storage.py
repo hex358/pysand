@@ -618,7 +618,7 @@ types = {
                 height=10,
 
                 ),
-    11: Flame(11, 5, 5, 100, spread_speed=60, non_flammables=[0, 1, 2, 6]),
+    11: Flame(11, 5, 5, 100, spread_speed=60, non_flammables=[0, 6]),
 }
 
 import modules.unrolled_builder as unrolled_builder

@@ -7,7 +7,7 @@ UI_MATCH = {
     2: ["WATER", (0.1,  0.6,  1.0, 1.0)],
     3: ["STONE", (0.7,  0.7,  0.7, 1.0)],
     4: ["WOOD", (0.33,  0.24,  0.19, 1.0)],
-    5: ["LAVA", (0.9,  0.3,  0.2, 0.9)],
+    5: ["LAVA", (1,  0.45,  0.3, 0.9)],
     6: ["VAPOR", (0.7,  0.7,  0.8, 0.7)],
     7: ["DIRT", (0.33,  0.19,  0.19, 1.0)],
     8: ["WET\nDIRT", (0.23,  0.09,  0.11, 1.0)],
@@ -46,7 +46,7 @@ def _ready() -> None:
     global label
     global prev_pos
     prev_pos = Vector2(0, 0, i=True)
-    label = render.Label("hello",120*5,17*5,(1,1), (1,0,0,1))
+    label = render.Label("hello",100*5,17*5,(1,1), (1,0,0,1))
     label.z_index = 5
     ox, oy = CHUNK_SIZE * 5.0, CHUNK_SIZE * 5.0 * 2
 
@@ -437,7 +437,7 @@ def pen(delta:float):
     display_pos = Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]))
     plane.set_shader_parameter("mousePos",
     math.floor((display_pos.x + 1.333 * p) / p) * p,
-    math.floor((display_pos.y + 1.4 * p) / p) * p)
+    math.floor((display_pos.y + 1.333 * p) / p) * p)
 
     plane.set_shader_parameter("shapeSize", pen_size)
     plane.set_shader_parameter("mode", MODE)

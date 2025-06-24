@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 layout(location = 0) in highp vec2 aPos;
 layout(location = 1) in highp vec2 aUV;
 uniform highp ivec2 vSize;

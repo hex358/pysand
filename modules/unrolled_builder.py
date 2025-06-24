@@ -233,6 +233,8 @@ def string_unroll():
         result += f"\ninteract_{index} = None\n"
 
     for index, powder in types.items():
+        if isinstance(powder, StablePowder): continue
+
         permuts = None
         pre_cond = ""
         cached = False

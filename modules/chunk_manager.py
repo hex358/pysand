@@ -232,7 +232,7 @@ class Chunk:
                 #if self.is_uniform and 0 < x < CHUNK_SIZE-1 and 0 < y < CHUNK_SIZE-1:
                 #   self.skip_over(); continue
 
-                if current in element_storage.update_types:
+                if current in element_storage.element_calls:
                     curr_bit = 0
                     #if element_storage.update_types[current].is_plant:
                    #     curr_bit = current & 0xFF
