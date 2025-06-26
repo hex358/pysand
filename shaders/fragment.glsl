@@ -3,9 +3,9 @@ flat in int vTileID;
 in vec2 outPos;
 
 precision highp float;
-const highp vec3 bg_color = vec3(0);
-const highp vec4 uPalette[12] = vec4[](
-    vec4(0.0, 0.0, 0.0, 0.0),
+const highp vec3 bg_color = vec3(0.2);
+const highp vec4 uPalette[13] = vec4[](
+    vec4(0.2, 0.2, 0.2, 1.0),
     vec4(0.75, 0.69, 0.50, 1.0),
     vec4(0.0,  0.5,  1.0, 0.8),
     vec4(0.7,  0.7,  0.7, 1.0),
@@ -16,7 +16,8 @@ const highp vec4 uPalette[12] = vec4[](
     vec4(0.23,  0.09,  0.11, 1.0),
     vec4(0.6,  0.8,  0, 1.0),
     vec4(0,  1,  0, 1.0),
-    vec4(1,  0.5,  0, 1.0)
+    vec4(1,  0.5,  0, 1.0),
+    vec4(0,  0.5,  0, 1.0)
 );
 
 out vec4 FragColor;
@@ -41,12 +42,13 @@ void main() {
     float noise = 1.0;
     vec2 mix_range = vec2(1,1);
 
-    if (tile != 6 ){
+    if (tile != 6 && tile != 0){
     noise = rand(floor(outPos / 5.0)*5.0);
     mix_range = vec2(0.9,1.1);}
 
     float brightness = mix(mix_range.x, mix_range.y, noise);
-    baseColor.rgb = mix(baseColor.rgb, bg_color, 1.0-baseColor.a);
+    if (tile != 0){
+    baseColor.rgb = baseColor.rgb*baseColor.a + bg_color*(1.0-baseColor.a);}
 
     FragColor = vec4(baseColor.rgb * brightness, float(tile));
 }

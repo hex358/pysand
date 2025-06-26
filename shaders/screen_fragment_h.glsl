@@ -2,6 +2,7 @@
 in vec2 uv;
 out vec4 FragColor;
 
+
 uniform sampler2D sceneTex;
 uniform float threshold;
 uniform float strength;
@@ -35,18 +36,20 @@ void main() {
         vec4 curr = texture(sceneTex, vec2(x, uv.y));
         int tile = int(curr.a);
         highp float k = 0.0;
+        highp vec4 glow_modulate = vec4(1.0);
         switch (tile){
             case 5:
                 k = 0.15;
+                glow_modulate = vec4(1.3, 0.8, 0.4, 1.0);
                 break;
             case 11:
-                k = 0.25;
+                k = 0.13;
+                glow_modulate = vec4(0.8, 0.3, 0.3, 1.0);
                 break;
 
         }
 
-            if (curr.r > 0.1 || curr.g > 0.1 || curr.b > 0.1){
-        sum += vec4(curr.rgb*k*4, 1.0)*weights[i];}
+        sum += vec4(curr.rgb*k*6, 1.0)*weights[i]*glow_modulate;
     }
     FragColor = vec4(sum.rgb, int(orig.a));//vec4(blendMix(vec4(orig.rgb, 1.0), sum).rgb, orig.a);
 }
