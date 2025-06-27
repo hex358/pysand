@@ -222,6 +222,7 @@ class Label(Control):
         pass
         #glPopMatrix()
     def _draw(self):
+
         glColor4f(*self.color)
         glPushAttrib(GL_PIXEL_MODE_BIT | 0x00000010)#GL_PIXEL_TRANSFER_BIT)
         glPixelTransferf(GL_RED_SCALE, self.color[0]); glPixelTransferf(GL_GREEN_SCALE, self.color[1])

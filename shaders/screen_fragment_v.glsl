@@ -40,7 +40,7 @@ void main() {
         highp vec4 glow_modulate = vec4(1.0);
         switch (tile){
             case 5:
-                k = 0.11;
+                k = 0.08;
                 glow_modulate = vec4(1.3, 0.8, 0.4, 1.0);
                 break;
             case 11:
