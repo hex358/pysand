@@ -1,7 +1,7 @@
 import importlib
 import textwrap
 
-pre_built = 1
+pre_built = 0
 
 chunk_manager = None
 imported = None
@@ -245,8 +245,16 @@ def string_unroll():
             result += f"permuts_{index} = (" + "".join(permut_tuples) + ")\n"
             result += 'replaces = {-1: 0, 0: 0, 1: 0}'
         if powder.is_plant:
-           pre_cond = inlines("""
-
+            pre_cond = ""
+            if powder.has_detatch:
+                pre_cond += inlines("""
+if ((id_and_bit > {bit} and ({get_cell}(x-1,y-1)) not in powder.id_space and ({get_cell}(x+1,y-1)) not in powder.id_space and ({get_cell}(x, y-1)) not in powder.id_space) or
+    (id_and_bit == {bit} and ({get_cell}(x,y-1)) {cond} and ({get_cell}(x+1,y-1)) {cond} and ({get_cell}(x, y-1)) {cond})):
+    {set_cell}(x,y,{on_detatch})
+    return
+""").format(bit=(powder.index << 8), on_detatch=(powder.on_detatch << 8),
+           cond = " in powder.detatch_if")
+            pre_cond += inlines("""
 if id_and_bit >= {thres}:
     keep = False
     sleep = True
@@ -258,7 +266,7 @@ else:
     else:
         replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
            """).format(id=powder.index, dir=powder.gravity_direction, thres=((powder.index << 8) + powder.height))
-           cached = True
+            cached = True
 
         #curr_bit = "-1"
         #if powder.has_bitwise_operations or powder.is_plant:

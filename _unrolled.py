@@ -2100,12 +2100,6 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
     iter_counter: int = 0
     res_x, res_y = None, None
     
-    if (id_and_bit > 2560 and chunk.get_cell(x-1,y-1) != 10 and chunk.get_cell(x+1,y-1) != 10 and chunk.get_cell(x, y-1) != 10) or\
-        (id_and_bit == 2560 and chunk.get_cell(x,y-1) == 0 and chunk.get_cell(x+1,y-1) == 0 and chunk.get_cell(x, y-1) == 0):
-        chunk.set_cell(x,y,1)
-        keep = False
-        sleep = True
-        return
     
     if id_and_bit >= 2570:
         keep = False

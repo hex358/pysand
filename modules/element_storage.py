@@ -330,6 +330,8 @@ class Powder:
                 self.bit_interactions[bit_id] = default
             powder = SubPowder(self.bit_interactions[bit_id], self.id_space)
             powder.priority_types = self.priority_types
+            if isinstance(self, Plant):
+                powder.detatch_if = self.detatch_if
             update_types[bit_id] = powder
 
 
@@ -472,8 +474,13 @@ class Plant(Powder):
                  growth_probability: int = 20,
                  growth_suitable: list[int] = [],
                  branch_probability: int = 5,
-                 powder_counterpart: int = 11,
+                 detatch_if: int | list[int] = [0],
+                 detatched_powder: int = None,
                  height: int = 10):
+        if isinstance(detatch_if, int): detatch_if = list(detatch_if)
+        self.detatch_if = set([element << 8 for element in detatch_if]) if not detatch_if is None else None
+        self.has_detatch = detatched_powder is not None
+        self.on_detatch = detatched_powder
         super().__init__(index,
                         class_tags=[PowderTags.Plant],
                         throw_dice=True,
@@ -609,8 +616,8 @@ types = {
                                                 probability=100,
                                                 in_offsets=[(0, -1)],
                                                 itself_bit_state=1, other_bit_state=0, if_bit_state_is=0),
-                                    Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
-                                                probability=5,
+                                    Interaction(with_powder=[0,6,2], itself_turns_into=10, other_turns_into=Keywords.other,
+                                                probability=2,
                                                 in_offsets=[(0, 1)],
                                                 itself_bit_state=0, other_bit_state=0, if_bit_state_is=1),
                                     # Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
@@ -624,8 +631,9 @@ types = {
                 growth_direction=1,
                 branch_probability=15,
                 growth_probability=100,
-                growth_suitable=[0],
+                growth_suitable=[0, 6, 2],
                 height=10,
+#detatched_powder=1
 
                 ),
     11: Flame(11, 5, 5, 100, spread_speed=60, dissolve_in=[0, 6], absorb_in=[1,2,10]),
