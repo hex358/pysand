@@ -1,7 +1,7 @@
 import importlib
 import textwrap
 
-pre_built = 0
+pre_built = 1
 
 chunk_manager = None
 imported = None
@@ -247,7 +247,7 @@ def string_unroll():
         if powder.is_plant:
            pre_cond = inlines("""
 
-if id_and_bit <= {thres}:
+if id_and_bit >= {thres}:
     keep = False
     sleep = True
 else:
@@ -257,7 +257,7 @@ else:
         sleep = True
     else:
         replaces[-1], replaces[0], replaces[1] = cached_left, cached_up, cached_right
-           """).format(id=powder.index, dir=powder.gravity_direction, thres=(powder.index << 8))
+           """).format(id=powder.index, dir=powder.gravity_direction, thres=((powder.index << 8) + powder.height))
            cached = True
 
         #curr_bit = "-1"

@@ -487,11 +487,11 @@ class Plant(Powder):
                         #custom_interactions=[Interaction(with_powder=Powder.gases, itself_turns_into=powder_counterpart, other_turns_into=other, bit_change=-1)]
                         )
         self.is_plant = True
-        plant_heights[index] = height
+        #plant_heights[index] = height
         self.height = height
         for gas in growth_suitable:
             self.add_interactions[gas] = Interaction(with_powder=gas, itself_turns_into=index, other_turns_into=index, probability=100,
-                                                     change_other_bit=BitRelative(relative_to_itself=True, value=-1))
+                                                     change_other_bit=BitRelative(relative_to_itself=True, value=1))
 
 
 
@@ -596,27 +596,27 @@ types = {
                 density=60,
                 use_bits=[0,1,2,3,4,5],
                 move_probability=50,
-                add_interaction_checks=[(0,1,100,[1,2])],#(0,1,100)],#(0,1,100)],
+                add_interaction_checks=[(0,1,100,[1])],#(0,1,100)],#(0,1,100)],
                 custom_interactions=[
                                      Interaction(itself_turns_into=9, other_turns_into=9, probability=50,
                                                in_offsets=[(0,-1)],
-                                               itself_bit_state=Keywords.other,other_bit_state=Keywords.other,with_powder=9,with_bit=[1,2], if_bit_state_is=0),
-                                    Interaction(with_powder=8, itself_turns_into=None, other_turns_into=None,
-                                                probability=100,
-                                                in_offsets=[(0, -1)],
-                                                itself_bit_state=2, other_bit_state=0, if_bit_state_is=0),
-                                    Interaction(with_powder=7, itself_turns_into=None, other_turns_into=None,
+                                               itself_bit_state=Keywords.other,other_bit_state=Keywords.other,with_powder=9,with_bit=1, if_bit_state_is=0),
+                                    # Interaction(with_powder=8, itself_turns_into=None, other_turns_into=None,
+                                    #             probability=100,
+                                    #             in_offsets=[(0, -1)],
+                                    #             itself_bit_state=2, other_bit_state=0, if_bit_state_is=0),
+                                    Interaction(with_powder=[7,8], itself_turns_into=None, other_turns_into=None,
                                                 probability=100,
                                                 in_offsets=[(0, -1)],
                                                 itself_bit_state=1, other_bit_state=0, if_bit_state_is=0),
                                     Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
                                                 probability=5,
                                                 in_offsets=[(0, 1)],
-                                                itself_bit_state=5, other_bit_state=0, if_bit_state_is=1),
-                                    Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
-                                                probability=5,
-                                                in_offsets=[(0, 1)],
-                                                itself_bit_state=10, other_bit_state=0, if_bit_state_is=2),
+                                                itself_bit_state=0, other_bit_state=0, if_bit_state_is=1),
+                                    # Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
+                                    #             probability=5,
+                                    #             in_offsets=[(0, 1)],
+                                    #             itself_bit_state=10, other_bit_state=0, if_bit_state_is=2),
 
                                     ]
                 ),
@@ -628,7 +628,7 @@ types = {
                 height=10,
 
                 ),
-    11: Flame(11, 5, 5, 100, spread_speed=60, dissolve_in=[0, 6], absorb_in=[1,2]),
+    11: Flame(11, 5, 5, 100, spread_speed=60, dissolve_in=[0, 6], absorb_in=[1,2,10]),
 }
 
 import modules.unrolled_builder as unrolled_builder

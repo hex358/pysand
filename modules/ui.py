@@ -478,7 +478,7 @@ def pen(delta:float):
                 visited.add((ox+x,oy+y))
                 selected = mainloop.SELECTED_TYPE
                 chunk_manager.global_set_cell(int(ox+x), int(oy+y),
-                                              selected << 8 | element_storage.plant_heights.get(selected, 0),
+                                              selected << 8,
                                               bit_value=True)
 
         if MODE != 3:

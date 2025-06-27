@@ -1870,7 +1870,7 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 0, y + 1
-            if  id_and_bit in acc_bits_9[(0, 1)] and  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+            if   id_and_bit == 2305 and  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
                 bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 interaction = powder.bit_interactions[(0, 1)].get(bottom_cell, None)
                 if interaction is not None:
@@ -1948,7 +1948,7 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
             
         if keep:
             new_x, new_y = x + 0, y + 1
-            if  id_and_bit in acc_bits_9[(0, 1)] and  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+            if   id_and_bit == 2305 and  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
                 bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
                 interaction = powder.bit_interactions[(0, 1)].get(bottom_cell, None)
                 if interaction is not None:
@@ -2100,9 +2100,14 @@ def powder_10(chunk, id_and_bit, curr_bit, x: int, y: int):
     iter_counter: int = 0
     res_x, res_y = None, None
     
+    if (id_and_bit > 2560 and chunk.get_cell(x-1,y-1) != 10 and chunk.get_cell(x+1,y-1) != 10 and chunk.get_cell(x, y-1) != 10) or\
+        (id_and_bit == 2560 and chunk.get_cell(x-1,y-1) == 0 and chunk.get_cell(x+1,y-1) == 0 and chunk.get_cell(x, y-1) == 0):
+        chunk.set_cell(x,y,1)
+        keep = False
+        sleep = True
+        return
     
-    
-    if id_and_bit <= 2560:
+    if id_and_bit >= 2570:
         keep = False
         sleep = True
     else:
