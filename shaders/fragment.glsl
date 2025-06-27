@@ -32,23 +32,28 @@ void main() {
 
     if (tile == 11) {
         float k = (vTileID & 0xFF)/9.0;
-        baseColor.a *= clamp(1.0-k*2.5, 0, 1);
+        baseColor.a *= clamp(1.0-k*2, 0, 1);
         baseColor.r *= clamp(k*6, 1, 10);
         baseColor.g *= clamp(1.0-k*2, 0, 1);
         baseColor.b *= clamp(1.0-k*4, 0, 1);
 
         //baseColor *= 1.5;
     }
+    if (baseColor.a < 0.001) {tile = 0; baseColor = vec4(0.0);}
+
+    if (tile != 0){
+
     float noise = 1.0;
     vec2 mix_range = vec2(1,1);
 
-    if (tile != 6 && tile != 0){
+    if (tile != 6){
     noise = rand(floor(outPos / 5.0)*5.0);
     mix_range = vec2(0.9,1.1);}
 
     float brightness = mix(mix_range.x, mix_range.y, noise);
-    if (tile != 0){
-    baseColor.rgb = baseColor.rgb*baseColor.a + bg_color*(1.0-baseColor.a);}
 
-    FragColor = vec4(baseColor.rgb * brightness, float(tile));
+    baseColor.rgb = baseColor.rgb*baseColor.a + bg_color*(1.0-baseColor.a);
+
+    FragColor = vec4(baseColor.rgb * brightness, float(tile));}
+    else{FragColor = vec4(bg_color,1.0);}
 }
