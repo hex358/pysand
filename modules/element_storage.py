@@ -140,7 +140,7 @@ class Powder:
     liquids: set = {2, 5}
     solids: list = [1, 3, 4, 7, 8, 9, 99]
     meltables: list = []
-    burnables: list = [4, 9, 10]
+    flammables: list = [4, 9, 10, 12]
     #index: int = 1
     gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=Keywords.current, probability=Keywords.density_diff)
                         for gas in gases]
@@ -158,12 +158,12 @@ class Powder:
         PowderTags.Plant:
             [],
         PowderTags.Fire:
-            [Interaction(with_powder=burnables, itself_turns_into=Keywords.current, other_turns_into=Keywords.current, probability=Keywords.temp_burn, itself_bit_state=0,
+            [Interaction(with_powder=flammables, itself_turns_into=Keywords.current, other_turns_into=Keywords.current, probability=Keywords.temp_burn, itself_bit_state=0,
             prioritized=True,
             expand=True),],
         PowderTags.Hot:
             [Interaction(with_powder=meltables, itself_turns_into=0, other_turns_into=Keywords.current, probability=Keywords.temp_corrode),
-             Interaction(with_powder=burnables, itself_turns_into=Keywords.current, other_turns_into=11,
+             Interaction(with_powder=flammables, itself_turns_into=Keywords.current, other_turns_into=11,
                          probability=Keywords.temp_burn, expand=True, double_sided=True),
              ],
     }
@@ -486,6 +486,7 @@ class Plant(Powder):
                         throw_dice=True,
                         gravity_direction=growth_direction,
                         fall_direction=growth_direction,
+                        flammability=90,
                         add_fall_offsets=[(-1,growth_direction, branch_probability),
                                           (1, growth_direction, branch_probability),
                                           (0, growth_direction, growth_probability)
@@ -517,7 +518,7 @@ class Flame(Powder):
                 index = index,
                 class_tags=[PowderTags.Fire],
                 use_bits=list(range(dissolve_time+1)),
-                custom_interactions=[Interaction(with_powder=dissolve_in, itself_turns_into=index, other_turns_into=index, probability=shift_probability, itself_bit_state=0,
+                custom_interactions=[Interaction(with_powder=dissolve_in, itself_turns_into=Keywords.other, other_turns_into=index, probability=shift_probability, itself_bit_state=0,
                                                 if_bit_state_is=list(range(0,dissolve_time)),
                                                 change_other_bit=BitRelative(relative_to_itself=True, value=1),
                                                 expand=True),
@@ -532,13 +533,15 @@ class Flame(Powder):
                                                 change_other_bit=BitRelative(relative_to_itself=True, value=1), expand=True,
                                                 other_turns_into=index,
                                                 if_bit_state_is=list(range(0,dissolve_time)),
-                                                probability=50),
+                                                probability=60),
 
                                      ],
                 add_fall_offsets=[(0,-1,100), (0,1,100), (1,0,100), (-1,0,100)],
                 add_interaction_checks=[(0,0,100)],
                 throw_dice=True,
                 density=-200,
+
+            #flammability=90,
                 override_fall_offsets = True
                         #custom_interactions=[Interaction(with_powder=Powder.gases, itself_turns_into=powder_counterpart, other_turns_into=other, bit_change=-1)]
                         )
@@ -600,7 +603,7 @@ types = {
                 gravity_direction=-1,
                 flammability=90,
                 fall_direction=-1,
-                density=60,
+                density=100,
                 use_bits=[0,1,2,3,4,5],
                 move_probability=50,
                 add_interaction_checks=[(0,1,100,[1])],#(0,1,100)],#(0,1,100)],
@@ -617,7 +620,7 @@ types = {
                                                 in_offsets=[(0, -1)],
                                                 itself_bit_state=1, other_bit_state=0, if_bit_state_is=0),
                                     Interaction(with_powder=[0,6,2], itself_turns_into=10, other_turns_into=Keywords.other,
-                                                probability=2,
+                                                probability=0.03,
                                                 in_offsets=[(0, 1)],
                                                 itself_bit_state=0, other_bit_state=0, if_bit_state_is=1),
                                     # Interaction(with_powder=Powder.gases, itself_turns_into=10, other_turns_into=Keywords.other,
@@ -633,10 +636,17 @@ types = {
                 growth_probability=100,
                 growth_suitable=[0, 6, 2],
                 height=10,
-#detatched_powder=1
+              detatch_if=[0, 6, 2, 5],
+detatched_powder=12
 
                 ),
-    11: Flame(11, 5, 5, 100, spread_speed=60, dissolve_in=[0, 6], absorb_in=[1,2,10]),
+    11: Flame(11, 5, 5, 100, spread_speed=60, dissolve_in=[0, 6], absorb_in=[1,2, 5]),
+12: Powder(index=12,
+                gravity_direction=-1,
+                fall_direction=-1,
+                flammability=90,
+                density=80,
+                move_probability=50),
 }
 
 import modules.unrolled_builder as unrolled_builder
