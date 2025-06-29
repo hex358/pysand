@@ -72,6 +72,7 @@ class Control:
 
     def __init__(self, *args, **kwargs):
         _controls.append(self)
+        self.verts = None
         self.child_controls = []
         self._z_index = 0
         self.self_storage.append(self)
@@ -241,6 +242,7 @@ class ColorRect(Control):
                outline_color: tuple = (1.0, 1.0, 1.0, 1.0),
                offsets_fix = 1,
                 *args):
+
         self.offsets_fix = offsets_fix
         self.color = [*color]; self.scale_x, self.scale_y = int(size[0]*control_scale), int(size[1]*control_scale)
         self.x, self.y = int(x*control_scale), int(y*control_scale); self.outline_color = outline_color
@@ -250,42 +252,61 @@ class ColorRect(Control):
     def _draw_stage_entered():
         glBegin(GL_TRIANGLES)
 
+
+    _outline_vbo = glGenBuffers(1)
+
     @staticmethod
     def _draw_stage_exited():
-        #print("END")
-    #    print(__class__.is_draw_stage())
-        #  super()._draw_stage_exited
         glEnd()
 
-
-
-        for self in __class__.buffer:
-            if self.outline_width == 0: continue
-            if cull(self):
-                pass
-            else:
+        width_groups = {}
+        for obj in ColorRect.buffer:
+            w = obj.outline_width
+            if w == 0 or not cull(obj):
                 continue
+            width_groups.setdefault(w, []).append(obj)
 
-            width = self.outline_width
-            glLineWidth(width)
-            width *= self.offsets_fix
-            glColor4f(*self.outline_color)
+        glEnableClientState(GL_VERTEX_ARRAY)
+        glEnableClientState(GL_COLOR_ARRAY)
+        glBindBuffer(GL_ARRAY_BUFFER, ColorRect._outline_vbo)
 
-            glBegin(GL_LINES)
-            glVertex2f(self.x, self.y + width / 2)
-            glVertex2f(self.x + self.scale_x, self.y + width / 2)
+        for w, objs in width_groups.items():
+            vertex_count = len(objs) * 8
+            data = np.zeros((vertex_count, 6), dtype=np.float32)
 
-            glVertex2f(self.x + self.scale_x - width / 2, self.y)
-            glVertex2f(self.x + self.scale_x - width / 2, self.y + self.scale_y)
+            idx = 0
+            for o in objs:
+                adj = o.outline_width * o.offsets_fix
+                x, y = o.x, o.y
+                sx, sy = o.scale_x, o.scale_y
+                r, g, b, a = o.outline_color
 
-            glVertex2f(self.x + self.scale_x, self.y + self.scale_y - width / 2)
-            glVertex2f(self.x, self.y + self.scale_y - width / 2)
+                coords = [
+                    (x, y + adj / 2), (x + sx, y + adj / 2),  # top
+                    (x + sx - adj / 2, y), (x + sx - adj / 2, y + sy),  # right
+                    (x + sx, y + sy - adj / 2), (x, y + sy - adj / 2),  # bottom
+                    (x + adj / 2, y + sy), (x + adj / 2, y)  # left
+                ]
 
-            glVertex2f(self.x + width / 2, self.y + self.scale_y)
-            glVertex2f(self.x + width / 2, self.y)
-            glEnd()
+                for vx, vy in coords:
+                    data[idx, 0] = vx
+                    data[idx, 1] = vy
+                    data[idx, 2:] = (r, g, b, a)
+                    idx += 1
 
+            glBufferData(GL_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW)
+
+            glLineWidth(w)
+            glVertexPointer(2, GL_FLOAT, 6 * 4, ctypes.c_void_p(0))
+            glColorPointer(4, GL_FLOAT, 6 * 4, ctypes.c_void_p(2 * 4))
+
+            glDrawArrays(GL_LINES, 0, vertex_count)
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+        glDisableClientState(GL_COLOR_ARRAY)
+        glDisableClientState(GL_VERTEX_ARRAY)
         glLineWidth(1.0)
+        glColor4f(1.0,1.0,1.0,1.0)
 
 
     def _after_draw(self):
