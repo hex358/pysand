@@ -51,10 +51,21 @@ class Control:
                  "color", "child_controls", "local_x",
                  "local_y", "init_scale", "metadata",
                  "parent", "root",
-                 "visible", "mouse_in", "_z_index")
+                 "visible", "mouse_in", "_z_index",
+                 "data_snapshot",
+                 "was_updated")
 
     def hide(self): self.visible = False
     def show(self): self.visible = True
+
+    def make_data_snapshot(self):
+        gen = self._generate_data()
+        if gen != self.data_snapshot:
+            self.was_updated = True
+            self.data_snapshot = gen
+
+    def _generate_data(self) -> tuple:
+        return (self.x, self.y, self.scale_x, self.scale_y)
 
     @property
     def z_index(self):
@@ -72,6 +83,8 @@ class Control:
 
     def __init__(self, *args, **kwargs):
         _controls.append(self)
+
+        self.was_updated = True
         self.verts = None
         self.child_controls = []
         self._z_index = 0
@@ -87,6 +100,7 @@ class Control:
         if __class__ == Control:
             self.x, self.y, self.scale_x, self.scale_y = 0, 0, 1, 1
         self._ready(*args, **kwargs)
+        self.data_snapshot = self._generate_data()
     def set_meta(self, name: str, v):
         self.metadata[name] = v
 
@@ -117,12 +131,21 @@ class Control:
 
     @staticmethod
     def _draw_stage_exited():
-      #  super()._draw_stage_exited()
         glColor4f(1, 1, 1, 1)
 
     @staticmethod
     def _draw_stage_entered():
         pass
+
+    @classmethod
+    def draw_stage_exited(cls):
+        cls._draw_stage_exited()
+        for i in _control_types[cls]:
+            i.was_updated = False
+
+    @classmethod
+    def draw_stage_entered(cls):
+        cls._draw_stage_entered()
 
     def __contains__(self, item):
         return item in self.child_controls
@@ -140,6 +163,8 @@ class Control:
         self.mouse_in = self.x <= pos.x <= self.x + self.scale_x and self.y <= pos.y <= self.y + self.scale_y
 
     def draw(self):
+        self.make_data_snapshot()
+
         for child in self.child_controls:
             child.x = child.local_x + self.x
             child.y = child.local_y + self.y
@@ -195,6 +220,7 @@ def set_control_scale(v: float):
 
 class Label(Control):
     self_storage = []
+
     @property
     def text(self) -> str:
         return self._text
@@ -255,11 +281,14 @@ class ColorRect(Control):
 
     _outline_vbo = glGenBuffers(1)
 
+    default = [None, -1]
+
     @staticmethod
     def _draw_stage_exited():
         glEnd()
 
         width_groups = {}
+       # print(len(_control_types[__class__]))
         for obj in ColorRect.buffer:
             w = obj.outline_width
             if w == 0 or not cull(obj):
@@ -272,7 +301,9 @@ class ColorRect(Control):
 
         for w, objs in width_groups.items():
             vertex_count = len(objs) * 8
-            data = np.zeros((vertex_count, 6), dtype=np.float32)
+            if not w in datas or len(datas[w]) != vertex_count:
+                datas[w] = np.zeros((vertex_count, 6), dtype=np.float32)
+            data = datas[w]
 
             idx = 0
             for o in objs:
@@ -339,7 +370,7 @@ class PressState(Enum):
 def default_call(from_button: "Button"):
     pass
     #print(from_button)
-
+datas = {}
 from math import floor
 class ScrollContainer(Control):
     self_storage = []
@@ -916,14 +947,14 @@ def _draw_control_pass():
                 continue
             c: type = control.__class__
             if prev_class is None or prev_class != c:
-                if prev_class is not None: prev_class._draw_stage_exited(); prev_class.buffer.clear()
-                c._draw_stage_entered()
+                if prev_class is not None: prev_class.draw_stage_exited(); prev_class.buffer.clear()
+                c.draw_stage_entered()
             prev_class = c
             control.draw()
             c.buffer.append(control)
 
         if prev_class is not None:
-            prev_class._draw_stage_exited()
+            prev_class.draw_stage_exited()
             prev_class.buffer.clear()
 
 
