@@ -723,7 +723,11 @@ def add_chunk(gx, gy, data: array) -> RenderChunk:
 
 prev_control_count = 0
 sorted_controls = []
+
+plane = None
 def _ready():
+    global plane
+
     re.flush()
 
     _init_quad_vbo()
@@ -736,7 +740,8 @@ def _ready():
     global _program, _pos_vbo, _id_vbo, _id_buffer
     glut.glutInit()
 
-    plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl", generate_vao = False)
+    plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl", generate_vao = False, get_uniforms=["uPalette"])
+    plane.set_shader_parameter_type("uPalette", "glUniform4fv")
     plane.set_shader_parameter("uPointSize", CHUNK_PIXEL_SIZE)
     glUseProgram(plane.program_id)
     plane.set_uniforms()
@@ -860,6 +865,11 @@ class ShaderPlane:
             glUseProgram(self.program_id)
             self.set_uniforms()
             glUseProgram(0)
+
+    def flush(self):
+        glUseProgram(self.program_id)
+        self.set_uniforms()
+        glUseProgram(0)
 
     def _process(self):
         self.set_uniforms()

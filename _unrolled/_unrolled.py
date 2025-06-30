@@ -1877,7 +1877,7 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                 interaction = powder.bit_interactions[(0, 1)].get(bottom_cell, None)
                 if interaction is not None:
                     if True and chunk.tick_modulus[interaction[8]]:
-                        if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        if 100*random() > 100-1 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 
@@ -1955,7 +1955,7 @@ def powder_9(chunk, id_and_bit, curr_bit, x: int, y: int):
                 interaction = powder.bit_interactions[(0, 1)].get(bottom_cell, None)
                 if interaction is not None:
                     if True and chunk.tick_modulus[interaction[8]]:
-                        if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        if 100*random() > 100-1 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 

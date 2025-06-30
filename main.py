@@ -1,9 +1,10 @@
 import sys
+import elements_config
 
 import ui
 
 PROJECT_CLASSNAMES = [
-    "variant", "ui", "render", "post_processing", "element_storage", "chunk_manager", "example"
+    "variant","render", "element_storage", "ui",  "post_processing", "chunk_manager", "example"
 ]
 GLOBAL_VARS = [
     "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT", "CHUNK_PIXEL_SIZE"
@@ -15,7 +16,7 @@ WINDOW_WIDTH, WINDOW_HEIGHT = 715, 680
 CHUNK_PIXEL_SIZE = 5.0
 PIXEL_SIZE = 5.0
 CHUNK_SIZE = 12
-size_inc = (3*PIXEL_SIZE-0,3*PIXEL_SIZE - 2+PIXEL_SIZE)
+size_inc = (3*PIXEL_SIZE-0,3*PIXEL_SIZE - 3+PIXEL_SIZE)
 
 CHUNKS_RECT = (1,2,11,11)
 

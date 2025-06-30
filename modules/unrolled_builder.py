@@ -337,7 +337,7 @@ if exclude != (-2,-2):""")
         result += "\n\n"
 
     result = result.replace("CHUNK_SIZE", str(chunk_manager.CHUNK_SIZE))
-    with open("_unrolled.py", "w+") as f:
+    with open("_unrolled/_unrolled.py", "w+") as f:
         f.write(result)
 
 StablePowder = None
