@@ -27,6 +27,7 @@ def get_vertex_offset():
             plane_offset_y - mainloop.CHUNKS_RECT[1] * CHUNK_SIZE * CHUNK_PIXEL_SIZE)
 
 def cull(self):
+    if isinstance(self, ScrollContainer): return True
     if not self.visible: return False
     xmin, ymin, xmax, ymax = 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT
     scale_x, scale_y = self.scale_x, self.scale_y
@@ -159,7 +160,7 @@ class Control:
 
     def _before_draw(self):
         glPushMatrix()
-        glTranslatef(self.x, self.y, 0)
+        glTranslatef(self.x, self.y, float(self.z_index))
         glScalef(self.scale_x, self.scale_y, 1.0)
     def _after_draw(self):
         glPopMatrix()
@@ -299,13 +300,11 @@ class ColorRect(Control):
     @classmethod
     def _draw_stage_exited(cls):
         glEnd()
+
         #if cls != ColorRect: return
         width_groups = {}
-       # print(len(_control_types[__class__]))
-        if cls == Button:
-            global bufid
-            bufid = id(cls.buffer)
-            print(len(cls.buffer))
+       # print(len(_control_types[__class__]
+
         for obj in cls.buffer:
             w = obj.outline_width
             if w == 0:# or not cull(obj):
@@ -327,7 +326,6 @@ class ColorRect(Control):
 
             if not w in cls.datas or len(cls.datas[w]) != vertex_count:
                 #print([(data) for data in cls.datas.values()])
-                #print("fjfjfjgjrj9pgbrjioptjiobtr")
                 cls.datas[w] = np.zeros((vertex_count, 6), dtype=np.float32)
             data = cls.datas[w]
 
@@ -369,20 +367,22 @@ class ColorRect(Control):
     def _after_draw(self):
         pass
 
+
     def _before_draw(self):
         pass
 
     def _draw(self):
+
         if self.color[3] > 0:
             glColor4f(*self.color)
 
-            glVertex2f(self.x, self.y)
-            glVertex2f(self.x+self.scale_x, self.y)
-            glVertex2f(self.x+self.scale_x, self.y+self.scale_y)
+            glVertex3f(self.x, self.y, float(self.z_index))
+            glVertex3f(self.x+self.scale_x, self.y, float(self.z_index))
+            glVertex3f(self.x+self.scale_x, self.y+self.scale_y, float(self.z_index))
 
-            glVertex2f(self.x, self.y)
-            glVertex2f(self.x + self.scale_x, self.y + self.scale_y)
-            glVertex2f(self.x, self.y+self.scale_y)
+            glVertex3f(self.x, self.y, float(self.z_index))
+            glVertex3f(self.x + self.scale_x, self.y + self.scale_y, float(self.z_index))
+            glVertex3f(self.x, self.y+self.scale_y, float(self.z_index))
         #glRectf(0.0f, 0.0f, w, h)
 
 from enum import Enum
@@ -756,6 +756,7 @@ sorted_controls = []
 def _ready():
     re.flush()
 
+
     _init_quad_vbo()
     glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE)
     glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE)
@@ -950,8 +951,12 @@ def _draw_chunk_pass():
     glUseProgram(0)
 
 
-
+first_frame = 1
 def _draw_control_pass():
+    glEnable(GL_DEPTH_TEST)
+    glDepthFunc(GL_GEQUAL)
+    glClearDepth(0.0)
+
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
     glLoadIdentity()
@@ -962,33 +967,34 @@ def _draw_control_pass():
     glPushMatrix()
     glLoadIdentity()
 
+  #  global first_frame
+    glClear(GL_DEPTH_BUFFER_BIT)
     glColor4f(1.0, 1.0, 1.0, 1.0)
 
-    if len(_controls) > 0:
-        global sorted_controls, prev_control_count
-        if len(_controls) != prev_control_count:
-            sorted_controls = sorted(_controls, key=lambda control: (control.z_index, id(control.__class__)))
-        prev_control_count = len(_controls)
-        sort = sorted_controls
 
-        prev_class = None
-        for control in sort:
+    for control_type in [Button, ColorRect]:
+        control_type.buffer.clear()
+        control_type.draw_stage_entered()
+        for control in control_type.self_storage:
             control.update_mouse_in()
-            if not control is ScrollContainer and (not cull(control) and not control.child_controls):
-                control.mouse_in = False
-                continue
-            c: type = control.__class__
-            if prev_class is None or prev_class != c:
-                if prev_class is not None: prev_class.draw_stage_exited(); prev_class.buffer.clear()
-                c.draw_stage_entered()
-            prev_class = c
+            if not cull(control):
+               continue
             control.draw()
-            c.buffer.append(control)
+            control_type.buffer.append(control)
+        control_type.draw_stage_exited()
 
-        if prev_class is not None:
-            prev_class.draw_stage_exited()
-            prev_class.buffer.clear()
 
+    glDisable(GL_DEPTH_TEST)
+
+    for control_type in [Label, TextureRect, ScrollContainer]:
+        control_type.draw_stage_entered()
+        for control in control_type.self_storage:
+            if not cull(control):
+                continue
+            control.update_mouse_in()
+            control.draw()
+        control_type.draw_stage_exited()
+ #   first_frame = 0
 
 def _draw_gradient_pass():
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
