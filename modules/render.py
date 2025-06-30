@@ -43,8 +43,15 @@ class Control:
     self_storage = []
     buffer = []
 
+    @classmethod
+    def _class_created(cls):
+        pass
+
     def __init_subclass__(cls, /, **kwargs):
         _control_types[cls] = cls.self_storage
+        cls.buffer = list()
+        cls.self_storage = []
+        cls._class_created()
 
     __slots__ = ("x", "y", "margin_left", "margin_bottom",
                  "scale_x", "scale_y",
@@ -129,12 +136,12 @@ class Control:
         for control in args:
             self.add_child(control)
 
-    @staticmethod
-    def _draw_stage_exited():
+    @classmethod
+    def _draw_stage_exited(cls):
         glColor4f(1, 1, 1, 1)
 
-    @staticmethod
-    def _draw_stage_entered():
+    @classmethod
+    def _draw_stage_entered(cls):
         pass
 
     @classmethod
@@ -274,36 +281,55 @@ class ColorRect(Control):
         self.x, self.y = int(x*control_scale), int(y*control_scale); self.outline_color = outline_color
         self.outline_width = int(outline_width*control_scale)
 
-    @staticmethod
-    def _draw_stage_entered():
+    @classmethod
+    def _draw_stage_entered(cls):
         glBegin(GL_TRIANGLES)
+
+    datas = {}
+    @classmethod
+    def _class_created(cls):
+        cls.datas = {}
+        cls.buffer = []
 
 
     _outline_vbo = glGenBuffers(1)
 
     default = [None, -1]
 
-    @staticmethod
-    def _draw_stage_exited():
+    @classmethod
+    def _draw_stage_exited(cls):
         glEnd()
-
+        #if cls != ColorRect: return
         width_groups = {}
        # print(len(_control_types[__class__]))
-        for obj in ColorRect.buffer:
+        if cls == Button:
+            global bufid
+            bufid = id(cls.buffer)
+            print(len(cls.buffer))
+        for obj in cls.buffer:
             w = obj.outline_width
-            if w == 0 or not cull(obj):
+            if w == 0:# or not cull(obj):
                 continue
-            width_groups.setdefault(w, []).append(obj)
+
+            if not w in width_groups: width_groups[w] = []
+            width_groups[w].append(obj)
 
         glEnableClientState(GL_VERTEX_ARRAY)
         glEnableClientState(GL_COLOR_ARRAY)
         glBindBuffer(GL_ARRAY_BUFFER, ColorRect._outline_vbo)
 
         for w, objs in width_groups.items():
+           # if cls == Button:
+           #     print(len(objs))
             vertex_count = len(objs) * 8
-            if not w in datas or len(datas[w]) != vertex_count:
-                datas[w] = np.zeros((vertex_count, 6), dtype=np.float32)
-            data = datas[w]
+         #   if cls == Button:
+      #          print(width_groups.keys())
+
+            if not w in cls.datas or len(cls.datas[w]) != vertex_count:
+                #print([(data) for data in cls.datas.values()])
+                #print("fjfjfjgjrj9pgbrjioptjiobtr")
+                cls.datas[w] = np.zeros((vertex_count, 6), dtype=np.float32)
+            data = cls.datas[w]
 
             idx = 0
             for o in objs:
@@ -387,12 +413,12 @@ class ScrollContainer(Control):
         self._prev = 0
         self.scroll_bar = None#ColorRect(90,20,(50,10),outline_width=0)
 
-    @staticmethod
-    def _draw_stage_entered():
+    @classmethod
+    def _draw_stage_entered(cls):
         pass
 
-    @staticmethod
-    def _draw_stage_exited():
+    @classmethod
+    def _draw_stage_exited(cls):
         pass
 
     def _before_draw(self):
@@ -449,9 +475,15 @@ class ScrollContainer(Control):
             self.child_pixels = caret
             caret += self.padding
 
-
+bufid = 0
 
 class Button(ColorRect):
+    def _generate_data(self) -> tuple:
+        return (self.x, self.y, self.scale_x, self.scale_y)
+
+    @classmethod
+    def _class_created(cls):
+        cls.buffer = []
 
     def _ready(self, x, y, size: tuple = (1.0, 1.0),
                 color: tuple = (1.0, 1.0, 1.0, 1.0),
@@ -596,8 +628,8 @@ class TextureRect(Control):
             textures[name] = load_texture(path, linear)
             self.texture_id, self.width, self.height = textures[name]
 
-    @staticmethod
-    def _draw_stage_entered():
+    @classmethod
+    def _draw_stage_entered(cls):
         pass
 
     def _before_draw(self):
@@ -606,8 +638,8 @@ class TextureRect(Control):
     def _after_draw(self):
         pass
 
-    @staticmethod
-    def _draw_stage_exited():
+    @classmethod
+    def _draw_stage_exited(cls):
         pass
 
     def _draw(self):
