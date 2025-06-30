@@ -152,8 +152,6 @@ class Control:
     @classmethod
     def draw_stage_exited(cls):
         cls._draw_stage_exited()
-        for i in _control_types[cls]:
-            i.was_updated = False
 
     @classmethod
     def draw_stage_entered(cls):
@@ -175,7 +173,7 @@ class Control:
         self.mouse_in = self.x <= pos.x <= self.x + self.scale_x and self.y <= pos.y <= self.y + self.scale_y
 
     def draw(self):
-        self.make_data_snapshot()
+        #self.make_data_snapshot()
 
         for child in self.child_controls:
             child.x = child.local_x + self.x
@@ -270,7 +268,6 @@ class Label(Control):
         glRasterPos2i(int(self.x), int(self.y))
         glDrawPixels(self.width, self.height, GL_RGBA, GL_UNSIGNED_BYTE, self.raw)
         glPopAttrib()
-
 class ColorRect(Control):
     self_storage = []
 
@@ -290,89 +287,49 @@ class ColorRect(Control):
     def _draw_stage_entered(cls):
         glBegin(GL_TRIANGLES)
 
-    datas = {}
     @classmethod
     def _class_created(cls):
         cls.datas = {}
         cls.buffer = []
+        cls._outline_data = None
 
 
-    _outline_vbo = glGenBuffers(1)
-
-    default = [None, -1]
 
     @classmethod
     def _draw_stage_exited(cls):
+        #print("END")
+    #    print(__class__.is_draw_stage())
+        #  super()._draw_stage_exited
         glEnd()
 
-        PIPELINE_ID = cls.PIPELINE_ID
-        datas = cls.get_data_slot()
-        #if cls != ColorRect: return
-        width_groups = {}
-       # print(len(_control_types[__class__]))
-        for obj in cls.buffer:
-            w = obj.outline_width
-            if w == 0 or not cull(obj):
-                continue
-
-            if not w in width_groups: width_groups[w] = []
-            width_groups[w].append(obj)
-
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glEnableClientState(GL_COLOR_ARRAY)
-        glBindBuffer(GL_ARRAY_BUFFER, ColorRect._outline_vbo)
-       # print(cls.datas.keys())
-
-        for w, objs in width_groups.items():
-           # if cls == Button:
-           #     print(len(objs))
-            vertex_count = len(objs) * 8
-         #   if cls == Button:
-      #          print(width_groups.keys())
 
 
-            if not w in datas or len(datas[w]) != vertex_count:
-                #print([(data) for data in cls.datas.values()])
-                datas[w] = np.zeros((vertex_count, 6), dtype=np.float32)
-            data = datas[w]
+        for self in __class__.buffer:
+            if self.outline_width == 0: continue
 
-            idx = 0
-            for o in objs:
-                if not o.was_updated:
-                    continue
+            width = self.outline_width
+            glLineWidth(width)
+            width *= self.offsets_fix
+            glColor4f(*self.outline_color)
 
-                adj = o.outline_width * o.offsets_fix
-                x, y = o.x, o.y
-                sx, sy = o.scale_x, o.scale_y
-                r, g, b, a = o.outline_color
+            glBegin(GL_LINES)
+            glVertex2f(self.x, self.y + width / 2)
+            glVertex2f(self.x + self.scale_x, self.y + width / 2)
 
-                coords = [
-                    (x, y + adj / 2), (x + sx, y + adj / 2),  # top
-                    (x + sx - adj / 2, y), (x + sx - adj / 2, y + sy),  # right
-                    (x + sx, y + sy - adj / 2), (x, y + sy - adj / 2),  # bottom
-                    (x + adj / 2, y + sy), (x + adj / 2, y)  # left
-                ]
+            glVertex2f(self.x + self.scale_x - width / 2, self.y)
+            glVertex2f(self.x + self.scale_x - width / 2, self.y + self.scale_y)
 
-                for vx, vy in coords:
-                    data[idx, 0] = vx
-                    data[idx, 1] = vy
-                    data[idx, 2:] = (r, g, b, a)
-                    idx += 1
+            glVertex2f(self.x + self.scale_x, self.y + self.scale_y - width / 2)
+            glVertex2f(self.x, self.y + self.scale_y - width / 2)
 
-            glBufferData(GL_ARRAY_BUFFER, data, GL_DYNAMIC_DRAW)
+            glVertex2f(self.x + width / 2, self.y + self.scale_y)
+            glVertex2f(self.x + width / 2, self.y)
+            glEnd()
 
-            glLineWidth(w)
-            glVertexPointer(2, GL_FLOAT, 6 * 4, ctypes.c_void_p(0))
-            glColorPointer(4, GL_FLOAT, 6 * 4, ctypes.c_void_p(2 * 4))
-
-            glDrawArrays(GL_LINES, 0, vertex_count)
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
-        glDisableClientState(GL_COLOR_ARRAY)
-        glDisableClientState(GL_VERTEX_ARRAY)
         glLineWidth(1.0)
-        glColor4f(1.0,1.0,1.0,1.0)
 
+    def _generate_data(self) -> tuple:
+        return (self.x, self.y, self.scale_x, self.scale_y, self.outline_color, self.color)
 
     def _after_draw(self):
         pass
@@ -384,6 +341,7 @@ class ColorRect(Control):
         if self.color[3] > 0:
             glColor4f(*self.color)
 
+
             glVertex2f(self.x, self.y)
             glVertex2f(self.x+self.scale_x, self.y)
             glVertex2f(self.x+self.scale_x, self.y+self.scale_y)
@@ -392,6 +350,9 @@ class ColorRect(Control):
             glVertex2f(self.x + self.scale_x, self.y + self.scale_y)
             glVertex2f(self.x, self.y+self.scale_y)
         #glRectf(0.0f, 0.0f, w, h)
+
+
+
 
 from enum import Enum
 class PressState(Enum):
@@ -488,7 +449,7 @@ bufid = 0
 class Button(ColorRect):
 
     def _generate_data(self) -> tuple:
-        return (self.x, self.y, self.scale_x, self.scale_y)
+        return (self.x, self.y, self.scale_x, self.scale_y, id(self.outline_color), id(self.color), self.press_state)
 
     @classmethod
     def _class_created(cls):
@@ -961,10 +922,10 @@ def _draw_chunk_pass():
 
 
 def _draw_control_pass():
+    # set up orthographic projection for UI
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
     glLoadIdentity()
-
     glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, -1.0, 1.0)
 
     glMatrixMode(GL_MODELVIEW)
@@ -972,35 +933,49 @@ def _draw_control_pass():
     glLoadIdentity()
 
     glColor4f(1.0, 1.0, 1.0, 1.0)
+
     for t in _control_types:
         t.PIPELINE_ID = 0
 
-    if len(_controls) > 0:
+    if _controls:
         global sorted_controls, prev_control_count
         if len(_controls) != prev_control_count:
-            sorted_controls = sorted(_controls, key=lambda control: (control.z_index, id(control.__class__)))
+            sorted_controls = sorted(
+                _controls,
+                key=lambda c: (c.z_index, id(c.__class__))
+            )
         prev_control_count = len(_controls)
-        sort = sorted_controls
 
-        prev_class = None
-        for control in sort:
+        prev_pipeline = None
+        for control in sorted_controls:
             control.update_mouse_in()
-            if not control is ScrollContainer and (not cull(control) and not control.child_controls):
+            culled = cull(control)
+
+            if not isinstance(control, ScrollContainer) \
+               and not culled \
+               and not control.child_controls:
                 control.mouse_in = False
                 continue
-            c: type = control.__class__
-            if prev_class is None or prev_class != c:
-                if prev_class is not None: prev_class.draw_stage_exited(); prev_class.buffer.clear()
-                c.PIPELINE_ID += 1
-                c.draw_stage_entered()
-            prev_class = c
+
+            pipeline_cls = ColorRect if isinstance(control, ColorRect) else control.__class__
+
+            if prev_pipeline is None or prev_pipeline is not pipeline_cls:
+                if prev_pipeline is not None:
+                    prev_pipeline.draw_stage_exited()
+                    prev_pipeline.buffer.clear()
+                pipeline_cls.PIPELINE_ID += 1
+                pipeline_cls.draw_stage_entered()
+            prev_pipeline = pipeline_cls
+
             control.draw()
-            c.buffer.append(control)
+            if culled:
+                pipeline_cls.buffer.append(control)
 
-        if prev_class is not None:
-            prev_class.draw_stage_exited()
-            prev_class.buffer.clear()
-
+        if prev_pipeline is not None:
+            prev_pipeline.draw_stage_exited()
+            prev_pipeline.buffer.clear()
+  #  for c in sorted_controls:
+#        c.was_updated = False
 
 def _draw_gradient_pass():
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
