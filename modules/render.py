@@ -332,13 +332,15 @@ class ColorRect(Control):
 
 
             if not w in datas or len(datas[w]) != vertex_count:
-                print("A")
                 #print([(data) for data in cls.datas.values()])
                 datas[w] = np.zeros((vertex_count, 6), dtype=np.float32)
             data = datas[w]
 
             idx = 0
             for o in objs:
+                if not o.was_updated:
+                    continue
+
                 adj = o.outline_width * o.offsets_fix
                 x, y = o.x, o.y
                 sx, sy = o.scale_x, o.scale_y
