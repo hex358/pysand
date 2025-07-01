@@ -1,3 +1,7 @@
+
+
+
+
 TAGS = ["--no-processing"]
 USE_MODULES = ["chunk_manager", "mainloop", "render", "ui"]
 modules_dict = {}
@@ -174,7 +178,7 @@ class Powder:
 
     @staticmethod
     def initialize():
-        print("AA")
+        #print("AA")
         gas_interactions = [Interaction(with_powder=gas, itself_turns_into=gas, other_turns_into=Keywords.current, probability=Keywords.density_diff)
                             for gas in gases]
         liquid_interactions = [Interaction(with_powder=liquid, itself_turns_into=liquid, other_turns_into=Keywords.current, probability=Keywords.density_diff)
@@ -194,8 +198,8 @@ class Powder:
                 [Interaction(with_powder=flammables, itself_turns_into=Keywords.current, other_turns_into=Keywords.current, probability=Keywords.temp_burn, itself_bit_state=0,
                 prioritized=True,
                 expand=True),
-                 Interaction(with_powder=meltables, itself_turns_into=Keywords.evaporate, other_turns_into=Keywords.current,
-                             probability=Keywords.temp_corrode)
+                 # Interaction(with_powder=meltables, itself_turns_into=Keywords.evaporate, other_turns_into=Keywords.current,
+                 #             probability=Keywords.temp_corrode)
                  ],
             PowderTags.Hot:
                 [Interaction(with_powder=meltables, itself_turns_into=Keywords.evaporate, other_turns_into=Keywords.current, probability=Keywords.temp_corrode),
@@ -661,10 +665,13 @@ colors = []
 names = []
 
 import numpy as np
+
+sets: frozenset = {"gases", "fires", "liquids"}
 def _ready() -> None:
     types.update(element_types)
     for i in ["all_elements", "gases", "fires", "liquids", "solids", "meltables", "flammables", "hot"]:
-        setattr(Powder, i, getattr(sys.modules[__name__], i))
+        curr = getattr(sys.modules[__name__], i)
+        setattr(Powder, i, set(curr) if i in sets else curr)
     Powder.initialize()
 
  #   t = perf_counter()
@@ -681,8 +688,8 @@ def _ready() -> None:
     del types[0]
     element_calls = unrolled_builder.import_unrolled()
 
-    arr = np.array(colors)
-    render.plane.set_shader_parameter("uPalette", 0, arr.nbytes, arr)
+    #arr = np.array(colors, dtype=np.float32)
+   # render.plane.set_shader_parameter("uPalette", arr.shape[0], arr)
     ui.UI_MATCH = {}
     for i in obtainable:
         ui.UI_MATCH[i] =  [names[i], colors[i]]

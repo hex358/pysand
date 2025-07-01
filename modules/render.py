@@ -1,3 +1,21 @@
+# modules/render.py
+#
+# Provides abstractions for more high-level graphics.
+# pyopengl was the utilized module.
+#
+# Note: this little engine was created for small projects (pysand),
+# and perfomance won't look good on bigger games. Use more robust
+# software instead.
+# My main goal was learning how graphic APIs work, and it was
+# achieved.
+#
+# Functionality:
+# Control - base class for all UI elements.
+# \-- > ColorRect - a colored rectangle with an optional outline.
+#
+
+
+
 import sys
 
 USE_MODULES = ["mainloop", "variant", "post_processing"]

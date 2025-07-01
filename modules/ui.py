@@ -1,14 +1,24 @@
+# modules/ui.py
+#
+# UI config file.
+# It handles scene managing. The code of function _ready
+# demonstrates how you create buttons, UI elements,
+# rectangles.. etc.
+#
+# Modify it and see the results.
+# You can see more in-depth capabilities of this rendering
+# "engine" in the modules/render.py file.
+
+
+
 import os.path
 
 config = []# --create-arrows, ...
 
 UI_MATCH = {
-
-#10: ["GRASS", (0,  1,  0, 1.0)],
-
 }
-from random import randint
 
+from random import randint
 
 TAGS = []
 USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant", "variant", "element_storage"]
