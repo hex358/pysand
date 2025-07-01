@@ -1,0 +1,2 @@
+<h1>PySand - an open-source particle sandbox</h1>
+<img src="https://cdn.discordapp.com/attachments/1182918701641650207/1389597992973107302/pysand.png?ex=6865337b&is=6863e1fb&hm=8c51d8a2bd682344da0a7d58ad1623c05746243a1c3b538a0ba20065a19fa77b&"></img>

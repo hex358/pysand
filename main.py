@@ -1,5 +1,13 @@
+# ./main.py
+#
+# Mainloop. Commands and manages all the
+# modules.
+# On start, _ready function is called on every module.
+# Then, every frame, it calls _process(delta) on them.
+#
+
 import sys
-import elements_config
+import config
 
 import ui
 

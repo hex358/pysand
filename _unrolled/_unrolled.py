@@ -44,6 +44,8 @@ interact_12 = None
 
 interact_13 = None
 
+interact_14 = None
+
 acc_bits_1 = None
 
 
@@ -2921,6 +2923,276 @@ def powder_12(chunk, id_and_bit, curr_bit, x: int, y: int):
                 if interaction is not None:
                     if True :
                         if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                            keep = False
+                            if True:
+                                
+                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                                ly, lx = (y), (x)
+                                if new_chunk != chunk:
+                                    ly, lx = (y) % 12, (x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                            if interaction[1] != bottom_cell:
+                                
+                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                                ly, lx = (new_y), (new_x)
+                                if new_chunk != chunk:
+                                    ly, lx = (new_y) % 12, (new_x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[1])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                        res_x, res_y = new_x, new_y
+                        sleep = False
+                        
+        
+        
+            
+    if sleep:
+        
+        chunk.skipped_over_count += 1
+        
+    else:
+        if res_x is not None:
+            
+            xo,yo = chunk.xo, chunk.yo
+            chunk.update_intensity = MAX_UPDATE_INTENSITY
+            chunk.is_uniform = False
+            chunk.first_assign = False
+            if not chunk in updated_this_round:
+                updated_this_round.add(chunk)
+                chunks.get((xo-1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                chunks.get((xo+1,yo), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                chunks.get((xo,yo-1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+                chunks.get((xo,yo+1), dummy_chunk).update_intensity = MAX_UPDATE_INTENSITY
+            
+        
+
+
+acc_bits_14 = None
+
+
+def powder_14(chunk, id_and_bit, curr_bit, x: int, y: int):
+
+
+    powder = update_types[id_and_bit]
+    get_cell = chunk.get_cell
+    
+    set_cell = chunk.set_cell
+    sleep: bool = True
+    keep = True
+    iter_counter: int = 0
+    res_x, res_y = None, None
+    
+    
+        
+
+    
+
+    if chunk.ticks % 2 == 0:
+
+        pass
+        if keep:
+            new_x, new_y = x + 0, y + -1
+            if  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                interaction = powder.bit_interactions[(0, -1)].get(bottom_cell, None)
+                if interaction is not None:
+                    if True :
+                        if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                            keep = False
+                            if True:
+                                
+                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                                ly, lx = (y), (x)
+                                if new_chunk != chunk:
+                                    ly, lx = (y) % 12, (x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                            if interaction[1] != bottom_cell:
+                                
+                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                                ly, lx = (new_y), (new_x)
+                                if new_chunk != chunk:
+                                    ly, lx = (new_y) % 12, (new_x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[1])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                        res_x, res_y = new_x, new_y
+                        sleep = False
+                        
+        
+        
+            
+        if keep:
+            new_x, new_y = x + -1, y + 0
+            if  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                interaction = powder.bit_interactions[(-1, 0)].get(bottom_cell, None)
+                if interaction is not None:
+                    if True :
+                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                            keep = False
+                            if True:
+                                
+                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                                ly, lx = (y), (x)
+                                if new_chunk != chunk:
+                                    ly, lx = (y) % 12, (x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                            if interaction[1] != bottom_cell:
+                                
+                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                                ly, lx = (new_y), (new_x)
+                                if new_chunk != chunk:
+                                    ly, lx = (new_y) % 12, (new_x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[1])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                        res_x, res_y = new_x, new_y
+                        sleep = False
+                        
+        
+        
+            
+        if keep:
+            new_x, new_y = x + 1, y + 0
+            if  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                interaction = powder.bit_interactions[(1, 0)].get(bottom_cell, None)
+                if interaction is not None:
+                    if True :
+                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                            keep = False
+                            if True:
+                                
+                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                                ly, lx = (y), (x)
+                                if new_chunk != chunk:
+                                    ly, lx = (y) % 12, (x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                            if interaction[1] != bottom_cell:
+                                
+                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                                ly, lx = (new_y), (new_x)
+                                if new_chunk != chunk:
+                                    ly, lx = (new_y) % 12, (new_x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[1])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                        res_x, res_y = new_x, new_y
+                        sleep = False
+                        
+        
+        
+            
+
+    else:
+
+        pass
+        if keep:
+            new_x, new_y = x + 0, y + -1
+            if  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                interaction = powder.bit_interactions[(0, -1)].get(bottom_cell, None)
+                if interaction is not None:
+                    if True :
+                        if  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                            keep = False
+                            if True:
+                                
+                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                                ly, lx = (y), (x)
+                                if new_chunk != chunk:
+                                    ly, lx = (y) % 12, (x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                            if interaction[1] != bottom_cell:
+                                
+                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                                ly, lx = (new_y), (new_x)
+                                if new_chunk != chunk:
+                                    ly, lx = (new_y) % 12, (new_x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[1])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                        res_x, res_y = new_x, new_y
+                        sleep = False
+                        
+        
+        
+            
+        if keep:
+            new_x, new_y = x + 1, y + 0
+            if  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                interaction = powder.bit_interactions[(1, 0)].get(bottom_cell, None)
+                if interaction is not None:
+                    if True :
+                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                            keep = False
+                            if True:
+                                
+                                new_chunk = chunk if 0 <= (x) < 12 and 0 <= (y) < 12 else chunks.get(((chunk.xo*12+(x)) // 12, (chunk.yo*12+(y)) // 12), dummy_chunk)
+                                ly, lx = (y), (x)
+                                if new_chunk != chunk:
+                                    ly, lx = (y) % 12, (x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[0])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                            if interaction[1] != bottom_cell:
+                                
+                                new_chunk = chunk if 0 <= (new_x) < 12 and 0 <= (new_y) < 12 else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk)
+                                ly, lx = (new_y), (new_x)
+                                if new_chunk != chunk:
+                                    ly, lx = (new_y) % 12, (new_x) % 12
+                                new_chunk.data[ly*12 + lx] = (interaction[1])
+                                new_chunk.visited.add((lx, ly))
+                                new_chunk.is_uniform = False
+                                new_chunk.first_assign = False
+                                
+                        res_x, res_y = new_x, new_y
+                        sleep = False
+                        
+        
+        
+            
+        if keep:
+            new_x, new_y = x + -1, y + 0
+            if  (not (((new_x),( new_y)) in chunk.visited if 0 <= (new_x) < 12 and 0 <= ( new_y) < 12 else ((new_x) % 12, ( new_y) % 12) in chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+( new_y)) // 12), dummy_chunk).visited) ) and True:
+                bottom_cell = chunk.prev[(new_y)*12+(new_x)] if (0 <= (new_x) < 12 and 0 <= (new_y) < 12) else chunks.get(((chunk.xo*12+(new_x)) // 12, (chunk.yo*12+(new_y)) // 12), dummy_chunk).prev[((new_y) % 12) * 12 + (new_x) % 12]
+                interaction = powder.bit_interactions[(-1, 0)].get(bottom_cell, None)
+                if interaction is not None:
+                    if True :
+                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 

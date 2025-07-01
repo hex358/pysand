@@ -4,13 +4,13 @@ in vec2 outPos;
 
 precision highp float;
 const highp vec3 bg_color = vec3(0.3);
-uniform highp vec4 uPalette[14] = vec4[](
+uniform highp vec4 uPalette[15] = vec4[](
     vec4(0.2, 0.2, 0.2, 1.0),
     vec4(0.75, 0.69, 0.50, 1.0),
     vec4(0.0,  0.5,  1.0, 0.8),
     vec4(0.7,  0.7,  0.7, 1.0),
     vec4(0.33,  0.24,  0.19, 1.0),
-    vec4(1,  0.45,  0.3, 0.9), //vec4(0.9,  0.3,  0.2, 0.9),
+    vec4(1,  0.45,  0.3, 0.9),
     vec4(0.6,  0.6,  0.8, 0.5),
     vec4(0.33,  0.19,  0.19, 1.0),
     vec4(0.23,  0.09,  0.11, 1.0),
@@ -18,7 +18,8 @@ uniform highp vec4 uPalette[14] = vec4[](
     vec4(0,  1,  0, 1.0),
     vec4(1,  0.5,  0, 1.0),
     vec4(0,  0.5,  0, 1.0),
-    vec4(0.5, 0.5, 0.4, 1.0)
+    vec4(0.8, 0.7, 0.7, 1.0),
+vec4(0.1, 0.0, 0.0, 1.0)
 );
 
 out vec4 FragColor;

@@ -4,7 +4,7 @@
 # as usage of uniforms affects the perfomance very negatively.
 #
 # And generally speaking, tweak the shaders! it helps to personalize
-# the game to your taste.
+# the game to your taste. Configure bloom, effects, etc.
 
 import modules.element_storage as el
 from modules.element_storage import *
@@ -23,7 +23,8 @@ el.colors = [
 (0, 1, 0, 1.0),
 (1, 0.5, 0, 1.0),
 (0, 0.5, 0, 1.0),
-(0.5, 0.5, 0.4, 1.0),
+(0.8, 0.7, 0.7, 1.0),
+(0.1, 0.0, 0.0, 1.0),
 ]
 
 el.names = [
@@ -40,19 +41,20 @@ el.names = [
     "GRASS",
     "FIRE",
     "DISSOLVED\nGRASS",
-    "CAST\nIRON"
+    "CAST\nIRON",
+    "OIL"
 ]
 
-el.obtainable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13]
+el.obtainable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14]
 
 
-el.all_elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 99]
+el.all_elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 99]
 el.gases = [0, 6]
 el.fires = [11]
-el.liquids = [2, 5]
+el.liquids = [2, 5, 14]
 el.solids = [1, 3, 4, 7, 8, 9, 99]
 el.meltables = [2, 13]
-el.flammables = [4, 9, 10, 12]
+el.flammables = [4, 9, 10, 12, 14]
 el.hot = [5, 11]
 
 
@@ -123,7 +125,7 @@ el.element_types = {
             growth_direction=1,
             branch_probability=15,
             growth_probability=30,
-            growth_suitable=[0, 6, 2],
+            growth_suitable=[0, 6],
             height=10,
             detatch_if=[0, 6, 2, 5, 12],
             detatched_powder=12
@@ -139,5 +141,13 @@ el.element_types = {
         density=80,
         move_probability=50),
 
-    13: StablePowder(index=13, meltability=20)
+    13: StablePowder(index=13, meltability=20),
+
+    14: Powder(index=14,
+              density=5,
+              temperature=100,
+              class_tags=[PowderTags.Liquid],
+              move_probability=70,
+              flammability=200,
+              fall_direction=0),
 }

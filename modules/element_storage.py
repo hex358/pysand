@@ -1,4 +1,7 @@
-
+# modules/element_storage.py
+#
+# Stores all the classes, and bakes interactions
+# between them on launch.
 
 
 

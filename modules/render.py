@@ -4,15 +4,27 @@
 # pyopengl was the utilized module.
 #
 # Note: this little engine was created for small projects (pysand),
-# and perfomance won't look good on bigger games. Use more robust
-# software instead.
-# My main goal was learning how graphic APIs work, and it was
+# and perfomance won't look good on bigger games. Use something
+# more robust instead.
+# My main goal was to learn how graphic APIs work, and it was
 # achieved.
 #
 # Functionality:
-# Control - base class for all UI elements.
-# \-- > ColorRect - a colored rectangle with an optional outline.
+# __ Control         - base class for all UI elements. Has position,
+#                      size and can have child controls.
+#  \____ ColorRect   - a colored rectangle with an optional outline.
+#      \____ Button  - a pressable ColorRect with a child control
+#                      attached to it.
+#  \____ Label       - a colored text.
+#  \____ TextureRect - a rectangle with a texture attached to it,
+#                      which can be reused.
+#  \____ Scroll      - a container that arranges child controls
+#        Container     vertically or horizontally with an
+#                      optional scrollbar.
 #
+# __ ShaderPlane     - a rectangle with a shader program applied
+#                      to it. You can automatically get uniform
+#                      locations and provide their types.
 
 
 
@@ -387,7 +399,7 @@ datas = {}
 from math import floor
 class ScrollContainer(Control):
     self_storage = []
-    def _ready(self, x: int, y: int, size: tuple[int, int], padding: int = 10, direction: str = "v"):
+    def _ready(self, x: int, y: int, size: tuple[int, int], padding: int = 10, direction: str = "v", scroll_bar: ColorRect = None):
         self.x, self.y, self.scale_x, self.scale_y = int(x * control_scale), int(y * control_scale), size[0] * control_scale, size[1] * control_scale
         self.child_controls = []; self.value = 0.0
         self.padding = padding * control_scale; self.direction = direction
@@ -398,7 +410,7 @@ class ScrollContainer(Control):
         self.snap = 0
         self.out_of_bounds_scroll_on = False
         self._prev = 0
-        self.scroll_bar = None#ColorRect(90,20,(50,10),outline_width=0)
+        self.scroll_bar = scroll_bar#ColorRect(90,20,(50,10),outline_width=0)
 
     @classmethod
     def _draw_stage_entered(cls):
@@ -435,8 +447,12 @@ class ScrollContainer(Control):
             self.scroll(self.scroll_k * mainloop.mouse_scroll_y * 400 / 1000)
 
         if self.scroll_bar is not None:
-            self.scroll_bar.x = variant.lerp(self.x, self.x + self.scale_x - self.scroll_bar.scale_x, self.value)
-            self.scroll_bar.scale_x = (self.scale_x**2 / self.child_pixels)
+            if self.direction == "h":
+                self.scroll_bar.x = variant.lerp(self.x, self.x + self.scale_x - self.scroll_bar.scale_x, self.value)
+                self.scroll_bar.scale_x = (self.scale_x**2 / self.child_pixels)
+            else:
+                self.scroll_bar.y = variant.lerp(self.x, self.y + self.scale_y - self.scroll_bar.scale_y, self.value)
+                self.scroll_bar.scale_y = (self.scale_y**2 / self.child_pixels)
             #print(self.scale_x / self.child_pixels)
         #self.scroll_bar.x = self.scale_x * self.value
         #print()

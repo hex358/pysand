@@ -1,3 +1,11 @@
+# modules/unrolled_builder.py
+#
+# Combines all element interactions into one
+# big python script, unrolling all the loops,
+# inlining funcs, etc. It was crucial for the
+# perfomance.
+
+
 import importlib
 import textwrap
 
