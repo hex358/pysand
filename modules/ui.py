@@ -20,7 +20,7 @@ UI_MATCH = {
 
 from random import randint
 
-TAGS = ["--debug"]
+TAGS = []#"--debug"]
 USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant", "variant", "element_storage"]
 element_storage = None
 chunk_manager = None
