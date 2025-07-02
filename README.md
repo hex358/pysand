@@ -1,4 +1,4 @@
-# PySand - an open-source Particle Sandbox
+# PySand - an open-source particle sandbox
 
 <img width=400,  src="https://cdn.discordapp.com/attachments/1182918701641650207/1389859647673995395/ffff.png?ex=6866272a&is=6864d5aa&hm=3eb1fcf87797f25f27f81c62d45d00ff1f248f334a8dd3bfabf34a13f107a62c&"></img>
 <br>PySand is a minimal but extensible sandbox game written in Python that uses OpenGL for rendering.
