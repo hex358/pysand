@@ -3040,7 +3040,7 @@ def powder_14(chunk, id_and_bit, curr_bit, x: int, y: int):
                 interaction = powder.bit_interactions[(-1, 0)].get(bottom_cell, None)
                 if interaction is not None:
                     if True :
-                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 
@@ -3077,7 +3077,7 @@ def powder_14(chunk, id_and_bit, curr_bit, x: int, y: int):
                 interaction = powder.bit_interactions[(1, 0)].get(bottom_cell, None)
                 if interaction is not None:
                     if True :
-                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 
@@ -3155,7 +3155,7 @@ def powder_14(chunk, id_and_bit, curr_bit, x: int, y: int):
                 interaction = powder.bit_interactions[(1, 0)].get(bottom_cell, None)
                 if interaction is not None:
                     if True :
-                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 
@@ -3192,7 +3192,7 @@ def powder_14(chunk, id_and_bit, curr_bit, x: int, y: int):
                 interaction = powder.bit_interactions[(-1, 0)].get(bottom_cell, None)
                 if interaction is not None:
                     if True :
-                        if 100*random() > 100-70 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
+                        if 100*random() > 100-50 and  (interaction[2] >= 100 or random()*100 > 100-interaction[2]):
                             keep = False
                             if True:
                                 

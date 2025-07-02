@@ -1,7 +1,7 @@
 # Example of how you setup your module.
 
 
-TAGS = ["--no-processing"] # _process function won't be called.
+TAGS = [] # --no-processing, --debug
 USE_MODULES = ["render"]
 render = None # This will be assigned by mainloop
 

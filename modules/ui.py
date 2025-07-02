@@ -20,7 +20,7 @@ UI_MATCH = {
 
 from random import randint
 
-TAGS = []
+TAGS = ["--debug"]
 USE_MODULES = ["render", "mainloop", "chunk_manager", "*variant", "variant", "element_storage"]
 element_storage = None
 chunk_manager = None
@@ -44,11 +44,15 @@ rect3 = None
 scroll2 = None
 import numpy as np
 def _ready() -> None:
-    global label
+    #global label
     global prev_pos
     prev_pos = Vector2(0, 0, i=True)
-    label = render.Label("hello",100*5,17*5,(1,1), (1,0,0,1))
-    label.z_index = 5
+
+    if  "--debug" in TAGS:
+        global label
+        label = render.Label("hello",100*5,17*5,(1,1), (1,0,0,1))
+        label.z_index = 5
+
     ox, oy = CHUNK_SIZE * 5.0, CHUNK_SIZE * 5.0 * 2
 
     global rect2
@@ -397,7 +401,7 @@ def fps(delta:float):
     fps_log.append(current_fps)
     if len(fps_log) > window_size:
         fps_log.pop(0)
-    if chunk_manager.update_tick:
+    if chunk_manager.update_tick and "--debug" in TAGS:
         label.text = str(int(sum(fps_log) / len(fps_log)))
       #  label.text = str(int(min(fps_log)))
 
@@ -430,12 +434,12 @@ def pen(delta:float):
 
     screen_pos = mainloop.screen_mouse_position
     off = render.get_vertex_offset()
-    global_pos = Vector2((screen_pos[0]+1.333 - off[0]) / render.CHUNK_PIXEL_SIZE, (WINDOW_HEIGHT - screen_pos[1] + 1.333 - off[1]) / render.CHUNK_PIXEL_SIZE, i=True)
+    global_pos = Vector2((screen_pos[0]+1.333 - off[0]) / render.CHUNK_PIXEL_SIZE, (mainloop.WINDOW_HEIGHT - screen_pos[1] + 1.333 - off[1]) / render.CHUNK_PIXEL_SIZE, i=True)
     global MODE, _float_pen_size
     # - 1.4*PIXEL_SIZE,oy - 1.1*PIXEL_SIZE,
     p = render.CHUNK_PIXEL_SIZE
 
-    display_pos = Vector2(screen_pos[0], (WINDOW_HEIGHT - screen_pos[1]))
+    display_pos = Vector2(screen_pos[0], (mainloop.WINDOW_HEIGHT - screen_pos[1]))
     plane.set_shader_parameter("mousePos",
     math.floor((display_pos.x + 1.333 * p) / p) * p,
     math.floor((display_pos.y + 1.333 * p) / p) * p)

@@ -1,60 +1,57 @@
+#!/usr/bin/env python3
 # ./main.py
-#
-# Mainloop. Commands and manages all the
-# modules.
+# Mainloop. Commands and manages all the modules.
 # On start, _ready function is called on every module.
 # Then, every frame, it calls _process(delta) on them.
-#
 
 import sys
 import config
-
-import ui
+import importlib
+from time import time
+from OpenGL.GL import *
+from OpenGL.GLUT import *
 
 PROJECT_CLASSNAMES = [
-    "variant","render", "element_storage", "ui",  "post_processing", "chunk_manager", "example"
+    "variant", "render", "element_storage", "ui", "post_processing", "chunk_manager", "example"
 ]
 GLOBAL_VARS = [
     "CHUNK_SIZE", "PIXEL_SIZE", "WINDOW_WIDTH", "WINDOW_HEIGHT", "CHUNKS_RECT", "CHUNK_PIXEL_SIZE"
 ]
 
-
-
 WINDOW_WIDTH, WINDOW_HEIGHT = 715, 680
 CHUNK_PIXEL_SIZE = 5.0
 PIXEL_SIZE = 5.0
 CHUNK_SIZE = 12
-size_inc = (3*PIXEL_SIZE-0,3*PIXEL_SIZE - 3+PIXEL_SIZE)
+size_inc = (3 * PIXEL_SIZE - 0, 3 * PIXEL_SIZE - 3 + PIXEL_SIZE)
+CHUNKS_RECT = (1, 2, 11, 11)
 
-CHUNKS_RECT = (1,2,11,11)
-
-import pygame
-from pygame.locals import *
-from OpenGL.GL import *
-from time import time
-import os
-import importlib
-
-os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-modules = []
-modules_dict: dict[str] = {"mainloop": sys.modules["__main__"]}
-_pixels = 0
 to_process = []
 to_before_process = []
+modules = []
+modules_dict = {"mainloop": sys.modules["__main__"]}
 
-def _ready() -> None:
-    pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), DOUBLEBUF | OPENGL)
-   # global clock
-   # clock = pygame.time.Clock()
-    pygame.display.set_caption("gl_test")
+screen_mouse_position = (0, 0)
+mouse_pressed = False
+mouse_just_pressed = False
+mouse_scroll_y = 0
+just_space_pressed = False
+
+SELECTED_TYPE = 1
+index = 1
+
+ticks = 0
+time_passed = 0.0
+delta_time = 0.0
+prev_time = None
+
+def _ready():
     for classname in PROJECT_CLASSNAMES:
-        module = importlib.import_module("modules."+classname)
+        module = importlib.import_module("modules." + classname)
         modules.append(module)
         modules_dict[classname] = module
         if not classname in sys.modules:
             sys.modules[classname] = module
         setattr(sys.modules["__main__"], classname, module)
-    pygame.init()
 
     for object in modules:
         tags = getattr(object, "TAGS") if hasattr(object, "TAGS") else []
@@ -84,95 +81,105 @@ def _ready() -> None:
     for object in modules:
         object._ready()
 
-mouse_scroll_y = 0
-mouse_just_pressed = False
-just_space_pressed = False
-def input_poll():
-    global screen_mouse_position, mouse_just_pressed
-    global mouse_pressed, prev_pressed
-    global SELECTED_TYPE, index, mouse_scroll_y
 
-    key = pygame.key.get_pressed()
-    global just_space_pressed
-    if key[pygame.K_SPACE]:
-        if not just_space_pressed:
-            ui.buttons["pause_button"].press()
-        just_space_pressed = True
-    else:
-        just_space_pressed = False
+def display():
+    global prev_time, delta_time, ticks, time_passed
+    global mouse_just_pressed, mouse_scroll_y, just_space_pressed
+    #print(mouse_scroll_y)
+    now = time()
+    if prev_time is None:
+        prev_time = now
+    delta = now - prev_time
+    delta_time = delta
+    prev_time = now
+    time_passed += delta
+    ticks += 1
 
+    for module in to_before_process:
+        module._before_process(delta)
+    for module in to_process:
+        module._process(delta)
 
+    glutSwapBuffers()
+    glutPostRedisplay()
     mouse_just_pressed = False
     mouse_scroll_y = 0
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            return False
+    just_space_pressed = False
 
-        if event.type == pygame.VIDEORESIZE:
-            global WINDOW_WIDTH, WINDOW_HEIGHT
-            WINDOW_WIDTH, WINDOW_HEIGHT = event.size
+def reshape(width, height):
 
-        if event.type == pygame.MOUSEMOTION:
-            screen_mouse_position = event.pos
+    global WINDOW_WIDTH, WINDOW_HEIGHT
+    WINDOW_WIDTH, WINDOW_HEIGHT = width, height
+    # if (WINDOW_HEIGHT, WINDOW_WIDTH) == (HEIGHT, WIDTH):
+    #     glViewport(0, 0, width, height)
+    #     glMatrixMode(GL_PROJECTION)
+    #     glLoadIdentity()
+    #     glOrtho(0, width, 0, height, -1.0, 1.0)
+    #     glMatrixMode(GL_MODELVIEW)
 
-        if event.type == pygame.MOUSEWHEEL:
-            mouse_scroll_y = 1 if event.y > 0 else -1
 
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            mouse_pressed = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
+def keyboard(key, x, y):
+    global just_space_pressed
+    if key == b' ':
+        if not just_space_pressed:
+            ui.buttons['pause_button'].press()
+        just_space_pressed = True
+    elif key == b'\x1b':
+       quit()
+
+
+def mouse(button, state, x, y):
+    global mouse_pressed, mouse_just_pressed, mouse_scroll_y, screen_mouse_position
+    screen_mouse_position = (x, y)
+    #print(button == GLUT_LEFT_BUTTON AND )
+    if button == GLUT_LEFT_BUTTON:
+        if state == GLUT_DOWN:
             mouse_just_pressed = not mouse_pressed
             mouse_pressed = True
+        elif state == GLUT_UP:
+            mouse_pressed = False
+
+    if state == GLUT_DOWN and button == 3:
+        mouse_scroll_y = 1
+    elif state == GLUT_DOWN and button == 4:
+        mouse_scroll_y = -1
 
 
+def motion(x, y):
+    global screen_mouse_position
+    screen_mouse_position = (x, y)
 
 
-SELECTED_TYPE = 1
-index: int = 1
+def passive_motion(x, y):
+    global screen_mouse_position
+    screen_mouse_position = (x, y)
 
-prev_pressed: bool = False
-def _process(delta:float) -> bool:
-    input_poll()
 
-    for object in to_before_process:
-        object._before_process(delta)
-    for object in to_process:
-        object._process(delta)
+def idle():
+    glutPostRedisplay()
 
-    pygame.display.flip()
-   # clock.tick(120)
 
-    return True
-
-import math
-
-screen_mouse_position: tuple[int, int] = (0, 0)
-mouse_pressed: bool = False
-
-ticks:int = 0
-time_passed = 0.0
-delta_time: float = 0.0
 
 def main():
-    running = True
-    global time_passed; global _pixels; global ticks; global delta_time
-    delta:float = 0.0
-    prev:float = time()
-    while running:
-        now = time()
-        delta = now-prev
-        delta_time = delta
-        prev = now
-        ticks += 1
-        time_passed += delta
-        if not _process(delta):
-            return
+    glutInit(sys.argv)
+    glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)//2-WINDOW_WIDTH//2, glutGet(GLUT_SCREEN_HEIGHT)//2-WINDOW_HEIGHT//2)
+    #glutInitWindowPosition()
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA)
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
+    glutCreateWindow(b"PySand")
+    _ready()
 
-
+    glutDisplayFunc(display)
+    glutReshapeFunc(reshape)
+    glutKeyboardFunc(keyboard)
+    glutMouseFunc(mouse)
+    glutMotionFunc(motion)
+    glutPassiveMotionFunc(passive_motion)
+    glutIdleFunc(idle)
+    glutMainLoop()
 
 if __name__ == "__main__":
-    _ready()
     main()

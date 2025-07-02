@@ -145,9 +145,9 @@ el.element_types = {
 
     14: Powder(index=14,
               density=5,
-              temperature=100,
+              temperature=0,
               class_tags=[PowderTags.Liquid],
-              move_probability=70,
+              move_probability=50,
               flammability=200,
               fall_direction=0),
 }

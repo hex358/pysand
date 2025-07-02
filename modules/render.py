@@ -58,7 +58,7 @@ def get_vertex_offset():
 
 def cull(self):
     if not self.visible: return False
-    xmin, ymin, xmax, ymax = 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT
+    xmin, ymin, xmax, ymax = 0, 0, mainloop.WINDOW_WIDTH, mainloop.WINDOW_HEIGHT
     scale_x, scale_y = self.scale_x, self.scale_y
     if self.root.__class__ == ScrollContainer:
         xmin, ymin, xmax, ymax = self.root.x - self.root.margin_left, self.root.y - self.root.margin_bottom, self.root.x + self.root.scale_x, self.root.y + self.root.scale_y
