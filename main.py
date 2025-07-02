@@ -163,6 +163,7 @@ def idle():
 
 def main():
     print("PySand 1.0.0")
+    glutInit(sys.argv)
 
    # glutInitContextVersion(4, 3)
     #glutInitContextProfile(GLUT_CORE_PROFILE)

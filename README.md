@@ -1,4 +1,4 @@
-# PySand - an Open-Source Particle Sandbox
+# PySand - an open-source Particle Sandbox
 
 <img width=400,  src="https://cdn.discordapp.com/attachments/1182918701641650207/1389859647673995395/ffff.png?ex=6866272a&is=6864d5aa&hm=3eb1fcf87797f25f27f81c62d45d00ff1f248f334a8dd3bfabf34a13f107a62c&"></img>
 <br>PySand is a minimal but extensible sandbox game written in Python that uses OpenGL for rendering.
@@ -98,7 +98,7 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/my-element`)
 5. Open a pull request
 
-## About this Project
+## About this project
 Initially I just wanted to see how PyOpenGL is used in real python projects. But over time, taking inspiration from games like [sandboxels](https://github.com/R74nCom/sandboxels), I thought it would be nice to make something similar.<br>Thanks for reading!
 
 ## License
