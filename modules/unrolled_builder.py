@@ -19,7 +19,7 @@ file_header = """
 ############        unrolled.py        ############
 # This file is created automatically to maximize  #
 # the perfomance via loop unrolling and function  #
-# inlining. It's not human-readable.              #
+# inlining. It's unreadable.                      #
 ###################################################
 
 
