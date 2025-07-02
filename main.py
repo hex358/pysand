@@ -161,12 +161,9 @@ def idle():
     glutPostRedisplay()
 
 
-
 def main():
-    print("AAAAA")
-    glutInit(sys.argv)
+    print("PySand 1.0.0")
 
-    print("GL version:", (GL_VERSION))
    # glutInitContextVersion(4, 3)
     #glutInitContextProfile(GLUT_CORE_PROFILE)
     glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)//2-WINDOW_WIDTH//2, glutGet(GLUT_SCREEN_HEIGHT)//2-WINDOW_HEIGHT//2)

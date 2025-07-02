@@ -582,7 +582,7 @@ def _init_quad_vbo():
                           0, 1,
                           1, 1], dtype=np.float32)
 
-    print(bool(glBufferData))
+ #   print(bool(glBufferData))
     _quad_vbo_positions = glGenBuffers(1)
     glBindBuffer(GL_ARRAY_BUFFER, _quad_vbo_positions)
     glBufferData(GL_ARRAY_BUFFER, positions.nbytes, positions, GL_STATIC_DRAW)
