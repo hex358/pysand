@@ -78,7 +78,7 @@ el.element_types = {
 }
 ```
 
-> **Note:** To change colors, tweak `shaders/fragment.glsl` manually, as using uniforms impacts performance.
+> **Note:** To change colors, tweak `shaders/fragment.glsl` manually.
 
 ## Creating Elements
 
