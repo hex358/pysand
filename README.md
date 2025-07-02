@@ -15,7 +15,7 @@
   * Plant
   * Seed
 * **Custom Interactions**. Each element can use a set of basic interactions (fire spreading into burnable elements, water flowing, etc.) and extend them using custom interactions.
-* **Configurable Shaders**. Tweak fragment and vertex shaders for bloom, lighting, and special effects. Little rendering "engine" PySand has can provide some abstractions, like setting uniforms, etc.
+* **Configurable graphics**. PySand is done from the scratch on OpenGL. It provides basic abstractions and classes for drawing (see `./modules/render.py`). Feel free to add UI elements like buttons and scrollbars, and to configure shaders.
 
 ## Installation
 
@@ -86,6 +86,7 @@ el.element_types = {
 * Append its RGBA color.
 * Add its name to `el.names`.
 * Define its behavior in `el.element_types`. Classes Flame, Powder, Plant or Seed just simplify the construction of your element. To assign it packs of interactions (being burnable/hot/liquid/etc.), set property `class_tags`, or for more specific interactions, use `custom_interactions`.
+* If you want, add special effects (like bloom or color gradient) in post-processing shaders.
 
 ## Contributing
 
