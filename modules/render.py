@@ -581,6 +581,8 @@ def _init_quad_vbo():
                           1, 0,
                           0, 1,
                           1, 1], dtype=np.float32)
+
+    print(bool(glBufferData))
     _quad_vbo_positions = glGenBuffers(1)
     glBindBuffer(GL_ARRAY_BUFFER, _quad_vbo_positions)
     glBufferData(GL_ARRAY_BUFFER, positions.nbytes, positions, GL_STATIC_DRAW)
@@ -763,6 +765,7 @@ def _ready():
     global plane
 
     re.flush()
+    glut.glutInit()
 
     _init_quad_vbo()
     glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE)
@@ -772,7 +775,7 @@ def _ready():
     glClearColor(0.3, 0.3, 0.3, 0)
 
     global _program, _pos_vbo, _id_vbo, _id_buffer
-    glut.glutInit()
+
 
     plane = ShaderPlane("shaders/vertex.glsl", "shaders/fragment.glsl", generate_vao = False, get_uniforms=["uPalette"])
     plane.set_shader_parameter_type("uPalette", "glUniform4fv")

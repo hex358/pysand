@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
 # ./main.py
-# Mainloop. Commands and manages all the modules.
+# Mainloop. manages all the modules.
 # On start, _ready function is called on every module.
 # Then, every frame, it calls _process(delta) on them.
 
@@ -42,6 +41,7 @@ index = 1
 ticks = 0
 time_passed = 0.0
 delta_time = 0.0
+
 prev_time = None
 
 def _ready():
@@ -163,14 +163,19 @@ def idle():
 
 
 def main():
+    print("AAAAA")
     glutInit(sys.argv)
+
+    print("GL version:", (GL_VERSION))
+   # glutInitContextVersion(4, 3)
+    #glutInitContextProfile(GLUT_CORE_PROFILE)
     glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)//2-WINDOW_WIDTH//2, glutGet(GLUT_SCREEN_HEIGHT)//2-WINDOW_HEIGHT//2)
     #glutInitWindowPosition()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA)
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
     glutCreateWindow(b"PySand")
-    _ready()
+
 
     glutDisplayFunc(display)
     glutReshapeFunc(reshape)
@@ -178,7 +183,11 @@ def main():
     glutMouseFunc(mouse)
     glutMotionFunc(motion)
     glutPassiveMotionFunc(passive_motion)
+
+
     glutIdleFunc(idle)
+
+    _ready()
     glutMainLoop()
 
 if __name__ == "__main__":
