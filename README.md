@@ -34,9 +34,9 @@
 
 3. Start the sandbox with:
 
-```bash
-python main.py
-```
+    ```bash
+    python main.py
+    ```
 
 Use the UI to place elements and watch them interact.
 
