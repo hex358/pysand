@@ -38,7 +38,7 @@ just_space_pressed = False
 SELECTED_TYPE = 1
 index = 1
 
-ticks = 0
+ticks = 0 #
 time_passed = 0.0
 delta_time = 0.0
 
