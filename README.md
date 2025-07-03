@@ -1,7 +1,7 @@
 # PySand - an open-source particle sandbox
 
 <img width=400,  src="https://cdn.discordapp.com/attachments/1182918701641650207/1389859647673995395/ffff.png?ex=6866272a&is=6864d5aa&hm=3eb1fcf87797f25f27f81c62d45d00ff1f248f334a8dd3bfabf34a13f107a62c&"></img>
-<br>PySand is a minimal but extensible sandbox game written in Python that uses OpenGL for rendering.
+<br>PySand is a minimal but extensible sandbox game. It's written in Python, rendering api is OpenGL.
 
 ## Features
 
@@ -13,7 +13,7 @@
   * Plant
   * Seed
 * **Custom Interactions**. Each element can use a set of basic interactions (fire spreading into flammable elements, water flowing, etc.) and extend them using custom interactions.
-* **Configurable graphics**. PySand is done from the scratch on OpenGL. It provides basic abstractions and classes for drawing (see `./modules/render.py`). Feel free to utilise UI elements like buttons and scrollbars, and to configure shaders.
+* **Configurable graphics**. PySand provides basic abstractions and classes for drawing (see `./modules/render.py`). Feel free to utilise UI elements like buttons and scrollbars, and to configure shaders.
 
 ## Installation
 
