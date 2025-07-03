@@ -20,7 +20,7 @@
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/pysand.git
+   git clone https://github.com/hex358/pysand.git
    cd pysand
    ```
 2. Install dependencies:
@@ -38,7 +38,7 @@
 
 Use the UI to place elements and watch them interact.
 
-## Configuration
+## Modding
 
 PySand ships with a default element config interface `./config.py` (for more complex modifications, change the `./modules/element_storage.py` itself). You can add or modify element definitions:
 
@@ -83,7 +83,7 @@ el.element_types = {
 * Assign it an unused index in `el.all_elements`.
 * Append its RGBA color.
 * Add its name to `el.names`.
-* Define its behavior in `el.element_types`. Classes **Flame**, **Powder**, **Plant** or **Seed** just simplify the construction of your element.<br> To assign it packs of interactions (being burnable/hot/liquid/etc.), set property `class_tags`, or for more specific interactions, use `custom_interactions`.
+* Define its behavior in `el.element_types`. Classes `Flame`, `Powder`, `Plant` or `Seed` just simplify the construction of your element.<br> To assign it packs of interactions (being burnable/hot/liquid/etc.), set property `class_tags`, or for more specific interactions, use `custom_interactions`.
 * Optionally, add special effects (like bloom or color gradient) in post-processing shaders.
 
 ## Contributing
