@@ -5,7 +5,6 @@
 
 ## Features
 
-* Define custom elements with unique properties and interactions.
 * **Base Classes**:
 
   * Powder
