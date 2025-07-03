@@ -6,15 +6,14 @@
 ## Features
 
 * **Base Classes**:
-
   * Powder
   * Liquid
   * Gas
   * Fire
   * Plant
   * Seed
-* **Custom Interactions**. Each element can use a set of basic interactions (fire spreading into burnable elements, water flowing, etc.) and extend them using custom interactions.
-* **Configurable graphics**. PySand is done from the scratch on OpenGL. It provides basic abstractions and classes for drawing (see `./modules/render.py`). Feel free to add UI elements like buttons and scrollbars, and to configure shaders.
+* **Custom Interactions**. Each element can use a set of basic interactions (fire spreading into flammable elements, water flowing, etc.) and extend them using custom interactions.
+* **Configurable graphics**. PySand is done from the scratch on OpenGL. It provides basic abstractions and classes for drawing (see `./modules/render.py`). Feel free to utilise UI elements like buttons and scrollbars, and to configure shaders.
 
 ## Installation
 
@@ -84,8 +83,8 @@ el.element_types = {
 * Assign it an unused index in `el.all_elements`.
 * Append its RGBA color.
 * Add its name to `el.names`.
-* Define its behavior in `el.element_types`. Classes Flame, Powder, Plant or Seed just simplify the construction of your element. To assign it packs of interactions (being burnable/hot/liquid/etc.), set property `class_tags`, or for more specific interactions, use `custom_interactions`.
-* If you want, add special effects (like bloom or color gradient) in post-processing shaders.
+* Define its behavior in `el.element_types`. Classes **Flame**, **Powder**, **Plant** or **Seed** just simplify the construction of your element.<br> To assign it packs of interactions (being burnable/hot/liquid/etc.), set property `class_tags`, or for more specific interactions, use `custom_interactions`.
+* Optionally, add special effects (like bloom or color gradient) in post-processing shaders.
 
 ## Contributing
 
@@ -98,7 +97,7 @@ Contributions are welcome! Please:
 5. Open a pull request
 
 ## About this project
-Initially I just wanted to see how PyOpenGL is used in real python projects. But over time, taking inspiration from games like [sandboxels](https://github.com/R74nCom/sandboxels), I thought it would be nice to make something similar.<br>Thanks for reading!
+Initially I just wanted to gain experience with OpenGL. But over time, taking inspiration from games like [sandboxels](https://github.com/R74nCom/sandboxels), I thought it would be nice to make something similar.<br>Thanks for reading!
 
 ## License
 
