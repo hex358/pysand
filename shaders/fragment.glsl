@@ -3,9 +3,9 @@ flat in int vTileID;
 in vec2 outPos;
 
 precision highp float;
-const highp vec3 bg_color = vec3(0.3);
+const highp vec3 bg_color = vec3(0);
 uniform highp vec4 uPalette[15] = vec4[](
-    vec4(0.2, 0.2, 0.2, 1.0),
+    vec4(0, 0, 0, 1.0),
     vec4(0.75, 0.69, 0.50, 1.0),
     vec4(0.0,  0.5,  1.0, 0.8),
     vec4(0.7,  0.7,  0.7, 1.0),

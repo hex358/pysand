@@ -1,6 +1,6 @@
 # PySand - an open-source particle sandbox
 
-<img width=400,  src="https://cdn.discordapp.com/attachments/1182918701641650207/1389859647673995395/ffff.png?ex=6866272a&is=6864d5aa&hm=3eb1fcf87797f25f27f81c62d45d00ff1f248f334a8dd3bfabf34a13f107a62c&"></img>
+<img width=400,  src="https://media.discordapp.net/attachments/1182918701641650207/1392125835758010391/q.png?ex=686e65b7&is=686d1437&hm=ecf314358538bc3e06f889a9b30f53c29df16d9d8addbc00902e82ed0c19183b&=&format=webp&quality=lossless&width=950&height=859"></img>
 <br>PySand is a minimal but extensible sandbox game. It's written in Python, rendering api is OpenGL.
 
 ## Features
